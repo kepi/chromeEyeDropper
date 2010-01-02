@@ -1,0 +1,114 @@
+<html>
+<head>
+<style>
+body {
+  font-family: Tahoma;
+}
+
+h3 {
+  font-family: Verdana, Arial;
+  font-size: 1em;
+  background-color: #7c9ac1;
+  color: white;
+  border: 2px solid #6183ad;
+  text-align: center;
+  padding: 3px;
+}
+
+#footer {
+  text-align: right;  
+  margin-top: 20px;
+  font-size: 0.8em;
+}
+
+.small {
+  width: 40px;
+}
+
+.icon { 
+  float: left; 
+  margin-right: 10px;
+}
+
+</style>
+
+<link type="text/css" rel="stylesheet" href="inc/jPicker/css/jPicker-1.0.11b.css" />
+<script type="text/javascript" src="inc/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="inc/jPicker/jpicker-1.0.11b.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  chrome.extension.sendRequest({reqtype: "get-color"}, function(response) {
+    var color = 'ffc000';
+
+    if ( response.color )
+      color = response.color;
+
+    var active = new $.jPicker.Color({hex: color});
+    $('#colorpicker').jPicker({window: {title: '&nbsp;'}, color: {active: active}, images: {clientPath: 'inc/jPicker/images/'}});
+  });
+
+});
+
+function activatePick() {
+  chrome.windows.getCurrent(function(w) {
+      chrome.tabs.getSelected(w.id, function(tab) {
+      chrome.tabs.sendRequest(tab.id, {reqtype: "pickup-activate"}, function(response) {
+        window.close();
+      });
+    });
+  });
+}
+
+function goto(url) {
+  chrome.tabs.create({url: url});
+  //window.close();
+}
+
+var activeTab = 'firstTab';
+
+function switchTab(tab) {
+  $('#'+activeTab).hide();
+  activeTab = tab;
+  $('#'+activeTab).show();
+}
+
+</script>
+</head>
+<body>
+
+<div id="firstTab">
+  <h3>Pick color from webpage</h3>
+  <img src="icon.png" alt="Eye Dropper" class="icon" /> <input type="button" id="pickButton" onClick="activatePick()" value="Pick color from webpage" />
+
+  <h3>Or choose from Color Picker</h3>
+  <div id="colorpicker"></div>
+
+  <div id="footer"><a href="#" onClick="goto('http://github.com/kepi/chromeEyeDropper/issues')">bug reports</a> | <a href="#" onClick="switchTab('secondTab')">about extension</a></div>
+</div>
+
+<div id="secondTab" style="display: none">
+  <h3>About chrome Eye Dropper</h3>
+  <p><img src="icon.png" alt="Eye Dropper" class="icon" /> chrome Eye Dropper is eye dropper and color picker extension for Google Chrome.</p>
+  <p>Version 0.1</p>
+
+  <h3>Credits</h3>
+  <p>This extension was written by Ondra 'Kepi' Kudlík and kindly sponsored by <a href="#" onClick="goto('http://www.igloonet.cz/')">IglooNET.cz</a> company.</p>
+
+  <p>Color Picker code presents thanks to Chris Tillman <a href="#" onclick="goto('http://www.digitalmagicpro.com/jPicker/')">jPicker jQuery plugin</a>.</p>
+
+  <p>Many work done thanks to amazing <a href="#" onClick="goto('http://www.jquery.com/')">jQuery</a> and its plugins as <a href="#" onClick="goto('http://james.padolsey.com/javascript/special-scroll-events-for-jquery/')">Special Scroll Events for jQuery</a>.</p>
+
+  <h3>TODO</h3>
+  <ul>
+    <li>Eye Dropper &ndash; Fix inexact colors &ndash; <a href="#" onlick="goto('http://code.google.com/p/chromium/issues/detail?id=21072')">Chromium Issue 21072</a></li>
+    <li>Eye Dropper &ndash; Fix not taking colors on bottom part of page when scrolling <a href="#" onlick="goto('http://code.google.com/p/chromium/issues/detail?id=21375')">Chromium Issue 21375</a></li>
+    <li>Add history of taken colors</li>
+    <li>Add possiblity to copy colors to clipboard in various formats</li>
+  </ul>
+
+  <div id="footer"><a href="#" onClick="goto('http://github.com/kepi/chromeEyeDropper/issues')">bug reports</a> | <a href="#" onClick="switchTab('firstTab')">back to Eye Dropper</a></div>
+</div>
+
+</body>
+</html>

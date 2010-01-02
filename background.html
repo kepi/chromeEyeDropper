@@ -1,0 +1,24 @@
+<html>
+<script>
+var colorPicked = null;
+
+chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+    if(request.reqtype == "get-shot") {
+      chrome.tabs.captureVisibleTab(null, function(dataURL) { 
+        sendResponse({dataURL: dataURL})
+      });
+
+    } else if(request.reqtype == "set-color") {
+        colorPicked = request.color.rgbhex;
+        chrome.browserAction.setBadgeText({text: 'N'});
+        chrome.browserAction.setBadgeBackgroundColor({color: [request.color.r, request.color.g, request.color.b, 255]});
+        sendResponse({text: colorPicked});
+
+    } else if(request.reqtype == "get-color") {
+        sendResponse({color: colorPicked});
+
+    } else
+        sendResponse({});
+});
+</script>
+</html>
