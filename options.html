@@ -1,0 +1,44 @@
+<html>
+<head><title>Eye Dropper - Options</title>
+<link type="text/css" rel="stylesheet" href="style.css" />
+
+<script type="text/javascript">
+// Saves options to localStorage.
+function save_options() {
+  if (!window.localStorage) {
+          alert("Error local storage is unavailable.");
+          window.close();
+  }
+
+  window.localStorage.autoClipboard = 
+    document.getElementById("autoClipboard").checked ? true : false;
+
+  // Update status to let user know options were saved.
+  var status = document.getElementById("status");
+  status.innerHTML = "Options Saved.";
+  setTimeout(function() {
+    status.innerHTML = "";
+  }, 750);
+}
+
+// Restores select box state to saved value from localStorage.
+function restore_options() {
+  document.getElementById("autoClipboard").checked = 
+    (window.localStorage.autoClipboard === "true") ? true : false;
+  console.log(window.localStorage.autoClipboard);
+}
+
+</script>
+</head>
+
+<body onload="restore_options()" id="options">
+<h3>Eye Dropper &ndash; Options</h3>
+<div>
+<label for="autoClipboard">Automaticaly copy picked color to clipboard when picking from webpage</label> <input type="checkbox" name="autoClipboard" id="autoClipboard" />
+</div>
+
+<br />
+<button onclick="save_options()">Save</button>
+<span id="status"></span>
+</body>
+</html>

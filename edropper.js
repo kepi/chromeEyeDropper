@@ -131,13 +131,11 @@ function mouseClick(e) {
   if(!dropper_activated)
     return;
 
-  // turn dropper off
-  deactivateDropper();
+  deactivateDropper();      // turn dropper off
+  e.preventDefault();       // disable follow link
+  var color = pickColor(e); // get color
 
-  // disable follow link
-  e.preventDefault(); 
-
-  var color = pickColor(e);
+  // save picked color
   chrome.extension.sendRequest({reqtype: "set-color", color: color}, function response(response) {
     if (debug)
       console.log("Picked: "+response.text);  

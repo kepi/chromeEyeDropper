@@ -1,37 +1,6 @@
 <html>
 <head>
-<style>
-body {
-  font-family: Tahoma;
-}
-
-h3 {
-  font-family: Verdana, Arial;
-  font-size: 1em;
-  background-color: #7c9ac1;
-  color: white;
-  border: 2px solid #6183ad;
-  text-align: center;
-  padding: 3px;
-}
-
-#footer {
-  text-align: right;  
-  margin-top: 20px;
-  font-size: 0.8em;
-}
-
-.small {
-  width: 40px;
-}
-
-.icon { 
-  float: left; 
-  margin-right: 10px;
-}
-
-</style>
-
+<link type="text/css" rel="stylesheet" href="style.css" />
 <link type="text/css" rel="stylesheet" href="inc/jPicker/css/jPicker-1.0.11b.css" />
 <script type="text/javascript" src="inc/jquery-1.3.2.min.js"></script>
 <script type="text/javascript" src="inc/jPicker/jpicker-1.0.11b.min.js"></script>
@@ -62,7 +31,9 @@ function activatePick() {
 
 function goto(url) {
   chrome.tabs.create({url: url});
-  //window.close();
+
+  if ( typeof arguments[1] != "undefined" && arguments[1] === true )
+    window.close();
 }
 
 var activeTab = 'firstTab';
@@ -84,7 +55,7 @@ function switchTab(tab) {
   <h3>Or choose from Color Picker</h3>
   <div id="colorpicker"></div>
 
-  <div id="footer"><a href="#" onClick="goto('http://github.com/kepi/chromeEyeDropper/issues')">bug reports</a> | <a href="#" onClick="switchTab('secondTab')">about extension</a></div>
+  <div id="footer"><a href="#" onClick="goto('http://github.com/kepi/chromeEyeDropper/issues')">bug reports</a> | <a href="#" onClick="switchTab('secondTab')">about extension</a> | <a href="#" onClick="goto('options.html', true)">options</a></div>
 </div>
 
 <div id="secondTab" style="display: none">
