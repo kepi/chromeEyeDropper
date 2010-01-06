@@ -131,7 +131,11 @@ function mouseClick(e) {
   if(!dropper_activated)
     return;
 
+  // turn dropper off
   deactivateDropper();
+
+  // disable follow link
+  e.preventDefault(); 
 
   var color = pickColor(e);
   chrome.extension.sendRequest({reqtype: "set-color", color: color}, function response(response) {
