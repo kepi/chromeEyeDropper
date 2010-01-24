@@ -35,6 +35,9 @@ function activateDropper() {
 
   dropper_activated = true;
 
+  // Status rectangle with actual color under cursor
+  $("body").append('<div id="color-tooltip" style="z-index: 1000; width:10px; height: 10px; border: 1px solid #000; display:none; font-size: 15px;"> </div>');
+
   // set some events
   document.addEventListener("mousemove", mouseMove, false);
   document.addEventListener("click", mouseClick, false);
@@ -114,6 +117,8 @@ function tooltip(e) {
 function deactivateDropper() { 
   if(!dropper_activated)
     return;
+
+  $("color-tip").remove();
 
   dropper_activated = false;
   screenshotTaken = false;
@@ -298,6 +303,3 @@ function updateCanvas() {
       }
   });
 }
-
-// Status rectangle with actual color under cursor
-$('body').prepend("<div id='color-tooltip' style='z-index: 1000; width:10px; height: 10px; border: 1px solid #000; display:none; font-size: 15px;'> </div>");
