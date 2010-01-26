@@ -1,6 +1,6 @@
 {
   "name": "Eye Dropper",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Eye Dropper for Google Chrome.",
 
   "background_page": "background.html",
@@ -8,7 +8,7 @@
   "content_scripts": [ {
       "all_frames": true,
       "js": [ "inc/jquery-1.3.2.min.js", "inc/jquery-special-scroll.js", "edropper.js" ],
-      "matches": [ "http://*/*", "https://*/*", "file://*/*" ],
+      "matches": [ "http://*/*", "https://*/*" ],
       "run_at": "document_end"
    } ],
 
