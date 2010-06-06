@@ -1,0 +1,14 @@
+﻿@media all 
+{
+	#LeftTop a { font-size: 15px; font-weight: bold; }
+	#LeftMiddle div.SVG { background: #fff; border: 1px solid #000; font-size: 11px; height: 360px; margin: 0px 10px; padding: 5px; text-align: left; width: 130px; }
+	#LeftBottom { display: none; }
+	#jPicker { margin: 0px 8px; text-align: left; }
+	#jPicker ul { font-size: 13px; margin: 0px 0px 0px 15px; padding: 0px; }
+	#jPicker p { font-size: 13px; padding: 0px 10px; }
+	#jPicker hr { clear: both; }
+	#jPicker h2 { font-size: 16px; }
+	#jPicker code { color: #468; font-size: 14px; font-weight: bold; }
+	#jPicker pre { background: #eee; border: 1px solid #000; display: block; font-size: 11px; margin: 10px 5px; padding: 5px; }
+	#jPicker span { font-size: 13px; text-align: center; }
+}
