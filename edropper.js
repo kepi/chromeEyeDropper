@@ -1,4 +1,5 @@
 // Used variables
+var version = 2;
 var debug = false;
 var dropper_activated = false;
 var screenshotTaken = false;
@@ -19,10 +20,15 @@ var Rects = [];
 
 // Listen for pickup activate
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-    if(request.reqtype == "pickup-activate")
-      activateDropper();
+    if(request.reqtype == "pickup-activate") {
+      if ( request.version == version )
+        activateDropper();
 
-    sendResponse({});
+      sendResponse({version: version});
+
+    } else {
+      sendResponse({});
+    }
 });
 
 // Turn Dropper On

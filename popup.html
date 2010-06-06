@@ -6,6 +6,7 @@
 <script type="text/javascript" src="inc/jPicker/jpicker-1.1.2.min.js"></script>
 
 <script>
+var version = 2;
 $(document).ready(function() {
   chrome.extension.sendRequest({reqtype: "get-color"}, function(response) {
     var color = 'ffc000';
@@ -20,13 +21,35 @@ $(document).ready(function() {
 });
 
 function activatePick() {
+  // set timer
+  timer = setTimeout('injectED();', 1000);
+
+  // try to activate dropper
   chrome.windows.getCurrent(function(w) {
       chrome.tabs.getSelected(w.id, function(tab) {
-      chrome.tabs.sendRequest(tab.id, {reqtype: "pickup-activate"}, function(response) {
-        window.close();
+      chrome.tabs.sendRequest(tab.id, {reqtype: "pickup-activate", version: version}, function(response) {
+        // we got response, clear timer
+        clearTimeout(timer);
+
+        // eDropper not loaded, inject it
+        if ( response.version == undefined )
+          injectED();
+        // Everything OK, just close popup
+        else if ( response.version == version)
+          window.close();
+        // Old version, user need to reload page :/
+        else
+          alert('Eye Dropper was updated, please, reload current tab or restart Chrome.');
+
       });
     });
   });
+}
+
+function injectED() {
+  alert("It seems that Eye Dropper was just installed or updated. Please, reload current tab or restart Chrome to be able to pick from webpage.");
+  window.close();
+  //chrome.tabs.executeScript(tab.id, {file: 'edropper.js'});
 }
 
 function goto(url) {
