@@ -6,9 +6,16 @@ var colorPicked = null;
 
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
     if(request.reqtype == "get-shot") {
-      chrome.tabs.captureVisibleTab(null, function(dataURL) { 
-        sendResponse({dataURL: dataURL})
-      });
+      try {
+        chrome.tabs.captureVisibleTab(null, {format: 'png'}, function(dataURL) { 
+          sendResponse({dataURL: dataURL})
+        });
+      }
+      catch (e) {
+        chrome.tabs.captureVisibleTab(null, function(dataURL) { 
+          sendResponse({dataURL: dataURL})
+        });
+      }
 
     } else if(request.reqtype == "set-color") {
         colorPicked = request.color.rgbhex;
