@@ -109,7 +109,8 @@ function tooltip(e) {
       'color': 'black',
       'position': 'absolute',
       'top': e.pageY+fromTop, 
-      'left': e.pageX+fromLeft
+      'left': e.pageX+fromLeft,
+      'border-color': '#'+color.opposite
       }).show();
 }
 
@@ -118,8 +119,6 @@ function deactivateDropper() {
   if(!dropper_activated)
     return;
 
-  $("color-tip").remove();
-
   dropper_activated = false;
   screenshotTaken = false;
   screenshoting = false;
@@ -127,7 +126,8 @@ function deactivateDropper() {
   document.removeEventListener("mousemove", mouseMove, false);
   document.removeEventListener("click", mouseClick, false);
   document.removeEventListener("keydown", keyDown, false);
-  $('#color-tooltip').css().hide();
+
+  $('#color-tooltip').remove();
 }
 
 // turn dropper on mouse click and send color to background
@@ -135,6 +135,9 @@ function deactivateDropper() {
 function mouseClick(e) {
   if(!dropper_activated)
     return;
+
+  if (debug)
+    console.log("Event: mouse click");
 
   deactivateDropper();      // turn dropper off
   e.preventDefault();       // disable follow link
@@ -181,6 +184,7 @@ var colorFromData = function(canvasIndex,data) {
   };
 
   color.rgbhex = rgbToHex(color.r,color.g,color.b);
+  color.opposite = rgbToHex(255-color.r,255-color.g,255-color.b);
   return color;
 };
 
