@@ -13,6 +13,9 @@ function save_options() {
   window.localStorage.autoClipboard = 
     document.getElementById("autoClipboard").checked ? true : false;
 
+  window.localStorage.autoClipboardNoGrid =
+    document.getElementById("autoClipboardNoGrid").checked ? true : false;
+
   // Update status to let user know options were saved.
   var status = document.getElementById("status");
   status.innerHTML = "Options Saved.";
@@ -25,6 +28,8 @@ function save_options() {
 function restore_options() {
   document.getElementById("autoClipboard").checked = 
     (window.localStorage.autoClipboard === "true") ? true : false;
+  document.getElementById("autoClipboardNoGrid").checked =
+    (window.localStorage.autoClipboardNoGrid === "true") ? true : false;
   console.log(window.localStorage.autoClipboard);
 }
 
@@ -35,6 +40,9 @@ function restore_options() {
 <h3>Eye Dropper &ndash; Options</h3>
 <div>
 <label for="autoClipboard">Automaticaly copy picked color to clipboard when picking from webpage</label> <input type="checkbox" name="autoClipboard" id="autoClipboard" />
+</div>
+<div>
+<label for="autoClipboardNoGrid">Do not copy # character, only RGB color</label> <input type="checkbox" name="autoClipboardNoGrid" id="autoClipboardNoGrid" />
 </div>
 
 <br />

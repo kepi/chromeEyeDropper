@@ -25,7 +25,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
         if ( localStorage != null && window.localStorage['autoClipboard'] === "true" ) {
           // save to clipboard
           var edCb = document.getElementById('edClipboard');
-          edCb.value = '#'+colorPicked; 
+          edCb.value = window.localStorage['autoClipboardNoGrid'] === "true" ? colorPicked : '#'+colorPicked; 
           edCb.select();
           document.execCommand("copy", false, null);
         }
