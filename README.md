@@ -2,8 +2,7 @@
 
 chrome Eye Dropper is eye dropper and color picker extension for Google Chrome.</p>
 
-You can install latest version of this extension directly from Google chrome extensions gallery
-https://chrome.google.com/extensions/detail/hmdcmlfkchdmnmnmheododdhjedfccka
+You can install latest version of this extension directly from [Google chrome extensions gallery](https://chrome.google.com/extensions/detail/hmdcmlfkchdmnmnmheododdhjedfccka)
 
 ##Credits
 
