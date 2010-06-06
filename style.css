@@ -10,6 +10,7 @@ h3 {
   border: 2px solid #6183ad;
   text-align: center;
   padding: 3px;
+  min-width: 530px;
 }
 
 #footer {
