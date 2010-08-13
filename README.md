@@ -16,5 +16,7 @@ Many work done thanks to amazing [jQuery](http://www.jquery.com/) and its plugin
 
 You can see my todo from assigned tickets on Issue page.
 
+##LICENSE
 
+This extension is released under MIT License.
 
