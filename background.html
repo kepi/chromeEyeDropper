@@ -3,9 +3,26 @@
 <head>
 <script>
 var colorPicked = null;
+var debug = false;
+
+// initialize history
+if ( window.localStorage.history == undefined )
+  window.localStorage.history = "[]";
 
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-    if(request.reqtype == "get-shot") {
+  if ( debug )
+    console.log('received request: '+request.reqtype);
+
+    // function for reporting what background supports
+    if(request.reqtype == 'supports') {
+      var state = 'no';
+
+      if ( request.what == 'dummy' || request.what == 'history' )
+        state = 'ok';
+
+        sendResponse({state: state});
+
+    } else if(request.reqtype == "get-shot") {
       try {
         chrome.tabs.captureVisibleTab(null, {format: 'png'}, function(dataURL) { 
           sendResponse({dataURL: dataURL})
@@ -22,18 +39,32 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
         chrome.browserAction.setBadgeText({text: 'N'});
         chrome.browserAction.setBadgeBackgroundColor({color: [request.color.r, request.color.g, request.color.b, 255]});
 
-        if ( localStorage != null && window.localStorage['autoClipboard'] === "true" ) {
+        if ( localStorage != null ) {
           // save to clipboard
-          var edCb = document.getElementById('edClipboard');
-          edCb.value = window.localStorage['autoClipboardNoGrid'] === "true" ? colorPicked : '#'+colorPicked; 
-          edCb.select();
-          document.execCommand("copy", false, null);
+          if ( window.localStorage['autoClipboard'] === "true" ) {
+            var edCb = document.getElementById('edClipboard');
+            edCb.value = window.localStorage['autoClipboardNoGrid'] === "true" ? colorPicked : '#'+colorPicked; 
+            edCb.select();
+            document.execCommand("copy", false, null);
+          }
+
+          if ( request.history == undefined || request.history != 'no' ) {
+            // add color to history
+            var history = JSON.parse(window.localStorage.history);
+            history.push(colorPicked);
+            window.localStorage.history = JSON.stringify(history);
+          }
         }
 
         // send response
         sendResponse({text: colorPicked});
+
     } else if(request.reqtype == "get-color") {
         sendResponse({color: colorPicked});
+
+        // reload background page
+    } else if(request.reqtype == 'reload-background') {
+      window.location.reload();
 
     } else
         sendResponse({});

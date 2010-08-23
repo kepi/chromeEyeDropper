@@ -38,3 +38,25 @@ body {
 #status {
   color: green;
 }
+
+.historySquare {
+  width: 15px;
+  height: 15px;
+  border: black;
+  float: left;
+  margin-right: 2px;
+  margin-bottom: 2px;
+}
+
+br.clear {
+  clear: both;
+}
+
+#pickedColorDiv {
+  margin-top: 20px;
+}
+
+#clearHistory {
+  margin-top: 20px;
+  text-align: right;
+}

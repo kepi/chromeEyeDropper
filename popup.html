@@ -68,7 +68,50 @@ $(document).ready(function() {
     $("#li-colorpicker").show(); //css.display = 'block';
     $("#tab-colorpicker").show(); //css.display = 'block';
   }
+
+  // History
+  if ( window.localStorage.history != undefined && window.localStorage.history.length > 3 ) {
+    var history = JSON.parse(window.localStorage.history);
+    output = ''
+    for ( c in history ) {
+      output += '<div class="historySquare" style="background: #' + history[c] + '" title="' + history[c] + '">&nbsp;</div>';
+    }
+    $("#history").html(output+'<br class="clear" /><div id="pickedColorDiv">Color: <span id="pickedColor">Move mouse over history squares to display hex</div><div id="clearHistory"><input type="button" onClick="clearHistory()" value="Clear colors history" />');
+
+    $('.historySquare').hover(function() { $('#pickedColor').html('#'+this.title) });
+    $('.historySquare').click(function() { 
+      var color = {
+        r: parseInt(this.title.substring(0, 2), 16),
+        g: parseInt(this.title.substring(2, 4), 16),
+        b: parseInt(this.title.substring(4, 6), 16),
+        alpha: 0
+      };
+      color.rgbhex = this.title;
+      chrome.extension.sendRequest({reqtype: "set-color", color: color, history: 'nos'});
+    });
+
+  } else {
+    check_support('history');
+    $("#history").html("No history yet. Try to pick some colors from web.");
+
+  }
 });
+
+function clearHistory()
+{
+  window.localStorage.history = '[]';
+  window.location.reload();
+}
+
+function check_support(what)
+{
+    chrome.extension.sendRequest({reqtype: "supports", what: what}, function(response) { 
+      if ( !response || response.state != 'ok' ) {
+        //console.log("Doesn't support " + what + ". Reloading background.");
+        chrome.extension.sendRequest({reqtype: "reload-background"});
+      }
+    });
+}
 
 function showJPicker()
 {
@@ -97,7 +140,7 @@ function showJPicker()
       <img src="icon.png" alt="Eye Dropper" class="icon" /> <input type="button" id="pickButton" onClick="activatePick()" value="Pick color from webpage" />
 
       <h3>Picked colors history</h3>
-      <p>kuk</p>
+      <div id="history">&nbsp;</div>
     </div>
 
     <div id="tab-colorpicker" style="display: none">
