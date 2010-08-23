@@ -1,24 +1,20 @@
 <html>
 <head>
-<link type="text/css" rel="stylesheet" href="style.css" />
-<link type="text/css" rel="stylesheet" href="inc/jPicker/css/jPicker-1.1.2.min.css" />
-<script type="text/javascript" src="inc/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="inc/jPicker/jpicker-1.1.2.min.js"></script>
+  <style type="text/css">
+    body { min-width: 400px; }
+  </style>
+
+  <link type="text/css" rel="stylesheet" href="style.css" />
+  <link type="text/css" rel="stylesheet" href="inc/jPicker/css/jPicker-1.1.2.min.css" />
+  <link href="inc/jquery-ui/css/smoothness/jquery-ui-1.8.4.custom.css" rel="stylesheet" type="text/css"/>
+
+  <script type="text/javascript" src="inc/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="inc/jPicker/jpicker-1.1.2.min.js"></script>
+  <script src="inc/jquery-ui/js/jquery-ui-1.8.4.custom.min.js"></script>
+
 
 <script>
 var version = 2;
-$(document).ready(function() {
-  chrome.extension.sendRequest({reqtype: "get-color"}, function(response) {
-    var color = 'ffc000';
-
-    if ( response.color )
-      color = response.color;
-
-    var active = new $.jPicker.Color({hex: color});
-    $('#colorpicker').jPicker({window: {title: '&nbsp;'}, color: {active: active}, images: {clientPath: 'inc/jPicker/images/'}});
-  });
-
-});
 
 function activatePick() {
   // set timer
@@ -59,42 +55,62 @@ function goto(url) {
     window.close();
 }
 
-var activeTab = 'firstTab';
+$(document).ready(function() {
+  // show tabs
+  $("#tabs").tabs();
 
-function switchTab(tab) {
-  $('#'+activeTab).hide();
-  activeTab = tab;
-  $('#'+activeTab).show();
-}
+  $("a.ext").click(function() { goto(this.href); });
+
+  chrome.extension.sendRequest({reqtype: "get-color"}, function(response) {
+    var color = 'ffc000';
+
+    if ( response.color )
+      color = response.color;
+
+    var active = new $.jPicker.Color({hex: color});
+    $('#colorpicker').jPicker({window: {title: '&nbsp;'}, color: {active: active}, images: {clientPath: 'inc/jPicker/images/'}});
+  });
+
+});
 
 </script>
 </head>
 <body>
 
-<div id="firstTab">
-  <h3>Pick color from webpage</h3>
-  <img src="icon.png" alt="Eye Dropper" class="icon" /> <input type="button" id="pickButton" onClick="activatePick()" value="Pick color from webpage" />
+  <div id="tabs">
+    <ul>
+      <li><a href="#tab-1"><span>Pick from web</span></a></li>
+      <li><a href="#tab-2"><span>Color picker</span></a></li>
+      <li><a href="#tab-3"><span>About</span></a></li>
+    </ul>
 
-  <h3>Or choose from Color Picker</h3>
-  <div id="colorpicker"></div>
+    <div id="tab-1">
+      <img src="icon.png" alt="Eye Dropper" class="icon" /> <input type="button" id="pickButton" onClick="activatePick()" value="Pick color from webpage" />
+    </div>
 
-  <div id="footer"><a href="#" onClick="goto('http://github.com/kepi/chromeEyeDropper/issues')">bug reports</a> | <a href="#" onClick="switchTab('secondTab')">about extension</a> | <a href="#" onClick="goto('options.html', true)">options</a></div>
-</div>
+    <div id="tab-2">
+      <div id="colorpicker"></div>
+    </div>
 
-<div id="secondTab" style="display: none">
-  <h3>About chrome Eye Dropper</h3>
-  <p><img src="icon.png" alt="Eye Dropper" class="icon" /> chrome Eye Dropper is eye dropper and color picker extension for Google Chrome.</p>
-  <p>Version 0.1.5</p>
+    <div id="tab-3">
+      <h3>About chrome Eye Dropper</h3>
+      <p><img src="icon.png" alt="Eye Dropper" class="icon" /> chrome Eye Dropper is eye dropper and color picker extension for Google Chrome.</p>
+      <p>Version 0.1.5</p>
 
-  <h3>Credits</h3>
-  <p>This extension was written by Ondra 'Kepi' Kudlík and kindly sponsored by <a href="#" onClick="goto('http://www.igloonet.cz/')">IglooNET.cz</a> company.</p>
+      <h3>Credits</h3>
+      <p>This extension was written by <a class="ext" href="http://kepi.cz/">Ondra 'Kepi' Kudlík</a>. Part of work is sponsored by <a class="ext" href="http://www.igloonet.cz/">IglooNET.cz</a> company.</p>
 
-  <p>Color Picker code thanks to Chris Tillman <a href="#" onclick="goto('http://www.digitalmagicpro.com/jPicker/')">jPicker jQuery plugin</a>.</p>
+      <p>Color Picker code thanks to Chris Tillman <a class="ext" href="http://www.digitalmagicpro.com/jPicker/">jPicker jQuery plugin</a>.</p>
 
-  <p>Many work done thanks to amazing <a href="#" onClick="goto('http://www.jquery.com/')">jQuery</a> and its plugins as <a href="#" onClick="goto('http://james.padolsey.com/javascript/special-scroll-events-for-jquery/')">Special Scroll Events for jQuery</a>.</p>
+      <p>Many work done thanks to amazing <a class="ext" href="http://www.jquery.com/">jQuery</a> and its plugins as <a class="ext" href="http://james.padolsey.com/javascript/special-scroll-events-for-jquery/">Special Scroll Events for jQuery</a>.</p>
 
-  <div id="footer"><a href="#" onClick="goto('http://github.com/kepi/chromeEyeDropper/issues')">bug reports</a> | <a href="#" onClick="switchTab('firstTab')">back to Eye Dropper</a></div>
-</div>
+      <div class="pledgie"><a class="ext" href="http://www.pledgie.com/campaigns/11364"><img alt="Click here to lend your support to: chromeEyeDropper and make a donation at www.pledgie.com !" src="http://www.pledgie.com/campaigns/11364.png?skin_name=chrome" border="0" /></a></div>
+
+    </div>
+    
+  </div>
+
+  <div id="footer"><a class="ext" href="http://github.com/kepi/chromeEyeDropper/issues">bug reports</a> | <a class="ext" href="options.html">options</a></div>
 
 </body>
 </html>

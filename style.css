@@ -1,22 +1,20 @@
 body {
-  font-family: Tahoma;
-}
-
-h3 {
-  font-family: Verdana, Arial;
-  font-size: 1em;
-  background-color: #7c9ac1;
-  color: white;
-  border: 2px solid #6183ad;
-  text-align: center;
-  padding: 3px;
-  min-width: 530px;
+  font-family: Arial, Verdana, sans-serif;
+  font-size: 10px;
+  text-align: left;
 }
 
 #footer {
   text-align: right;  
   margin-top: 20px;
-  font-size: 0.8em;
+}
+
+#footer a {
+  color: black;
+}
+
+#footer a:hover {
+  color: navy;
 }
 
 .small {
@@ -30,4 +28,9 @@ h3 {
 
 #options {
   max-width: 600px;
+}
+
+.pledgie {
+  margin-top: 20px;
+  text-align: center;
 }
