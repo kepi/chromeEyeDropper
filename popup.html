@@ -5,11 +5,9 @@
   </style>
 
   <link type="text/css" rel="stylesheet" href="style.css" />
-  <link type="text/css" rel="stylesheet" href="inc/jPicker/css/jPicker-1.1.2.min.css" />
   <link href="inc/jquery-ui/css/smoothness/jquery-ui-1.8.4.custom.css" rel="stylesheet" type="text/css"/>
 
   <script type="text/javascript" src="inc/jquery-1.4.2.min.js"></script>
-  <script type="text/javascript" src="inc/jPicker/jpicker-1.1.2.min.js"></script>
   <script src="inc/jquery-ui/js/jquery-ui-1.8.4.custom.min.js"></script>
 
 
@@ -61,6 +59,19 @@ $(document).ready(function() {
 
   $("a.ext").click(function() { goto(this.href); });
 
+  // Color Picker 
+  disableColorpicker = window.localStorage.disableColorpicker;
+  if ( disableColorpicker !== "true" ) {
+    $("head").append('<link "text/css" rel="stylesheet" href="inc/jPicker/css/jPicker-1.1.2.min.css" />');
+    $.getScript('inc/jPicker/jpicker-1.1.2.min.js', function() { setTimeout('showJPicker()', 250); });
+
+    $("#li-colorpicker").show(); //css.display = 'block';
+    $("#tab-colorpicker").show(); //css.display = 'block';
+  }
+});
+
+function showJPicker()
+{
   chrome.extension.sendRequest({reqtype: "get-color"}, function(response) {
     var color = 'ffc000';
 
@@ -70,29 +81,30 @@ $(document).ready(function() {
     var active = new $.jPicker.Color({hex: color});
     $('#colorpicker').jPicker({window: {title: '&nbsp;'}, color: {active: active}, images: {clientPath: 'inc/jPicker/images/'}});
   });
-
-});
-
+}
 </script>
 </head>
 <body>
 
   <div id="tabs">
     <ul>
-      <li><a href="#tab-1"><span>Pick from web</span></a></li>
-      <li><a href="#tab-2"><span>Color picker</span></a></li>
-      <li><a href="#tab-3"><span>About</span></a></li>
+      <li><a href="#tab-pick"><span>Pick from web</span></a></li>
+      <li id="li-colorpicker" style="display: none"><a href="#tab-colorpicker"><span>Color picker</span></a></li>
+      <li><a href="#tab-about"><span>About</span></a></li>
     </ul>
 
-    <div id="tab-1">
+    <div id="tab-pick">
       <img src="icon.png" alt="Eye Dropper" class="icon" /> <input type="button" id="pickButton" onClick="activatePick()" value="Pick color from webpage" />
+
+      <h3>Picked colors history</h3>
+      <p>kuk</p>
     </div>
 
-    <div id="tab-2">
+    <div id="tab-colorpicker" style="display: none">
       <div id="colorpicker"></div>
     </div>
 
-    <div id="tab-3">
+    <div id="tab-about">
       <h3>About chrome Eye Dropper</h3>
       <p><img src="icon.png" alt="Eye Dropper" class="icon" /> chrome Eye Dropper is eye dropper and color picker extension for Google Chrome.</p>
       <p>Version 0.1.5</p>
