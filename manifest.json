@@ -1,6 +1,6 @@
 {
   "name": "Eye Dropper",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Eye Dropper for Google Chrome.",
 
   "background_page": "background.html",
