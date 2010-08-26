@@ -14,8 +14,41 @@
 
 
 <script>
-var version = 2;
+var version = 3;
+var bg = chrome.extension.getBackgroundPage();
+var isScriptLoaded = false;
 
+function init() {
+    bg.picker.init();
+    // find current tab 
+    chrome.tabs.getSelected(null, function(tab) {
+      bg.picker.tab = tab;
+      
+      // special chrome pages
+      if (tab.url.indexOf('chrome') == 0) {
+        console.warn('need-implementation');
+        return;
+      }
+
+      /*
+      // activate pickup
+      chrome.tabs.sendRequest(tab.id, {reqtype: "pickup-activate", version: version}, function(response) {
+        // neco udelat
+        console.log('do something');
+      });
+      */
+
+    });
+
+    console.log('popup activated');
+}
+
+function activatePick() {
+  bg.picker.activate();
+  window.close();
+}
+
+  /*
 function activatePick() {
   // set timer
   timer = setTimeout('injectED();', 1000);
@@ -41,12 +74,7 @@ function activatePick() {
     });
   });
 }
-
-function injectED() {
-  alert("It seems that Eye Dropper was just installed or updated. Please, reload current tab or restart Chrome to be able to pick from webpage.");
-  window.close();
-  //chrome.tabs.executeScript(tab.id, {file: 'edropper.js'});
-}
+  */
 
 function goto(url) {
   chrome.tabs.create({url: url});
@@ -56,6 +84,9 @@ function goto(url) {
 }
 
 $(document).ready(function() {
+  // initialize script
+  init();
+
   // show tabs
   $("#tabs").tabs();
 

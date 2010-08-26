@@ -1,7 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script>
+<script type="text/javascript">
+// vim:ft=javascript
+
+function $(id) {
+    return document.getElementById(id);
+}
+
+var picker = {
+  tab: 0,
+  screenshotData: '',
+  debugImage: null,
+
+  sendMessage: function(message, callback) {
+    chrome.tabs.sendRequest(picker.tab.id, message, callback);
+  },
+
+  messageListener: function() {
+    chrome.extension.onConnect.addListener(function(port) {
+      port.onMessage.addListener(function(req) {
+          console.log(req.msg);
+      });
+    });
+  },
+
+  // activate Pick
+  activate: function(test) {
+    console.log('activating pickup');
+    picker.capture();
+  },
+
+  // capture actual Screenshot and set screenshot Data
+  capture: function() {
+    try {
+      chrome.tabs.captureVisibleTab(null, {format: 'png'}, picker.setScreenshotData);
+    }
+    catch (e) {
+      chrome.tabs.captureVisibleTab(null, picker.setScreenshotData);
+    }
+  },
+  // simply set data for taken screenshot
+  setScreenshotData: function(data) {
+    picker.screenshotData = data;
+    picker.sendMessage({reqtype: 'pickup-activate'}, function() {});
+    //chrome.tabs.create({'url': 'debugimage.html'}, function() {});
+  },
+  
+  init: function() {
+    // we have to listen for messages
+    picker.messageListener();
+  }
+};
+
+/*
+
+
+*/
+
+/*
 var colorPicked = null;
 var debug = false;
 
@@ -62,6 +119,13 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
     } else if(request.reqtype == "get-color") {
         sendResponse({color: colorPicked});
 
+        // handle debug tab
+    } else if(request.reqtype == 'debug-image') {
+      if ( request.data ) {
+        img.show();
+        img.src = request.data;
+      }
+
         // reload background page
     } else if(request.reqtype == 'reload-background') {
       window.location.reload();
@@ -69,6 +133,12 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
     } else
         sendResponse({});
 });
+
+$(document).ready(function() {
+  var img = $("#debugImage");
+  img.hide();
+});
+*/
 </script>
 </head>
 <body>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript">
+  function init() {
+    var bg = chrome.extension.getBackgroundPage();
+    bg.picker.debugImage = $('debugImage');
+    bg.picker.debugImage.src = bg.picker.screenshotData;
+  }
+
+  function $(id) {
+      return document.getElementById(id);
+  }
+
+</script>
+</head>
+<body onload="init()">
+  <img id="debugImage" />
+</body>
+</html>

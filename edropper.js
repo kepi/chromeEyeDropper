@@ -1,6 +1,6 @@
 // Used variables
 var version = 2;
-var debug = false;
+var debug = true;
 var dropper_activated = false;
 var screenshotTaken = false;
 var screenshoting = false;
@@ -17,6 +17,8 @@ var canvasElement = null;
 var canvasContext = null;
 
 var Rects = [];
+
+var debugTab = null;
 
 // Listen for pickup activate
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
@@ -303,13 +305,16 @@ function updateCanvas() {
         if (merged == false)
           Rects.push(rect);
 
-        if (debug)
-          console.log("taking screenshot "+imgWidth+'x'+imgHeight+' posun: '+pageXOffset+'x'+pageYOffset+' # '+canvasWidth+'x'+canvasHeight+' # '+window.innerWidth+'x'+window.innerHeight);
-
         // draw image to canvas
         canvasContext.drawImage(imgElement,pageXOffset,pageYOffset);
         imageData=canvasContext.getImageData(0, 0, canvasWidth, canvasHeight);
         screenshotTaken = true;
+
+        if ( debug ) {
+          console.log("taking screenshot "+imgWidth+'x'+imgHeight+' posun: '+pageXOffset+'x'+pageYOffset+' # '+canvasWidth+'x'+canvasHeight+' # '+window.innerWidth+'x'+window.innerHeight);
+
+          chrome.extension.sendRequest({reqtype: "debug-image", data: imageData});
+        }
       }
   });
 }
