@@ -47,10 +47,7 @@ var page = {
       return;
 
     $("body").append('<div id="color-tooltip" style="z-index: 1000; width:10px; height: 10px; border: 1px solid #000; display:none; font-size: 15px;"> </div>');
-    //$("head").append('<style type="text/css" id="edropper-css">* { cursor: default !important}</style>');
-
     page.elColorTooltip = $('#color-tooltip');
-    //page.elCursorStyle = $('#edropper-css');
 
     console.log('activating page dropper');
     page.defaults();
@@ -77,7 +74,6 @@ var page = {
     $(document).unbind('scrollstop', page.onScrollStop);
 
     page.elColorTooltip.remove();
-    //page.elCursorStyle.remove();
   },
 
   // ---------------------------------
@@ -277,8 +273,7 @@ var page = {
 
     page.screenshoting = true;
 
-    //document.getElementById('color-tooltip').style.display = 'none';
-    //page.elCursorStyle.html('* { cursor: wait !important}');
+    document.body.style.cursor = 'progress';
 
     console.log('I want new screenshot');
     page.elColorTooltip.hide(1, function() {
@@ -323,8 +318,8 @@ var page = {
       // TODO - je nutne refreshnout ctverecek a nastavit mu spravnou barvu
 
       page.screenshoting = false;
-      //page.elCursorStyle.html('* { cursor: default !important}');
-      page.elColorTooltip.show();
+      document.body.style.cursor = 'default';
+      page.elColorTooltip.show(1);
 
       page.sendMessage({type: 'debug-tab', image: page.canvas.toDataURL()}, function() {});
     }
