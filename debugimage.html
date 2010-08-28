@@ -10,10 +10,8 @@
     $('debugImage').src = bg.picker.canvas.toDataURL();
 
     chrome.extension.onRequest.addListener(function(req, sender, sendResponse) {
-      if(req.reqtype == "update") {
-        console.log('Updating image');
-        $('debugImage').src = bg.picker.canvas.toDataURL();
-      }
+      if(req.reqtype == "update")
+        window.location.reload();
     });
   }
 

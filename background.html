@@ -134,7 +134,7 @@ var picker = {
     if ( picker.debugTab != 0 ) {
       chrome.tabs.sendRequest(picker.debugTab, {reqtype: 'update'});
     } else
-      chrome.tabs.create({'url': 'debugimage.html'}, function(tab) { picker.debugTab = tab.id });
+      chrome.tabs.create({url: 'debugimage.html', selected: false}, function(tab) { picker.debugTab = tab.id });
   },
 
   isThisPlatform: function(operationSystem) {
