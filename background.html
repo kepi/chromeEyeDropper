@@ -16,6 +16,7 @@ var picker = {
   canvasContext: null,
   debugImage: null,
   debugTab: 0,
+  color: null,
 
   sendMessage: function(message, callback) {
     chrome.tabs.sendRequest(picker.tab.id, message, callback);
@@ -24,34 +25,83 @@ var picker = {
   messageListener: function() {
     chrome.extension.onConnect.addListener(function(port) {
       port.onMessage.addListener(function(req) {
-        if ( req.reqtype == 'screenshot' ) {
-          picker.capture();
-        } else if ( req.reqtype == 'debug-tab' ) {
-          picker.debugImage = req.image;
-          picker.createDebugTab();
+        switch(req.type) {
+          // Taking screenshot for content script
+          case 'screenshot': picker.capture(); break;
+          
+          // Creating debug tab
+          case 'debug-tab': 
+            picker.debugImage = req.image;
+            picker.createDebugTab();
+            break;
+
+          // Define what background script supports
+          case 'supports': picker.supports(req.what); break;
+
+          // Set color given in req
+          case 'set-color': picker.setColor(req); break;
+                            
+          // Get picked color
+          case 'get-color': sendResponse({color: picker.color}); break;
+
+          // Reload background script
+          case 'reload-background': window.location.reload(); break;
+
+          // Send empty response if unimplemented
+          default: sendResponse({});
         }
-        console.log(req.reqtype);
       });
     });
   },
 
+  supports: function(what) {
+    var state = 'no';
+    if ( req.what == 'dummy' || req.what == 'history' )
+      state = 'ok';
+
+    sendResponse({state: state});
+  },
+
+  setColor: function(req) {
+    picker.color = req.color.rgbhex;
+    chrome.browserAction.setBadgeText({text: 'N'});
+    chrome.browserAction.setBadgeBackgroundColor({color: [req.color.r, req.color.g, req.color.b, 255]});
+
+    if ( window.localStorage != null ) {
+      // save to clipboard
+      if ( window.localStorage['autoClipboard'] === "true" ) {
+        var edCb = document.getElementById('edClipboard');
+        edCb.value = window.localStorage['autoClipboardNoGrid'] === "true" ? picker.color : '#' + picker.color; 
+        edCb.select();
+        document.execCommand("copy", false, null);
+      }
+
+      if ( req.history == undefined || req.history != 'no' ) {
+        // add color to history
+        var history = JSON.parse(window.localStorage.history);
+        history.push(picker.color);
+        window.localStorage.history = JSON.stringify(history);
+      }
+    }
+  },
+
   // activate Pick
   activate: function() {
-    picker.sendMessage({reqtype: 'pickup-activate'}, function() {});
+    picker.sendMessage({type: 'pickup-activate'}, function() {});
     console.log('activating pickup');
   },
 
   // capture actual Screenshot
   capture: function() {
     chrome.tabs.captureVisibleTab(null, {format: picker.screenshotFormat, quality: 100}, function(data) {
-      picker.sendMessage({reqtype: 'update-image', data: data}, function() {});
+      picker.sendMessage({type: 'update-image', data: data}, function() {});
     });
   },
 
   createDebugTab: function() {
     // DEBUG
     if ( picker.debugTab != 0 ) {
-      chrome.tabs.sendRequest(picker.debugTab, {reqtype: 'update'});
+      chrome.tabs.sendRequest(picker.debugTab, {type: 'update'});
     } else
       chrome.tabs.create({url: 'debugimage.html', selected: false}, function(tab) { picker.debugTab = tab.id });
   },
@@ -61,6 +111,9 @@ var picker = {
   },
   
   init: function() {
+    // settings from local storage
+    if ( window.localStorage.history == undefined )
+      window.localStorage.history = "[]";
     // windows support jpeg only
     picker.screenshotFormat = picker.isThisPlatform('windows') ? 'jpeg' : 'png';
 
@@ -68,93 +121,6 @@ var picker = {
     picker.messageListener();
   }
 };
-
-/*
-
-
-*/
-
-/*
-var colorPicked = null;
-var debug = false;
-
-// initialize history
-if ( window.localStorage.history == undefined )
-  window.localStorage.history = "[]";
-
-chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-  if ( debug )
-    console.log('received request: '+request.reqtype);
-
-    // function for reporting what background supports
-    if(request.reqtype == 'supports') {
-      var state = 'no';
-
-      if ( request.what == 'dummy' || request.what == 'history' )
-        state = 'ok';
-
-        sendResponse({state: state});
-
-    } else if(request.reqtype == "get-shot") {
-      try {
-        chrome.tabs.captureVisibleTab(null, {format: 'png'}, function(dataURL) { 
-          sendResponse({dataURL: dataURL})
-        });
-      }
-      catch (e) {
-        chrome.tabs.captureVisibleTab(null, function(dataURL) { 
-          sendResponse({dataURL: dataURL})
-        });
-      }
-
-    } else if(request.reqtype == "set-color") {
-        colorPicked = request.color.rgbhex;
-        chrome.browserAction.setBadgeText({text: 'N'});
-        chrome.browserAction.setBadgeBackgroundColor({color: [request.color.r, request.color.g, request.color.b, 255]});
-
-        if ( localStorage != null ) {
-          // save to clipboard
-          if ( window.localStorage['autoClipboard'] === "true" ) {
-            var edCb = document.getElementById('edClipboard');
-            edCb.value = window.localStorage['autoClipboardNoGrid'] === "true" ? colorPicked : '#'+colorPicked; 
-            edCb.select();
-            document.execCommand("copy", false, null);
-          }
-
-          if ( request.history == undefined || request.history != 'no' ) {
-            // add color to history
-            var history = JSON.parse(window.localStorage.history);
-            history.push(colorPicked);
-            window.localStorage.history = JSON.stringify(history);
-          }
-        }
-
-        // send response
-        sendResponse({text: colorPicked});
-
-    } else if(request.reqtype == "get-color") {
-        sendResponse({color: colorPicked});
-
-        // handle debug tab
-    } else if(request.reqtype == 'debug-image') {
-      if ( request.data ) {
-        img.show();
-        img.src = request.data;
-      }
-
-        // reload background page
-    } else if(request.reqtype == 'reload-background') {
-      window.location.reload();
-
-    } else
-        sendResponse({});
-});
-
-$(document).ready(function() {
-  var img = $("#debugImage");
-  img.hide();
-});
-*/
 </script>
 </head>
 <body>

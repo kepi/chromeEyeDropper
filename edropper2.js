@@ -3,14 +3,17 @@ var page = {
   width: $(document).width(),
   height: $(document).height(),
   imageData: null,
-  canvas: document.createElement("canvas"),
   canvasBorders: 20,
   canvasData: null,
   dropperActivated: false,
-  screenshoting: false,
   screenWidth: 0,
   screenHeight: 0,
-  rects: [],
+
+  defaults: function() {
+    page.canvas = document.createElement("canvas");
+    page.rects = [];
+    page.screenshoting = false;
+  },
 
   // ---------------------------------
   // MESSAGING 
@@ -18,15 +21,15 @@ var page = {
   messageListener: function() {
     // Listen for pickup activate
     console.log('page activated');
-    chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-        if(request.reqtype == "pickup-activate") {
+    chrome.extension.onRequest.addListener(function(req, sender, sendResponse) {
+        if(req.type == "pickup-activate") {
             page.dropperActivate();
-        } else if (request.reqtype == 'update-image' ) {
+        } else if (req.type == 'update-image' ) {
           console.log('setting image data');
-          page.imageData = request.data;
+          page.imageData = req.data;
           page.capture();
-        } else if (request.reqtype == 'tooltip' ) {
-          page.tooltip(request.color, request.x, request.y);
+        } else if (req.type == 'tooltip' ) {
+          page.tooltip(req.color, req.x, req.y);
         } else {
           sendResponse({});
         }
@@ -45,14 +48,16 @@ var page = {
     if (page.dropperActivated)
       return;
 
+    page.defaults();
+
     page.dropperActivated = true;
     page.screenChanged();
+
     console.log('activating page dropper');
     $(document).bind('scrollstop', page.onScrollStop);
     document.addEventListener("mousemove", page.onMouseMove, false);
     document.addEventListener("click", page.onMouseClick, false);
     document.addEventListener("keydown", page.onKeyDown, false);
-    console.log('activating page dropper done');
 
     $("body").append('<div id="color-tooltip" style="z-index: 1000; width:10px; height: 10px; border: 1px solid #000; display:none; font-size: 15px;"> </div>');
     $("head").append('<style type="text/css" id="edropper-css">* { cursor: default !important}</style>');
@@ -63,6 +68,7 @@ var page = {
       return;
 
     page.dropperActivated = false;
+
     console.log('deactivating page dropper');
     document.removeEventListener("mousemove", page.onMouseMove, false);
     document.removeEventListener("click", page.onMouseClick, false);
@@ -88,9 +94,7 @@ var page = {
     if (!page.dropperActivated)
       return;
 
-    console.log("Deactivating dropper");
-    // TODO
-    //chrome.extension.sendRequest({reqtype: "set-color", color: color}, function response(response) {
+    page.sendMessage({type: "set-color", color: page.pickColor(e)});
     page.dropperDeactivate();
   },
   
@@ -202,7 +206,7 @@ var page = {
       return;
 
     var canvasIndex = (e.pageX + e.pageY * page.canvas.width) * 4;
-    console.log(e.pageX + ' ' + e.pageY + ' ' + page.canvas.width);
+    //console.log(e.pageX + ' ' + e.pageY + ' ' + page.canvas.width);
 
     var color = {
       r: page.canvasData[canvasIndex],
@@ -212,7 +216,7 @@ var page = {
     };
 
     color.rgbhex = page.rgbToHex(color.r,color.g,color.b);
-    console.log(color.rgbhex);
+    //console.log(color.rgbhex);
     color.opposite = page.rgbToHex(255-color.r,255-color.g,255-color.b);
     return color;
   },
@@ -246,7 +250,7 @@ var page = {
     $("#edropper-css").html('* { cursor: wait !important}');
     
     page.screenshoting = true;
-    page.sendMessage({reqtype: 'screenshot'}, function() {});
+    page.sendMessage({type: 'screenshot'}, function() {});
   },
   
   checkCanvas: function() {
@@ -304,11 +308,10 @@ var page = {
       page.canvasData = page.canvasContext.getImageData(0, 0, page.canvas.width, page.canvas.height).data;
 
       page.screenshoting = false;
-      console.log('ukazuji kurzor');
       $("#edropper-css").html('* { cursor: default !important}');
       $('#color-tooltip').show();
 
-      page.sendMessage({reqtype: 'debug-tab', image: page.canvas.toDataURL()}, function() {});
+      page.sendMessage({type: 'debug-tab', image: page.canvas.toDataURL()}, function() {});
     }
     image.src = page.imageData;
   },
