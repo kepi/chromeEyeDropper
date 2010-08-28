@@ -321,7 +321,7 @@ var page = {
       document.body.style.cursor = 'default';
       page.elColorTooltip.show(1);
 
-      page.sendMessage({type: 'debug-tab', image: page.canvas.toDataURL()}, function() {});
+      //page.sendMessage({type: 'debug-tab', image: page.canvas.toDataURL()}, function() {});
     }
     image.src = page.imageData;
   },
