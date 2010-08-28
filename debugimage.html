@@ -7,7 +7,7 @@
 <script type="text/javascript">
   function init() {
     var bg = chrome.extension.getBackgroundPage();
-    $('debugImage').src = bg.picker.canvas.toDataURL();
+    $('debugImage').src = bg.picker.debugImage;
 
     chrome.extension.onRequest.addListener(function(req, sender, sendResponse) {
       if(req.reqtype == "update")

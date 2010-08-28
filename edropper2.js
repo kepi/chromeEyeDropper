@@ -8,7 +8,9 @@ var page = {
   canvasData: null,
   dropperActivated: false,
   screenshoting: false,
-  scrolling: false,
+  screenWidth: 0,
+  screenHeight: 0,
+  rects: [],
 
   // ---------------------------------
   // MESSAGING 
@@ -22,7 +24,7 @@ var page = {
         } else if (request.reqtype == 'update-image' ) {
           console.log('setting image data');
           page.imageData = request.data;
-          page.updateCanvas();
+          page.capture();
         } else if (request.reqtype == 'tooltip' ) {
           page.tooltip(request.color, request.x, request.y);
         } else {
@@ -46,7 +48,6 @@ var page = {
     page.dropperActivated = true;
     page.screenChanged();
     console.log('activating page dropper');
-    $(document).bind('scrollstart', page.onScrollStart);
     $(document).bind('scrollstop', page.onScrollStop);
     document.addEventListener("mousemove", page.onMouseMove, false);
     document.addEventListener("click", page.onMouseClick, false);
@@ -67,7 +68,6 @@ var page = {
     document.removeEventListener("click", page.onMouseClick, false);
     document.removeEventListener("keydown", page.onKeyDown, false);
     $(document).unbind('scrollstop', page.onScrollStop);
-    $(document).unbind('scrollstop', page.onScrollStart);
 
     $('#color-tooltip').remove();
     $("#edropper-css").remove();
@@ -98,8 +98,6 @@ var page = {
     if (!page.dropperActivated)
      return;
     
-    page.scrolling = false;
-
     console.log("Scroll stop");
     page.screenChanged();
   },
@@ -108,11 +106,6 @@ var page = {
     if (!page.dropperActivated)
      return;
 
-    page.scrolling = true;
-    console.log("Scroll start");
-
-    $('#color-tooltip').hide();
-    $("#edropper-css").html('* { cursor: wait !important}');
   },
 
   onKeyDown: function(e) {
@@ -144,19 +137,17 @@ var page = {
   // ---------------------------------
 
   tooltip: function(e) {
-    if (!page.dropperActivated || page.screenshoting || page.scrolling)
+    if (!page.dropperActivated || page.screenshoting)
       return;
 
     var color = page.pickColor(e);
     var fromTop = -15;
     var fromLeft = 10;
 
-    /*
-    if ( (e.pageX-pageXOffset) > imgWidth/2 )
+    if ( (e.pageX-page.XOffset) > page.screenWidth/2 )
       fromLeft = -20;
-    if ( (e.pageY-pageYOffset) < imgHeight/2 )
+    if ( (e.pageY-page.YOffset) < page.screenHeight/2 )
       fromTop = 15;
-      */
 
     $('#color-tooltip').css({ 
         'background-color': '#'+color.rgbhex,
@@ -168,6 +159,40 @@ var page = {
         }).show();
   },
 
+  // return true if rectangle A is whole in rectangle B
+  rectInRect: function(A, B) {
+    if ( A.x >= B.x && A.y >= B.y && (A.x+A.width) <= (B.x+B.width) && (A.y+A.height) <= (B.y+B.height) )
+      return true;
+    else
+      return false;
+  },
+
+  // merge same x or y positioned rectangles if overlaps
+  // width (or height)  of B has to be bigger or equal to A
+  rectMerge: function(A, B) {
+    if ( A.x == B.x && A.width <= B.width ) {
+      if ( A.y < B.y ) {
+        B.y = A.y;
+        B.height = B.height + B.y - A.y;
+      } else {
+        B.height = B.height + A.y - B.y;
+      }
+      return B;
+
+    } else if ( A.y == B.y && A.height <= B.height ) {
+      if ( A.x < B.x ) {
+        B.x = A.x;
+        B.width = B.width + B.x - A.x;
+      } else {
+        B.width = B.width + A.x - B.x;
+      }
+
+      return B;
+    }
+
+    return false;
+  },
+
   // ---------------------------------
   // COLORS
   // ---------------------------------
@@ -177,6 +202,7 @@ var page = {
       return;
 
     var canvasIndex = (e.pageX + e.pageY * page.canvas.width) * 4;
+    console.log(e.pageX + ' ' + e.pageY + ' ' + page.canvas.width);
 
     var color = {
       r: page.canvasData[canvasIndex],
@@ -186,6 +212,7 @@ var page = {
     };
 
     color.rgbhex = page.rgbToHex(color.r,color.g,color.b);
+    console.log(color.rgbhex);
     color.opposite = page.rgbToHex(255-color.r,255-color.g,255-color.b);
     return color;
   },
@@ -213,36 +240,78 @@ var page = {
     if (!page.dropperActivated)
       return;
 
-    page.screenshoting = true;
+    console.log("Scroll start");
 
-    page.sendMessage({reqtype: 'screenshot', 
-      pageWidth: page.width, 
-      pageHeight: page.height, 
-      canvasBorders: page.canvasBorders,
-      pageYOffset: $(document).scrollTop(),
-      pageXOffset: $(document).scrollLeft()
-    });
+    $('#color-tooltip').hide();
+    $("#edropper-css").html('* { cursor: wait !important}');
+    
+    page.screenshoting = true;
+    page.sendMessage({reqtype: 'screenshot'}, function() {});
   },
   
-  updateCanvas: function() {
-    var image = new Image();
-    image.onload = function() {
-      console.log('updating canvas');
-      page.canvas.width = image.width;
-      page.canvas.height = image.height;
-
-      var context = page.canvas.getContext('2d');
-      context.drawImage(image, 0, 0);
-      page.canvasData = context.getImageData(0, 0, image.width, image.height).data;
-
-      page.screenshoting = false;
-      $("#edropper-css").html('* { cursor: default !important}');
-      $('#color-tooltip').show();
+  checkCanvas: function() {
+    // we have to create new canvas element 
+    if ( page.canvas.width != (page.width+page.canvasBorders) || page.canvas.height != (page.height+page.canvasBorders) ) {
+      console.log('creating new canvas');
+      page.canvas = document.createElement('canvas');
+      page.canvas.width = page.width + page.canvasBorders;
+      page.canvas.height = page.height + page.canvasBorders;
+      page.canvasContext = page.canvas.getContext('2d');
+      page.rects = [];
     }
-
-    image.src = page.imageData;
   },
 
+  // capture actual Screenshot
+  capture: function() {
+    page.YOffset = $(document).scrollTop(),
+    page.XOffset = $(document).scrollLeft()
+    page.checkCanvas();
+
+    var image = new Image();
+
+    image.onload = function() {
+      page.screenWidth = image.width;
+      page.screenHeight = image.height;
+
+      var rect = {x: page.XOffset, y: page.YOffset, width: image.width, height: image.height};
+      var merged = false;
+
+      // if there are already any rectangles
+      if ( page.rects.length > 0 ) {
+        // if we already have this shot, return
+        for ( index in page.rects ) {
+          if ( page.rectInRect(rect, page.rects[index]) )
+            return;
+        }
+
+        // try to merge shot with others
+        for ( index in page.rects ) {
+          var t = page.rectMerge(rect, page.rects[index]);
+
+          if ( t != false ) {
+            console.log('merging');
+            merged = true;
+            page.rects[index] = t;
+          }
+        }
+      }
+
+      // put rectangle in array
+      if (merged == false)
+        page.rects.push(rect);
+
+      page.canvasContext.drawImage(image, page.XOffset, page.YOffset);
+      page.canvasData = page.canvasContext.getImageData(0, 0, page.canvas.width, page.canvas.height).data;
+
+      page.screenshoting = false;
+      console.log('ukazuji kurzor');
+      $("#edropper-css").html('* { cursor: default !important}');
+      $('#color-tooltip').show();
+
+      page.sendMessage({reqtype: 'debug-tab', image: page.canvas.toDataURL()}, function() {});
+    }
+    image.src = page.imageData;
+  },
 
   init: function() {
     page.messageListener();
