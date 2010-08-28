@@ -23,11 +23,14 @@ var picker = {
   },
 
   messageListener: function() {
+    console.log('message listener called');
     chrome.extension.onConnect.addListener(function(port) {
       port.onMessage.addListener(function(req) {
         switch(req.type) {
           // Taking screenshot for content script
-          case 'screenshot': picker.capture(); break;
+          case 'screenshot': 
+            console.log('received screenshot request');
+            picker.capture(); break;
           
           // Creating debug tab
           case 'debug-tab': 
@@ -93,7 +96,9 @@ var picker = {
 
   // capture actual Screenshot
   capture: function() {
+    console.log('capturing');
     chrome.tabs.captureVisibleTab(null, {format: picker.screenshotFormat, quality: 100}, function(data) {
+      console.log('sending updated image');
       picker.sendMessage({type: 'update-image', data: data}, function() {});
     });
   },
@@ -121,9 +126,10 @@ var picker = {
     picker.messageListener();
   }
 };
+
 </script>
 </head>
-<body>
+<body onload="picker.init()">
   <textarea id="edClipboard"></textarea>
 </body>
 </html>

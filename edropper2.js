@@ -22,17 +22,15 @@ var page = {
     // Listen for pickup activate
     console.log('page activated');
     chrome.extension.onRequest.addListener(function(req, sender, sendResponse) {
-        if(req.type == "pickup-activate") {
-            page.dropperActivate();
-        } else if (req.type == 'update-image' ) {
-          console.log('setting image data');
+      switch(req.type) {
+        case 'pickup-activate': page.dropperActivate(); break;
+        case 'update-image':
+          console.log('background send me updated screenshot');
           page.imageData = req.data;
           page.capture();
-        } else if (req.type == 'tooltip' ) {
-          page.tooltip(req.color, req.x, req.y);
-        } else {
-          sendResponse({});
-        }
+          break;
+        default: sendResponse({}); break;
+      }
     });
   },
 
@@ -48,12 +46,12 @@ var page = {
     if (page.dropperActivated)
       return;
 
+    console.log('activating page dropper');
     page.defaults();
 
     page.dropperActivated = true;
     page.screenChanged();
 
-    console.log('activating page dropper');
     $(document).bind('scrollstop', page.onScrollStop);
     document.addEventListener("mousemove", page.onMouseMove, false);
     document.addEventListener("click", page.onMouseClick, false);
@@ -117,15 +115,14 @@ var page = {
       return;
 
     switch (e.keyCode) {
-      case 85: // u - Update
-        console.error('update canvas not implemented');
-        page.screenChanged();
-        break;
-      case 80: // p - pickUp color  
+      // u - Update
+      case 85: page.screenChanged(true); break;
+      // p - pickUp color
+      case 80:   
         // FIXME: do mouseClick je potreba predat spravne pozici, ne takto
         mouseClick(e); break;
-      case 27: // Esc - stop picking
-        deactivateDropper(); break;
+      // Esc - stop picking
+      case 27: deactivateDropper(); break;
     }
   },
 
@@ -240,19 +237,6 @@ var page = {
   // UPDATING SCREEN 
   // ---------------------------------
 
-  screenChanged: function() {
-    if (!page.dropperActivated)
-      return;
-
-    console.log("Scroll start");
-
-    $('#color-tooltip').hide();
-    $("#edropper-css").html('* { cursor: wait !important}');
-    
-    page.screenshoting = true;
-    page.sendMessage({type: 'screenshot'}, function() {});
-  },
-  
   checkCanvas: function() {
     // we have to create new canvas element 
     if ( page.canvas.width != (page.width+page.canvasBorders) || page.canvas.height != (page.height+page.canvasBorders) ) {
@@ -265,11 +249,37 @@ var page = {
     }
   },
 
-  // capture actual Screenshot
-  capture: function() {
+  screenChanged: function(force) {
+    if (!page.dropperActivated)
+      return;
+
     page.YOffset = $(document).scrollTop(),
     page.XOffset = $(document).scrollLeft()
+
+    var rect = {x: page.XOffset, y: page.YOffset, width: page.screenWidth, height: page.screenHeight};
+
+    // don't screenshot if we already have this one
+    if ( !force && page.rects.length > 0 ) {
+      for ( index in page.rects ) {
+        if ( page.rectInRect(rect, page.rects[index]) ) {
+          console.log('uz mame, nefotim');
+          return;
+        }
+      }
+    }
+
+    $('#color-tooltip').hide();
+    $("#edropper-css").html('* { cursor: wait !important}');
+    
+    page.screenshoting = true;
+    console.log('I want new screenshot');
+    page.sendMessage({type: 'screenshot'}, function() {});
+  },
+  
+  // capture actual Screenshot
+  capture: function() {
     page.checkCanvas();
+    console.log(page.rects);
 
     var image = new Image();
 
@@ -282,12 +292,6 @@ var page = {
 
       // if there are already any rectangles
       if ( page.rects.length > 0 ) {
-        // if we already have this shot, return
-        for ( index in page.rects ) {
-          if ( page.rectInRect(rect, page.rects[index]) )
-            return;
-        }
-
         // try to merge shot with others
         for ( index in page.rects ) {
           var t = page.rectMerge(rect, page.rects[index]);
@@ -306,6 +310,7 @@ var page = {
 
       page.canvasContext.drawImage(image, page.XOffset, page.YOffset);
       page.canvasData = page.canvasContext.getImageData(0, 0, page.canvas.width, page.canvas.height).data;
+      // TODO - je nutne refreshnout ctverecek a nastavit mu spravnou barvu
 
       page.screenshoting = false;
       $("#edropper-css").html('* { cursor: default !important}');

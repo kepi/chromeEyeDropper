@@ -19,7 +19,6 @@ var bg = chrome.extension.getBackgroundPage();
 var isScriptLoaded = false;
 
 function init() {
-    bg.picker.init();
     // find current tab 
     chrome.tabs.getSelected(null, function(tab) {
       bg.picker.tab = tab;
