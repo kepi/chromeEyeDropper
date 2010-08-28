@@ -1,11 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style type="text/css">
+  body { border: 0px; margin: 0px; padding: 0px; }
+</style>
 <script type="text/javascript">
   function init() {
     var bg = chrome.extension.getBackgroundPage();
-    bg.picker.debugImage = $('debugImage');
-    bg.picker.debugImage.src = bg.picker.screenshotData;
+    $('debugImage').src = bg.picker.canvas.toDataURL();
+
+    chrome.extension.onRequest.addListener(function(req, sender, sendResponse) {
+      if(req.reqtype == "update") {
+        console.log('Updating image');
+        $('debugImage').src = bg.picker.canvas.toDataURL();
+      }
+    });
   }
 
   function $(id) {

@@ -1,9 +1,10 @@
 
 var page = {
-  width: 0,
-  height: 0,
-  canvas: document.createElement("canvas"),
+  width: $(document).width(),
+  height: $(document).height(),
   imageData: null,
+  canvas: document.createElement("canvas"),
+  canvasBorders: 20,
   canvasData: null,
   dropperActivated: false,
 
@@ -41,11 +42,12 @@ var page = {
       return;
 
     page.dropperActivated = true;
+    page.screenChanged();
     console.log('activating page dropper');
     document.addEventListener("mousemove", page.onMouseMove, false);
     document.addEventListener("click", page.onMouseClick, false);
     document.addEventListener("keydown", page.onKeyDown, false);
-    //$(document).bind('scrollstop', page.onScrollStop);
+    $(document).bind('scrollstop', page.onScrollStop);
     console.log('activating page dropper done');
 
     $("body").append('<div id="color-tooltip" style="z-index: 1000; width:10px; height: 10px; border: 1px solid #000; display:none; font-size: 15px;"> </div>');
@@ -60,7 +62,7 @@ var page = {
     document.removeEventListener("mousemove", page.onMouseMove, false);
     document.removeEventListener("click", page.onMouseClick, false);
     document.removeEventListener("keydown", page.onKeyDown, false);
-    //$(document).unbind('scrollstop', page.onScrollStop);
+    $(document).unbind('scrollstop', page.onScrollStop);
 
     $('#color-tooltip').remove();
   },
@@ -86,12 +88,12 @@ var page = {
     page.dropperDeactivate();
   },
   
-  onscrollStop: function() {
+  onScrollStop: function() {
     if (!page.dropperActivated)
      return;
 
     console.log("Scroll stop");
-    page.sendMessage({reqtype: 'screenshot'});
+    page.screenChanged();
   },
 
   onKeyDown: function(e) {
@@ -101,7 +103,7 @@ var page = {
     switch (e.keyCode) {
       case 85: // u - Update
         console.error('update canvas not implemented');
-        page.sendMessage({reqtype: 'screenshot'});
+        page.screenChanged();
         break;
       case 80: // p - pickUp color  
         // FIXME: do mouseClick je potreba predat spravne pozici, ne takto
@@ -119,7 +121,7 @@ var page = {
   },
 
   // ---------------------------------
-  // EVENT HANDLING
+  // MISC
   // ---------------------------------
 
   tooltip: function(e) {
@@ -184,6 +186,19 @@ var page = {
   // ---------------------------------
   // CANVAS
   // ---------------------------------
+
+  screenChanged: function() {
+    if (!page.dropperActivated)
+      return;
+
+    page.sendMessage({reqtype: 'screenshot', 
+      pageWidth: page.width, 
+      pageHeight: page.height, 
+      canvasBorders: page.canvasBorders,
+      pageYOffset: $(document).scrollTop(),
+      pageXOffset: $(document).scrollLeft()
+    });
+  },
   
   updateCanvas: function() {
     var image = new Image();

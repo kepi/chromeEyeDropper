@@ -13,7 +13,10 @@ var picker = {
   screenshotData: '',
   screenshotFormat: 'png',
   canvas: document.createElement("canvas"),
+  canvasContext: null,
   debugImage: null,
+  debugTab: 0,
+  rects: [],
 
   sendMessage: function(message, callback) {
     chrome.tabs.sendRequest(picker.tab.id, message, callback);
@@ -23,7 +26,7 @@ var picker = {
     chrome.extension.onConnect.addListener(function(port) {
       port.onMessage.addListener(function(req) {
         if ( req.reqtype == 'screenshot' ) {
-          picker.capture();
+          picker.capture(req);
         } 
         console.log(req.reqtype);
       });
@@ -32,31 +35,106 @@ var picker = {
 
   // activate Pick
   activate: function() {
+    picker.sendMessage({reqtype: 'pickup-activate'}, function() {});
     console.log('activating pickup');
-    picker.capture();
+  },
+
+  checkCanvas: function(info) {
+    // we have to create new canvas element
+    if ( picker.canvas.width != (info.pageWidth+info.canvasBorders) || picker.canvas.height != (info.pageHeight+info.canvasBorders) ) {
+      console.log('creating new canvas');
+      picker.canvas = document.createElement('canvas');
+      picker.canvas.width = info.pageWidth + info.canvasBorders;
+      picker.canvas.height = info.pageHeight + info.canvasBorders;
+      picker.canvasContext = picker.canvas.getContext('2d');
+      picker.rects = [];
+    }
+  },
+
+  // return true if rectangle A is whole in rectangle B
+  rectInRect: function(A, B) {
+    if ( A.x >= B.x && A.y >= B.y && (A.x+A.width) <= (B.x+B.width) && (A.y+A.height) <= (B.y+B.height) )
+      return true;
+    else
+      return false;
+  },
+
+  // merge same x or y positioned rectangles if overlaps
+  // width (or height)  of B has to be bigger or equal to A
+  rectMerge: function(A, B) {
+    if ( A.x == B.x && A.width <= B.width ) {
+      if ( A.y < B.y ) {
+        B.y = A.y;
+        B.height = B.height + B.y - A.y;
+      } else {
+        B.height = B.height + A.y - B.y;
+      }
+      return B;
+
+    } else if ( A.y == B.y && A.height <= B.height ) {
+      if ( A.x < B.x ) {
+        B.x = A.x;
+        B.width = B.width + B.x - A.x;
+      } else {
+        B.width = B.width + A.x - B.x;
+      }
+
+      return B;
+    }
+
+    return false;
   },
 
   // capture actual Screenshot
-  capture: function() {
-    console.log('capturing');
-    chrome.tabs.captureVisibleTab(null, {format: picker.screenshotFormat}, function(data) {
+  capture: function(info) {
+    picker.checkCanvas(info);
+
+    chrome.tabs.captureVisibleTab(null, {format: picker.screenshotFormat, quality: 100}, function(data) {
       var image = new Image();
       image.onload = function() {
-        console.log('image loaded');
-        picker.canvas.width = image.width;
-        picker.canvas.height = image.height;
+        var rect = {x: info.pageXOffset, y: info.pageYOffset, width: image.width, height: image.height};
+        var merged = false;
 
-        var context = picker.canvas.getContext('2d');
-        context.drawImage(image, 0, 0);
+        // if there are already any rectangles
+        if ( picker.rects.length > 0 ) {
+          // if we already have this shot, return
+          for ( index in picker.ects ) {
+            if ( picker.rectInRect(rect, picker.rects[index]) )
+            {
+              screenshotTaken = true;
+              return;
+            }
+          }
+
+          // try to merge shot with others
+          for ( index in picker.rects ) {
+            var t = picker.rectMerge(rect, picker.rects[index]);
+
+            if ( t != false ) {
+              console.log('merging');
+              merged = true;
+              picker.rects[index] = t;
+            }
+          }
+        }
+
+        // put rectangle in array
+        if (merged == false)
+          picker.rects.push(rect);
+
+        picker.canvasContext.drawImage(image, info.pageXOffset, info.pageYOffset);
 
         picker.sendMessage({reqtype: 'update-image', data: picker.canvas.toDataURL()}, function() {});
-        picker.sendMessage({reqtype: 'pickup-activate'}, function() {});
+
       }
       image.src = data;
       console.log('image data set');
     });
     // DEBUG
-    //chrome.tabs.create({'url': 'debugimage.html'}, function() {});
+    if ( picker.debugTab != 0 ) {
+      chrome.tabs.sendRequest(picker.debugTab, {reqtype: 'update'});
+    } else
+      chrome.tabs.create({'url': 'debugimage.html'}, function(tab) { picker.debugTab = tab.id });
   },
 
   isThisPlatform: function(operationSystem) {
