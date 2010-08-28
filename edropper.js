@@ -20,38 +20,6 @@ var Rects = [];
 
 var debugTab = null;
 
-// Listen for pickup activate
-chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-    if(request.reqtype == "pickup-activate") {
-      if ( request.version == version )
-        activateDropper();
-
-      sendResponse({version: version});
-
-    } else {
-      sendResponse({});
-    }
-});
-
-// Turn Dropper On
-function activateDropper() { 
-  if(dropper_activated == true)
-    return;
-
-  if (debug)
-    console.log("activating dropper");
-
-  dropper_activated = true;
-
-  // Status rectangle with actual color under cursor
-  $("body").append('<div id="color-tooltip" style="z-index: 1000; width:10px; height: 10px; border: 1px solid #000; display:none; font-size: 15px;"> </div>');
-
-  // set some events
-  document.addEventListener("mousemove", mouseMove, false);
-  document.addEventListener("click", mouseClick, false);
-  document.addEventListener("keydown", keyDown, false);
-  $(document).bind('scrollstop', scrollStop);
-
   // create canvas
   var canvasBorders = 20;
 
@@ -63,18 +31,6 @@ function activateDropper() {
   canvasElement.height = canvasHeight;
 
   canvasContext = canvasElement.getContext('2d');
-}
-
-// update screenshot on scroll stop event
-function scrollStop() {
-  if(dropper_activated == false)
-    return;
-
-  if (debug)
-    console.log("Scroll stop");
-
-  updateCanvas();
-}
 
 // update screnshot on mouse move
 function mouseMove(e) {
@@ -138,78 +94,6 @@ function deactivateDropper() {
   $('#color-tooltip').remove();
 }
 
-// turn dropper on mouse click and send color to background
-// so badge can be changed
-function mouseClick(e) {
-  if(!dropper_activated)
-    return;
-
-  if (debug)
-    console.log("Event: mouse click");
-
-  deactivateDropper();      // turn dropper off
-  e.preventDefault();       // disable follow link
-  var color = pickColor(e); // get color
-
-  // save picked color
-  chrome.extension.sendRequest({reqtype: "set-color", color: color}, function response(response) {
-    if (debug)
-      console.log("Picked: "+response.text);  
-  });
-}
-
-// respond to some keys when dropper activated
-function keyDown(e) {
-  if(!dropper_activated)
-    return;
-
-  if ( e.keyCode == 85 ) // u - Update
-    updateCanvas(true);
-  // FIXME: do mouseClick je potreba predat spravne pozici, ne takto
-  else if ( e.keyCode == 80 ) // p - Pick Up Color
-    mouseClick(e);
-  else if ( e.keyCode == 27 ) // Esc - stop picking
-    deactivateDropper();
-}
-
-// e: click event object
-// w: width of canvas element
-// returns canvas index
-var canvasIndexFromEvent = function(e,w) {
-  var x = e.pageX; // - pageXOffset;
-  var y = e.pageY; // - pageYOffset;
-  return (x + y * w) * 4; 
-}; 
-
-// colorData: array containing canvas-style data for a pixel in order: r, g, b, alpha transparency
-// return color object
-var colorFromData = function(canvasIndex,data) {
-  var color = {
-    r: data[canvasIndex],
-    g: data[canvasIndex+1],
-    b: data[canvasIndex+2],
-    alpha: data[canvasIndex+3]
-  };
-
-  color.rgbhex = rgbToHex(color.r,color.g,color.b);
-  color.opposite = rgbToHex(255-color.r,255-color.g,255-color.b);
-  return color;
-};
-
-// i: color channel value, integer 0-255
-// returns two character string hex representation of a color channel (00-FF)
-var toHex = function(i) {
-  if(i === undefined) return 'FF'; // TODO this shouldn't happen; looks like offset/x/y might be off by one
-  var str = i.toString(16);
-  while(str.length < 2) { str = '0' + str; }
-  return str;
-};
-
-// r,g,b: color channel value, integer 0-255
-// returns six character string hex representation of a color
-var rgbToHex = function(r,g,b) {
-  return toHex(r)+toHex(g)+toHex(b);
-};
 
 // return true if rectangle A is whole in rectangle B
 function rectInRect(A, B) {

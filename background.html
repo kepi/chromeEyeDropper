@@ -11,6 +11,8 @@ function $(id) {
 var picker = {
   tab: 0,
   screenshotData: '',
+  screenshotFormat: 'png',
+  canvas: document.createElement("canvas"),
   debugImage: null,
 
   sendMessage: function(message, callback) {
@@ -20,34 +22,51 @@ var picker = {
   messageListener: function() {
     chrome.extension.onConnect.addListener(function(port) {
       port.onMessage.addListener(function(req) {
-          console.log(req.msg);
+        if ( req.reqtype == 'screenshot' ) {
+          picker.capture();
+        } 
+        console.log(req.reqtype);
       });
     });
   },
 
   // activate Pick
-  activate: function(test) {
+  activate: function() {
     console.log('activating pickup');
     picker.capture();
   },
 
-  // capture actual Screenshot and set screenshot Data
+  // capture actual Screenshot
   capture: function() {
-    try {
-      chrome.tabs.captureVisibleTab(null, {format: 'png'}, picker.setScreenshotData);
-    }
-    catch (e) {
-      chrome.tabs.captureVisibleTab(null, picker.setScreenshotData);
-    }
-  },
-  // simply set data for taken screenshot
-  setScreenshotData: function(data) {
-    picker.screenshotData = data;
-    picker.sendMessage({reqtype: 'pickup-activate'}, function() {});
+    console.log('capturing');
+    chrome.tabs.captureVisibleTab(null, {format: picker.screenshotFormat}, function(data) {
+      var image = new Image();
+      image.onload = function() {
+        console.log('image loaded');
+        picker.canvas.width = image.width;
+        picker.canvas.height = image.height;
+
+        var context = picker.canvas.getContext('2d');
+        context.drawImage(image, 0, 0);
+
+        picker.sendMessage({reqtype: 'update-image', data: picker.canvas.toDataURL()}, function() {});
+        picker.sendMessage({reqtype: 'pickup-activate'}, function() {});
+      }
+      image.src = data;
+      console.log('image data set');
+    });
+    // DEBUG
     //chrome.tabs.create({'url': 'debugimage.html'}, function() {});
+  },
+
+  isThisPlatform: function(operationSystem) {
+    return navigator.userAgent.toLowerCase().indexOf(operationSystem) > -1;
   },
   
   init: function() {
+    // windows support jpeg only
+    picker.screenshotFormat = picker.isThisPlatform('windows') ? 'jpeg' : 'png';
+
     // we have to listen for messages
     picker.messageListener();
   }
