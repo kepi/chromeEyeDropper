@@ -73,7 +73,7 @@ var picker = {
     if ( window.localStorage != null ) {
       // save to clipboard
       if ( window.localStorage['autoClipboard'] === "true" ) {
-        var edCb = document.getElementById('edClipboard');
+        var edCb = $('edClipboard');
         edCb.value = window.localStorage['autoClipboardNoGrid'] === "true" ? picker.color : '#' + picker.color; 
         edCb.select();
         document.execCommand("copy", false, null);
