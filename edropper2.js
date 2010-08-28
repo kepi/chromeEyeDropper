@@ -46,6 +46,12 @@ var page = {
     if (page.dropperActivated)
       return;
 
+    $("body").append('<div id="color-tooltip" style="z-index: 1000; width:10px; height: 10px; border: 1px solid #000; display:none; font-size: 15px;"> </div>');
+    //$("head").append('<style type="text/css" id="edropper-css">* { cursor: default !important}</style>');
+
+    page.elColorTooltip = $('#color-tooltip');
+    //page.elCursorStyle = $('#edropper-css');
+
     console.log('activating page dropper');
     page.defaults();
 
@@ -56,9 +62,6 @@ var page = {
     document.addEventListener("mousemove", page.onMouseMove, false);
     document.addEventListener("click", page.onMouseClick, false);
     document.addEventListener("keydown", page.onKeyDown, false);
-
-    $("body").append('<div id="color-tooltip" style="z-index: 1000; width:10px; height: 10px; border: 1px solid #000; display:none; font-size: 15px;"> </div>');
-    $("head").append('<style type="text/css" id="edropper-css">* { cursor: default !important}</style>');
   },
 
   dropperDeactivate: function() {
@@ -73,8 +76,8 @@ var page = {
     document.removeEventListener("keydown", page.onKeyDown, false);
     $(document).unbind('scrollstop', page.onScrollStop);
 
-    $('#color-tooltip').remove();
-    $("#edropper-css").remove();
+    page.elColorTooltip.remove();
+    //page.elCursorStyle.remove();
   },
 
   // ---------------------------------
@@ -91,9 +94,11 @@ var page = {
   onMouseClick: function(e) {
     if (!page.dropperActivated)
       return;
+    
+    e.preventDefault();
 
-    page.sendMessage({type: "set-color", color: page.pickColor(e)});
     page.dropperDeactivate();
+    page.sendMessage({type: "set-color", color: page.pickColor(e)});
   },
   
   onScrollStop: function() {
@@ -131,6 +136,8 @@ var page = {
       return;
 
     console.log('window resized');
+    page.defaults();
+    page.screenChanged();
   },
 
   // ---------------------------------
@@ -150,7 +157,7 @@ var page = {
     if ( (e.pageY-page.YOffset) < page.screenHeight/2 )
       fromTop = 15;
 
-    $('#color-tooltip').css({ 
+    page.elColorTooltip.css({ 
         'background-color': '#'+color.rgbhex,
         'color': 'black',
         'position': 'absolute',
@@ -268,12 +275,15 @@ var page = {
       }
     }
 
-    $('#color-tooltip').hide();
-    $("#edropper-css").html('* { cursor: wait !important}');
-    
     page.screenshoting = true;
+
+    //document.getElementById('color-tooltip').style.display = 'none';
+    //page.elCursorStyle.html('* { cursor: wait !important}');
+
     console.log('I want new screenshot');
-    page.sendMessage({type: 'screenshot'}, function() {});
+    page.elColorTooltip.hide(1, function() {
+      page.sendMessage({type: 'screenshot'}, function() {});
+    });
   },
   
   // capture actual Screenshot
@@ -313,8 +323,8 @@ var page = {
       // TODO - je nutne refreshnout ctverecek a nastavit mu spravnou barvu
 
       page.screenshoting = false;
-      $("#edropper-css").html('* { cursor: default !important}');
-      $('#color-tooltip').show();
+      //page.elCursorStyle.html('* { cursor: default !important}');
+      page.elColorTooltip.show();
 
       page.sendMessage({type: 'debug-tab', image: page.canvas.toDataURL()}, function() {});
     }
