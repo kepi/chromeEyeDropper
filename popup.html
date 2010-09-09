@@ -17,6 +17,7 @@
 var NEED_BG_VERSION=1;
 
 var bg = chrome.extension.getBackgroundPage();
+var pickupDisabled = false;
 
 // reload background if we need new version
 if ( bg.version < NEED_BG_VERSION ) {
@@ -27,27 +28,41 @@ if ( bg.version < NEED_BG_VERSION ) {
 function init() {
     // find current tab 
     chrome.tabs.getSelected(null, function(tab) {
+      var message = '';
       bg.picker.useTab(tab);
       
       // special chrome pages
       if (tab.url.indexOf('chrome') == 0) {
-        console.warn('need-implementation');
-        return;
+        message = "Sorry, but because of Google Chrome policy you can't pick color from special Chrome pages.";
+        pickupDisabled = true;
+      }
+      // chrome gallery
+      else if (tab.url.indexOf('https://chrome.google.com/extensions') == 0) {
+        message = "Sorry, but because of Google Chrome policy you can't pick color from Google Chrome extension gallery.";
+        pickupDisabled = true;
       }
       // local pages
       else if (tab.url.indexOf('file') == 0) {
-        console.warn('need-implementation');
-        return;
+        message = "Sorry, but because of Google Chrome policy you can't pick color from local pages.";
+        pickupDisabled = true;
+      }
+
+      // disable or enable pickup button
+      if ( pickupDisabled === true ) {
+        $("#pickButton").attr("disabled","disabled");
+        $("#pickupMessage").html(message).show();
+      } else {
+        $("#pickButton").click(activatePick);
       }
 
     });
-
-    console.log('popup activated');
 }
 
 function activatePick() {
-  bg.picker.activate();
-  window.close();
+  if ( pickupDisabled === false ) {
+    bg.picker.activate();
+    window.close();
+  }
 }
 
 function goto(url) {
@@ -144,7 +159,8 @@ function showJPicker()
     </ul>
 
     <div id="tab-pick">
-      <img src="icon.png" alt="Eye Dropper" class="icon" /> <input type="button" id="pickButton" onClick="activatePick()" value="Pick color from webpage" />
+      <img src="icon.png" alt="Eye Dropper" class="icon" /> <input type="button" id="pickButton" value="Pick color from webpage" />
+      <div id="pickupMessage" style="display: none">&nbsp;</div>
 
       <h3>Picked colors history</h3>
       <div id="history">&nbsp;</div>

@@ -60,3 +60,12 @@ br.clear {
   margin-top: 20px;
   text-align: right;
 }
+
+#pickupMessage {
+  margin-top: 8px;
+  background-color: #fec438;
+  padding: 4px;
+  font-weight: bold;
+  border: 1px solid #444;
+  border-radius: 3px;
+}
