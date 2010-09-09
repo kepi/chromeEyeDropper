@@ -17,5 +17,5 @@
     "popup": "popup.html"
   },
 
-  "permissions": [ "tabs" ]
+  "permissions": [ "tabs", "http://*/*", "https://*/*" ]
 }

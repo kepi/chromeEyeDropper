@@ -1,3 +1,4 @@
+var EDROPPER_VERSION=1;
 
 var page = {
   width: $(document).width(),
@@ -23,6 +24,7 @@ var page = {
     console.log('page activated');
     chrome.extension.onRequest.addListener(function(req, sender, sendResponse) {
       switch(req.type) {
+        case 'edropper-loaded': sendResponse({version: EDROPPER_VERSION}); break;
         case 'pickup-activate': page.dropperActivate(); break;
         case 'update-image':
           console.log('background send me updated screenshot');

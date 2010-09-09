@@ -4,12 +4,16 @@
 <script type="text/javascript">
 // vim:ft=javascript
 
+var NEED_DROPPER_VERSION=1;
+
 function $(id) {
     return document.getElementById(id);
 }
 
 var picker = {
   tab: 0,
+  dropperLoaded: false,
+  dropperVersion: 0,
   screenshotData: '',
   screenshotFormat: 'png',
   canvas: document.createElement("canvas"),
@@ -17,6 +21,24 @@ var picker = {
   debugImage: null,
   debugTab: 0,
   color: null,
+
+  // use selected tab
+  // need to null all tab-specific variables
+  useTab: function(tab) {
+    picker.tab = tab;
+    picker.dropperLoaded = false;
+    picker.dropperVersion = 0;
+    picker.screenshotData = '';
+    picker.canvas = document.createElement("canvas");
+    picker.canvasContext = null;
+    picker.color = null;
+
+    picker.sendMessage({type: 'edropper-loaded'}, function(res) {
+      picker.dropperLoaded = true; 
+      picker.dropperVersion = res.version;
+      console.log('Picker is loaded with version ' + picker.dropperVersion);
+    });
+  },
 
   sendMessage: function(message, callback) {
     chrome.tabs.sendRequest(picker.tab.id, message, callback);
@@ -90,6 +112,36 @@ var picker = {
 
   // activate Pick
   activate: function() {
+    // inject javascript if needed
+    if ( picker.dropperLoaded === false ) {
+      console.log('trying to inject jquery');
+      chrome.tabs.executeScript(picker.tab.id, {file: "inc/jquery-1.4.2.min.js"}, function() {
+        console.log('jquery injected');
+        chrome.tabs.executeScript(picker.tab.id, {file: "inc/jquery-special-scroll.js"}, function() {
+          console.log('jquery-special-scroll injected');
+          chrome.tabs.executeScript(picker.tab.id, {file: "edropper2.js"}, function() {
+            console.log('edropper2 injected');
+
+            picker.pickupActivate();
+
+          });
+        });
+      });
+    // dropper is loaded but with old version
+    } else if ( picker.dropperVersion < NEED_DROPPER_VERSION ) {
+        chrome.tabs.executeScript(picker.tab.id, {file: "edropper2.js"}, function() {
+          console.log('new version of edropper2 injected');
+
+          picker.pickupActivate();
+
+        });
+    // dropper is loaded, activate
+    } else
+      picker.pickupActivate();
+  },
+
+  pickupActivate: function() {
+    // activate picker
     picker.sendMessage({type: 'pickup-activate'}, function() {});
     console.log('activating pickup');
   },

@@ -21,21 +21,18 @@ var isScriptLoaded = false;
 function init() {
     // find current tab 
     chrome.tabs.getSelected(null, function(tab) {
-      bg.picker.tab = tab;
+      bg.picker.useTab(tab);
       
       // special chrome pages
       if (tab.url.indexOf('chrome') == 0) {
         console.warn('need-implementation');
         return;
       }
-
-      /*
-      // activate pickup
-      chrome.tabs.sendRequest(tab.id, {reqtype: "pickup-activate", version: version}, function(response) {
-        // neco udelat
-        console.log('do something');
-      });
-      */
+      // local pages
+      else if (tab.url.indexOf('file') == 0) {
+        console.warn('need-implementation');
+        return;
+      }
 
     });
 
@@ -46,34 +43,6 @@ function activatePick() {
   bg.picker.activate();
   window.close();
 }
-
-  /*
-function activatePick() {
-  // set timer
-  timer = setTimeout('injectED();', 1000);
-
-  // try to activate dropper
-  chrome.windows.getCurrent(function(w) {
-      chrome.tabs.getSelected(w.id, function(tab) {
-      chrome.tabs.sendRequest(tab.id, {reqtype: "pickup-activate", version: version}, function(response) {
-        // we got response, clear timer
-        clearTimeout(timer);
-
-        // eDropper not loaded, inject it
-        if ( response.version == undefined )
-          injectED();
-        // Everything OK, just close popup
-        else if ( response.version == version)
-          window.close();
-        // Old version, user need to reload page :/
-        else
-          alert('Eye Dropper was updated, please, reload current tab or restart Chrome.');
-
-      });
-    });
-  });
-}
-  */
 
 function goto(url) {
   chrome.tabs.create({url: url});
