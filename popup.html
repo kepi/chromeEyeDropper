@@ -109,7 +109,7 @@ $(document).ready(function() {
         alpha: 0
       };
       color.rgbhex = this.title;
-      chrome.extension.sendRequest({reqtype: "set-color", color: color, history: 'nos'});
+      bg.picker.setColor({color: color, history: 'no'});
     });
 
   } else {
