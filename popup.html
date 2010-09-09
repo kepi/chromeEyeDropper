@@ -146,17 +146,12 @@ function showJPicker()
   $("#tab-colorpicker").show(); //css.display = 'block';
 
   var color = 'ffc000';
+  console.log(bg.picker.color);
   if ( bg.picker.color != null )
     color = bg.picker.color;
 
   var active = new $.jPicker.Color({hex: color});
   $('#colorpicker').jPicker({window: {title: '&nbsp;'}, color: {active: active}, images: {clientPath: 'inc/jPicker/images/'}});
-
-  // update jPicker with current color if we now it
-  chrome.extension.sendRequest({reqtype: "get-color"}, function(response) {
-    if ( response.color )
-      setPickercolor(response.color);
-  });
 }
 </script>
 </head>

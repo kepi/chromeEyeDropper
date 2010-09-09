@@ -33,7 +33,6 @@ var picker = {
     picker.screenshotData = '';
     picker.canvas = document.createElement("canvas");
     picker.canvasContext = null;
-    picker.color = null;
 
     picker.sendMessage({type: 'edropper-loaded'}, function(res) {
       picker.dropperLoaded = true; 
