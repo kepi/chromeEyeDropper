@@ -1,4 +1,4 @@
-var EDROPPER_VERSION=1;
+var EDROPPER_VERSION=2;
 
 var page = {
   width: $(document).width(),
@@ -26,6 +26,7 @@ var page = {
       switch(req.type) {
         case 'edropper-loaded': sendResponse({version: EDROPPER_VERSION}); break;
         case 'pickup-activate': page.dropperActivate(); break;
+        case 'pickup-deactivate': page.dropperDeactivate(); break;
         case 'update-image':
           console.log('background send me updated screenshot');
           page.imageData = req.data;
@@ -125,7 +126,7 @@ var page = {
         // FIXME: do mouseClick je potreba predat spravne pozici, ne takto
         mouseClick(e); break;
       // Esc - stop picking
-      case 27: deactivateDropper(); break;
+      case 27: page.dropperDeactivate(); break;
     }
   },
 

@@ -4,8 +4,8 @@
 <script type="text/javascript">
 // vim:ft=javascript
 
-var NEED_DROPPER_VERSION=1;
-var BG_VERSION=1;
+var NEED_DROPPER_VERSION=2;
+var BG_VERSION=2;
 
 function $(id) {
     return document.getElementById(id);
@@ -145,6 +145,7 @@ var picker = {
   pickupActivate: function() {
     // activate picker
     picker.sendMessage({type: 'pickup-activate'}, function() {});
+
     console.log('activating pickup');
   },
 
@@ -175,6 +176,14 @@ var picker = {
   isThisPlatform: function(operationSystem) {
     return navigator.userAgent.toLowerCase().indexOf(operationSystem) > -1;
   },
+
+  tabOnChangeListener: function() {
+    // deactivate dropper if tab changed
+    chrome.tabs.onSelectionChanged.addListener(function(tabId, selectInfo) {
+      if ( picker.tab.id == tabId )
+        picker.sendMessage({type: 'pickup-deactivate'}, function() {});
+    });
+  },
   
   init: function() {
     // settings from local storage
@@ -185,6 +194,9 @@ var picker = {
 
     // we have to listen for messages
     picker.messageListener();
+    
+    // act when tab is changed
+    picker.tabOnChangeListener();
   }
 };
 
