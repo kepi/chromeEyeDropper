@@ -38,7 +38,7 @@ var picker = {
     picker.sendMessage({type: 'edropper-loaded'}, function(res) {
       picker.dropperLoaded = true; 
       picker.dropperVersion = res.version;
-      console.log('Picker is loaded with version ' + picker.dropperVersion);
+      ////console.log('Picker is loaded with version ' + picker.dropperVersion);
     });
   },
 
@@ -47,13 +47,13 @@ var picker = {
   },
 
   messageListener: function() {
-    console.log('message listener called');
+    ////console.log('message listener called');
     chrome.extension.onConnect.addListener(function(port) {
       port.onMessage.addListener(function(req) {
         switch(req.type) {
           // Taking screenshot for content script
           case 'screenshot': 
-            console.log('received screenshot request');
+            ////console.log('received screenshot request');
             picker.capture(); break;
           
           // Creating debug tab
@@ -116,13 +116,13 @@ var picker = {
   activate: function() {
     // inject javascript if needed
     if ( picker.dropperLoaded === false ) {
-      console.log('trying to inject jquery');
+      ////console.log('trying to inject jquery');
       chrome.tabs.executeScript(picker.tab.id, {file: "inc/jquery-1.4.2.min.js"}, function() {
-        console.log('jquery injected');
+        ////console.log('jquery injected');
         chrome.tabs.executeScript(picker.tab.id, {file: "inc/jquery-special-scroll.js"}, function() {
-          console.log('jquery-special-scroll injected');
+          ////console.log('jquery-special-scroll injected');
           chrome.tabs.executeScript(picker.tab.id, {file: "edropper2.js"}, function() {
-            console.log('edropper2 injected');
+            ////console.log('edropper2 injected');
 
             picker.pickupActivate();
 
@@ -132,7 +132,7 @@ var picker = {
     // dropper is loaded but with old version
     } else if ( picker.dropperVersion < NEED_DROPPER_VERSION ) {
         chrome.tabs.executeScript(picker.tab.id, {file: "edropper2.js"}, function() {
-          console.log('new version of edropper2 injected');
+          ////console.log('new version of edropper2 injected');
 
           picker.pickupActivate();
 
@@ -146,12 +146,12 @@ var picker = {
     // activate picker
     picker.sendMessage({type: 'pickup-activate'}, function() {});
 
-    console.log('activating pickup');
+    ////console.log('activating pickup');
   },
 
   // capture actual Screenshot
   capture: function() {
-    console.log('capturing');
+    ////console.log('capturing');
     try {
       chrome.tabs.captureVisibleTab(null, {format: picker.screenshotFormat, quality: 100}, picker.doCapture);
     // fallback for chrome before 5.0.372.0
@@ -161,7 +161,7 @@ var picker = {
   },
 
   doCapture: function(data) {
-      console.log('sending updated image');
+      ////console.log('sending updated image');
       picker.sendMessage({type: 'update-image', data: data}, function() {});
   },
 

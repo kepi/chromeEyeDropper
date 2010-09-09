@@ -21,14 +21,14 @@ var page = {
   // ---------------------------------
   messageListener: function() {
     // Listen for pickup activate
-    console.log('page activated');
+    ////console.log('page activated');
     chrome.extension.onRequest.addListener(function(req, sender, sendResponse) {
       switch(req.type) {
         case 'edropper-loaded': sendResponse({version: EDROPPER_VERSION}); break;
         case 'pickup-activate': page.dropperActivate(); break;
         case 'pickup-deactivate': page.dropperDeactivate(); break;
         case 'update-image':
-          console.log('background send me updated screenshot');
+          ////console.log('background send me updated screenshot');
           page.imageData = req.data;
           page.capture();
           break;
@@ -52,7 +52,7 @@ var page = {
     $("body").append('<div id="color-tooltip" style="z-index: 1000; width:10px; height: 10px; border: 1px solid #000; display:none; font-size: 15px;"> </div>');
     page.elColorTooltip = $('#color-tooltip');
 
-    console.log('activating page dropper');
+    ////console.log('activating page dropper');
     page.defaults();
 
     page.dropperActivated = true;
@@ -70,7 +70,7 @@ var page = {
 
     page.dropperActivated = false;
 
-    console.log('deactivating page dropper');
+    ////console.log('deactivating page dropper');
     document.removeEventListener("mousemove", page.onMouseMove, false);
     document.removeEventListener("click", page.onMouseClick, false);
     document.removeEventListener("keydown", page.onKeyDown, false);
@@ -104,7 +104,7 @@ var page = {
     if (!page.dropperActivated)
      return;
     
-    console.log("Scroll stop");
+    ////console.log("Scroll stop");
     page.screenChanged();
   },
 
@@ -134,7 +134,7 @@ var page = {
     if (!page.dropperActivated)
       return;
 
-    console.log('window resized');
+    ////console.log('window resized');
     page.defaults();
     page.screenChanged();
   },
@@ -209,7 +209,7 @@ var page = {
       return;
 
     var canvasIndex = (e.pageX + e.pageY * page.canvas.width) * 4;
-    //console.log(e.pageX + ' ' + e.pageY + ' ' + page.canvas.width);
+    ////console.log(e.pageX + ' ' + e.pageY + ' ' + page.canvas.width);
 
     var color = {
       r: page.canvasData[canvasIndex],
@@ -219,7 +219,7 @@ var page = {
     };
 
     color.rgbhex = page.rgbToHex(color.r,color.g,color.b);
-    //console.log(color.rgbhex);
+    ////console.log(color.rgbhex);
     color.opposite = page.rgbToHex(255-color.r,255-color.g,255-color.b);
     return color;
   },
@@ -246,7 +246,7 @@ var page = {
   checkCanvas: function() {
     // we have to create new canvas element 
     if ( page.canvas.width != (page.width+page.canvasBorders) || page.canvas.height != (page.height+page.canvasBorders) ) {
-      console.log('creating new canvas');
+      ////console.log('creating new canvas');
       page.canvas = document.createElement('canvas');
       page.canvas.width = page.width + page.canvasBorders;
       page.canvas.height = page.height + page.canvasBorders;
@@ -268,7 +268,7 @@ var page = {
     if ( !force && page.rects.length > 0 ) {
       for ( index in page.rects ) {
         if ( page.rectInRect(rect, page.rects[index]) ) {
-          console.log('uz mame, nefotim');
+          ////console.log('uz mame, nefotim');
           return;
         }
       }
@@ -278,7 +278,7 @@ var page = {
 
     document.body.style.cursor = 'progress';
 
-    console.log('I want new screenshot');
+    ////console.log('I want new screenshot');
     page.elColorTooltip.hide(1, function() {
       page.sendMessage({type: 'screenshot'}, function() {});
     });
@@ -287,7 +287,7 @@ var page = {
   // capture actual Screenshot
   capture: function() {
     page.checkCanvas();
-    console.log(page.rects);
+    ////console.log(page.rects);
 
     var image = new Image();
 
@@ -305,7 +305,7 @@ var page = {
           var t = page.rectMerge(rect, page.rects[index]);
 
           if ( t != false ) {
-            console.log('merging');
+            ////console.log('merging');
             merged = true;
             page.rects[index] = t;
           }

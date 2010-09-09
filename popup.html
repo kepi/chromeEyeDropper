@@ -129,7 +129,7 @@ function check_support(what)
 {
     chrome.extension.sendRequest({reqtype: "supports", what: what}, function(response) { 
       if ( !response || response.state != 'ok' ) {
-        //console.log("Doesn't support " + what + ". Reloading background.");
+        ////console.log("Doesn't support " + what + ". Reloading background.");
         chrome.extension.sendRequest({reqtype: "reload-background"});
       }
     });
