@@ -149,10 +149,17 @@ var picker = {
   // capture actual Screenshot
   capture: function() {
     console.log('capturing');
-    chrome.tabs.captureVisibleTab(null, {format: picker.screenshotFormat, quality: 100}, function(data) {
+    try {
+      chrome.tabs.captureVisibleTab(null, {format: picker.screenshotFormat, quality: 100}, picker.doCapture);
+    // fallback for chrome before 5.0.372.0
+    } catch(e) {
+      chrome.tabs.captureVisibleTab(null, picker.doCapture);
+    }
+  },
+
+  doCapture: function(data) {
       console.log('sending updated image');
       picker.sendMessage({type: 'update-image', data: data}, function() {});
-    });
   },
 
   createDebugTab: function() {
