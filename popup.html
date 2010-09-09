@@ -14,10 +14,16 @@
 
 
 <script>
-var version = 3;
-var bg = chrome.extension.getBackgroundPage();
-var isScriptLoaded = false;
+var NEED_BG_VERSION=1;
 
+var bg = chrome.extension.getBackgroundPage();
+
+// reload background if we need new version
+if ( bg.version < NEED_BG_VERSION ) {
+      chrome.extension.sendRequest({reqtype: "reload-background"});
+}
+
+// init tab
 function init() {
     // find current tab 
     chrome.tabs.getSelected(null, function(tab) {

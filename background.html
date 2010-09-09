@@ -5,6 +5,7 @@
 // vim:ft=javascript
 
 var NEED_DROPPER_VERSION=1;
+var BG_VERSION=1;
 
 function $(id) {
     return document.getElementById(id);
@@ -12,6 +13,7 @@ function $(id) {
 
 var picker = {
   tab: 0,
+  version: BG_VERSION,
   dropperLoaded: false,
   dropperVersion: 0,
   screenshotData: '',
