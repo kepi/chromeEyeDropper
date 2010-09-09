@@ -5,12 +5,6 @@
 
   "background_page": "background.html",
   "options_page": "options.html",
-  "content_scripts": [ {
-      "all_frames": true,
-      "js": [ "inc/jquery-1.4.2.min.js", "inc/jquery-special-scroll.js", "edropper2.js" ],
-      "matches": [ "http://*/*", "https://*/*" ],
-      "run_at": "document_end"
-   } ],
 
   "icons": {
     "48": "icon_48.png",
