@@ -87,8 +87,6 @@ $(document).ready(function() {
     $("head").append('<link "text/css" rel="stylesheet" href="inc/jPicker/css/jPicker-1.1.2.min.css" />');
     $.getScript('inc/jPicker/jpicker-1.1.2.min.js', function() { setTimeout('showJPicker()', 250); });
 
-    $("#li-colorpicker").show(); //css.display = 'block';
-    $("#tab-colorpicker").show(); //css.display = 'block';
   }
 
   // History
@@ -110,6 +108,7 @@ $(document).ready(function() {
       };
       color.rgbhex = this.title;
       bg.picker.setColor({color: color, history: 'no'});
+      setPickerColor(color);
     });
 
   } else {
@@ -118,6 +117,11 @@ $(document).ready(function() {
 
   }
 });
+
+function setPickerColor(color)
+{
+  $.jPicker.List[0].color.active.val('rgb', {r: color.r, g: color.g, b: color.b});
+}
 
 function clearHistory()
 {
@@ -135,16 +139,23 @@ function check_support(what)
     });
 }
 
+// show jPicker tab and set color
 function showJPicker()
 {
+  $("#li-colorpicker").show(); //css.display = 'block';
+  $("#tab-colorpicker").show(); //css.display = 'block';
+
+  var color = 'ffc000';
+  if ( bg.picker.color != null )
+    color = bg.picker.color;
+
+  var active = new $.jPicker.Color({hex: color});
+  $('#colorpicker').jPicker({window: {title: '&nbsp;'}, color: {active: active}, images: {clientPath: 'inc/jPicker/images/'}});
+
+  // update jPicker with current color if we now it
   chrome.extension.sendRequest({reqtype: "get-color"}, function(response) {
-    var color = 'ffc000';
-
     if ( response.color )
-      color = response.color;
-
-    var active = new $.jPicker.Color({hex: color});
-    $('#colorpicker').jPicker({window: {title: '&nbsp;'}, color: {active: active}, images: {clientPath: 'inc/jPicker/images/'}});
+      setPickercolor(response.color);
   });
 }
 </script>

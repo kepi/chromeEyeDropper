@@ -117,11 +117,11 @@ var picker = {
     // inject javascript if needed
     if ( picker.dropperLoaded === false ) {
       ////console.log('trying to inject jquery');
-      chrome.tabs.executeScript(picker.tab.id, {file: "inc/jquery-1.4.2.min.js"}, function() {
+      chrome.tabs.executeScript(picker.tab.id, {allFrames: true, file: "inc/jquery-1.4.2.min.js"}, function() {
         ////console.log('jquery injected');
-        chrome.tabs.executeScript(picker.tab.id, {file: "inc/jquery-special-scroll.js"}, function() {
+        chrome.tabs.executeScript(picker.tab.id, {allFrames: true, file: "inc/jquery-special-scroll.js"}, function() {
           ////console.log('jquery-special-scroll injected');
-          chrome.tabs.executeScript(picker.tab.id, {file: "edropper2.js"}, function() {
+          chrome.tabs.executeScript(picker.tab.id, {allFrames: true, file: "edropper2.js"}, function() {
             ////console.log('edropper2 injected');
 
             picker.pickupActivate();
@@ -131,7 +131,7 @@ var picker = {
       });
     // dropper is loaded but with old version
     } else if ( picker.dropperVersion < NEED_DROPPER_VERSION ) {
-        chrome.tabs.executeScript(picker.tab.id, {file: "edropper2.js"}, function() {
+        chrome.tabs.executeScript(picker.tab.id, {allFrames: true, file: "edropper2.js"}, function() {
           ////console.log('new version of edropper2 injected');
 
           picker.pickupActivate();
