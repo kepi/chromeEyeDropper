@@ -1,16 +1,27 @@
+html { 
+  height: auto;
+}
+
 body {
   font-family: Arial, Verdana, sans-serif;
   font-size: 10px;
   text-align: left;
+  min-width: 400px;
+  height: auto;
+  margin: 0px; padding: 0px;
+  background: transparent;
 }
 
 #footer {
+  font-family: Arial, Verdana, sans-serif;
   text-align: right;  
-  margin-top: 20px;
+  margin-top: 10px;
+  padding: 10px;
+  border-top: 1px solid #e0e0e0;
 }
 
 #footer a {
-  color: black;
+  color: gray;
 }
 
 #footer a:hover {
@@ -68,4 +79,14 @@ br.clear {
   font-weight: bold;
   border: 1px solid #444;
   border-radius: 3px;
+}
+
+.ui-tabs .ui-tabs-hide {
+  display: none;
+  position: absolute;
+  left: -10000px;
+}
+
+.ui-tabs {
+  border: 0px !important;
 }

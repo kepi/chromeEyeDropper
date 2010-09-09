@@ -2,11 +2,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
 
-  <style type="text/css">
-    body { min-width: 400px; }
-  </style>
-
-  <link type="text/css" rel="stylesheet" href="style.css" />
+  <link type="text/css" rel="stylesheet" href="style.2.css" />
   <link href="inc/jquery-ui/css/smoothness/jquery-ui-1.8.4.custom.css" rel="stylesheet" type="text/css"/>
 
   <script type="text/javascript" src="inc/jquery-1.4.2.min.js"></script>
@@ -77,7 +73,13 @@ $(document).ready(function() {
   init();
 
   // show tabs
-  $("#tabs").tabs();
+  $("#tabs").tabs().bind('tabsshow', function(event, ui) {
+    if ( ui.panel.id == 'tab-pick' ) {
+      $("#eyeDropperBody").css('height', '250px');
+      $("html").css('height', '250px');
+    }
+  });
+    
 
   $("a.ext").click(function() { goto(this.href); });
 
@@ -155,16 +157,16 @@ function showJPicker()
 }
 </script>
 </head>
-<body>
+<body id="eyeDropperBody">
 
-  <div id="tabs">
+  <div id="tabs" class="ui-tabs">
     <ul>
       <li><a href="#tab-pick"><span>Pick from web</span></a></li>
       <li id="li-colorpicker" style="display: none"><a href="#tab-colorpicker"><span>Color picker</span></a></li>
       <li><a href="#tab-about"><span>About</span></a></li>
     </ul>
 
-    <div id="tab-pick">
+    <div id="tab-pick" class="ui-tabs-hide">
       <img src="icon.png" alt="Eye Dropper" class="icon" /> <input type="button" id="pickButton" value="Pick color from webpage" />
       <div id="pickupMessage" style="display: none">&nbsp;</div>
 
@@ -172,11 +174,11 @@ function showJPicker()
       <div id="history">&nbsp;</div>
     </div>
 
-    <div id="tab-colorpicker" style="display: none">
+    <div id="tab-colorpicker" class="ui-tabs-hide" style="display: none">
       <div id="colorpicker"></div>
     </div>
 
-    <div id="tab-about">
+    <div id="tab-about" class="ui-tabs-hide">
       <h3>About chrome Eye Dropper</h3>
       <p><img src="icon.png" alt="Eye Dropper" class="icon" /> chrome Eye Dropper is eye dropper and color picker extension for Google Chrome.</p>
       <p>Version 0.1.7</p>
@@ -194,7 +196,7 @@ function showJPicker()
     
   </div>
 
-  <div id="footer"><a class="ext" href="http://github.com/kepi/chromeEyeDropper/issues">bug reports</a> | <a class="ext" href="options.html">options</a></div>
+  <div id="footer"><a class="ext" href="http://github.com/kepi/chromeEyeDropper/issues">Report a bug</a> | <a class="ext" href="options.html">Options</a></div>
 
 </body>
 </html>
