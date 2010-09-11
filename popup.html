@@ -16,7 +16,7 @@ var bg = chrome.extension.getBackgroundPage();
 var pickupDisabled = false;
 
 // reload background if we need new version
-if ( bg.version < NEED_BG_VERSION ) {
+if ( bg.version == undefined || bg.version < NEED_BG_VERSION ) {
       chrome.extension.sendRequest({reqtype: "reload-background"});
 }
 

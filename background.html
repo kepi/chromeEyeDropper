@@ -129,7 +129,7 @@ var picker = {
         });
       });
     // dropper is loaded but with old version
-    } else if ( picker.dropperVersion < NEED_DROPPER_VERSION ) {
+    } else if ( picker.dropperVersion == undefined || picker.dropperVersion < NEED_DROPPER_VERSION ) {
         chrome.tabs.executeScript(picker.tab.id, {allFrames: true, file: "edropper2.js"}, function() {
           ////console.log('new version of edropper2 injected');
 
