@@ -53,7 +53,7 @@ body {
 .historySquare {
   width: 15px;
   height: 15px;
-  border: black;
+  border: 1px solid #666;
   float: left;
   margin-right: 2px;
   margin-bottom: 2px;
