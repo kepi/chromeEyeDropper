@@ -56,8 +56,10 @@ $(document).ready(function() {
 </script>
 </head>
 
-<body id="options">
-  <h3>Eye Dropper &ndash; Options</h3>
+<body id="options-body">
+  <h1>Eye Dropper &ndash; Options</h1>
+
+  <div id="options">
   <div id="tabs">
     <ul>
       <li><a href="#tab-1"><span>Main</span></a></li>
@@ -86,11 +88,15 @@ $(document).ready(function() {
       <span id="status"></span>
     </div>
   </div>
+  </div>
 
-  <p>If you find Chrome Eye Dropper usefull and wish to support and encourage its continued development, please consider a donation. Thanks!</p>
+  <div id="donation">
+    <div>
+    <p>If you find Chrome Eye Dropper usefull and wish to support and encourage its continued development, please consider a donation. Thanks!</p>
 
-  <!-- Begin PayPal Donations --> 
-  <form id="paypal-donation-options" action="https://www.paypal.com/cgi-bin/webscr" method="post"><div class="paypal-donations"><input type="hidden" name="cmd" value="_donations" /><input type="hidden" name="business" value="kepi@orthank.net" /><input type="hidden" name="return" value="http://eye-dropper.kepi.cz/thanks-for-your-donation/" /><input type="hidden" name="item_name" value="Eye Dropper" /><input type="hidden" name="currency_code" value="USD" /><input type="image" src="inc/btn_donate_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online." /></div></form> 
-
+    <!-- Begin PayPal Donations --> 
+    <form id="paypal-donation-options" action="https://www.paypal.com/cgi-bin/webscr" method="post"><div class="paypal-donations"><input type="hidden" name="cmd" value="_donations" /><input type="hidden" name="business" value="kepi@orthank.net" /><input type="hidden" name="return" value="http://eye-dropper.kepi.cz/thanks-for-your-donation/" /><input type="hidden" name="item_name" value="Eye Dropper" /><input type="hidden" name="currency_code" value="USD" /><input type="image" src="inc/btn_donate_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online." /></div></form> 
+    </div>
+  </div>
 </body>
 </html>

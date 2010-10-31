@@ -37,10 +37,6 @@ body {
   margin-right: 10px;
 }
 
-#options {
-  max-width: 600px;
-}
-
 .pledgie {
   margin-top: 20px;
   text-align: center;
@@ -95,3 +91,33 @@ br.clear {
   text-align: center;
   margin-top: 20px;
 }
+
+#options, #donation div {
+  max-width: 600px;
+  margin: 0px auto;
+}
+
+#options {
+  min-height: 150px;
+}
+
+#options-body {
+  background: #fdfdfd;
+}
+
+#options-body h1 { 
+  background: black;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#3C3C3C), to(#111));
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+#options-body #donation {
+  margin-top: 30px;
+  font-size: 11px;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#d9f2d0), to(#fdfdfd));
+  padding: 10px;
+  height: 100px;
+}
+
