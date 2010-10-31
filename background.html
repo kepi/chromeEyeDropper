@@ -5,12 +5,25 @@
 // vim:ft=javascript
 
 var NEED_DROPPER_VERSION=2;
-var BG_VERSION=2;
+var BG_VERSION=3;
 
+// jQuery like functions
+
+// for get element by id
 function $(id) {
     return document.getElementById(id);
 }
 
+// Returns -1 if value isn't in array.
+// Return position starting from 0 if found
+function inArray(value, array) {
+  for(var i=0; i<array.length; i++) {
+    if (array[i] == value) return i;
+  }
+  return -1;
+}
+
+// base picker object
 var picker = {
   tab: 0,
   version: BG_VERSION,
@@ -88,13 +101,15 @@ var picker = {
     sendResponse({state: state});
   },
 
+  // method for setting color. It set picker color, update badge and save to history if possible
   setColor: function(req) {
     picker.color = req.color.rgbhex;
     chrome.browserAction.setBadgeText({text: 'N'});
     chrome.browserAction.setBadgeBackgroundColor({color: [req.color.r, req.color.g, req.color.b, 255]});
 
+    // local storage only if available
     if ( window.localStorage != null ) {
-      // save to clipboard
+      // save to clipboard through small hack
       if ( window.localStorage['autoClipboard'] === "true" ) {
         var edCb = $('edClipboard');
         edCb.value = window.localStorage['autoClipboardNoGrid'] === "true" ? picker.color : '#' + picker.color; 
@@ -102,11 +117,15 @@ var picker = {
         document.execCommand("copy", false, null);
       }
 
+      // history can be disabled i.e when setting color from
+      // history itself
       if ( req.history == undefined || req.history != 'no' ) {
-        // add color to history
         var history = JSON.parse(window.localStorage.history);
-        history.push(picker.color);
-        window.localStorage.history = JSON.stringify(history);
+        // first check if there isn't same color in history
+        if ( inArray(picker.color, history) < 0 ) {
+          history.push(picker.color);
+          window.localStorage.history = JSON.stringify(history);
+        }
       }
     }
   },
