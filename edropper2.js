@@ -26,7 +26,7 @@ var page = {
     chrome.extension.onRequest.addListener(function(req, sender, sendResponse) {
       switch(req.type) {
         case 'edropper-loaded': sendResponse({version: EDROPPER_VERSION}); break;
-        case 'pickup-activate': page.dropperActivate(); page.cursor = req.cursor; break;
+        case 'pickup-activate': page.cursor = req.cursor; page.dropperActivate(); break;
         case 'pickup-deactivate': page.dropperDeactivate(); break;
         case 'update-image':
           ////console.log('background send me updated screenshot');
@@ -53,6 +53,9 @@ var page = {
     $("body").append('<div id="color-tooltip" style="z-index: 1000; width:10px; height: 10px; border: 1px solid #000; display:none; font-size: 15px;"> </div>');
     page.elColorTooltip = $('#color-tooltip');
 
+    // load css for cursor changes
+    $("head").append('<link id="eye-dropper-css" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inc/anchor-cursor-'+page.cursor+'.css')+'" />');
+
     ////console.log('activating page dropper');
     page.defaults();
 
@@ -68,6 +71,10 @@ var page = {
   dropperDeactivate: function() {
     if (!page.dropperActivated)
       return;
+
+    // reset cursor changes
+    document.body.style.cursor = 'default';
+    $("#eye-dropper-css").remove();
 
     page.dropperActivated = false;
 
