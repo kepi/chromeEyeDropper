@@ -27,6 +27,10 @@ function save_options() {
   window.localStorage.disableColorpicker = 
     document.getElementById("disableColorpicker").checked ? true : false;
 
+  cursor = document.getElementById('dropperCursorcrosshair').checked ? 'crosshair' : 'default';
+  window.localStorage.dropperCursor =  cursor;
+  console.log(window.localStorage.dropperCursor);
+
   // Update status to let user know options were saved.
   var status = document.getElementById("status");
   status.innerHTML = "Options Saved.";
@@ -43,7 +47,9 @@ function restore_options() {
     (window.localStorage.autoClipboardNoGrid === "true") ? true : false;
   document.getElementById("disableColorpicker").checked = 
     (window.localStorage.disableColorpicker === "true") ? true : false;
-  console.log(window.localStorage.autoClipboard);
+  
+  cursor = (window.localStorage.dropperCursor === 'crosshair') ? 'crosshair' : 'default';
+  document.getElementById('dropperCursor'+cursor).checked = true;
 }
 
 // On document load
@@ -67,18 +73,22 @@ $(document).ready(function() {
     </ul>
 
     <div id="tab-1">
-      <div>
+      <div class="opt">
         <label for="autoClipboard">Automaticaly copy picked color to clipboard when picking from webpage</label> <input type="checkbox" name="autoClipboard" id="autoClipboard" />
       </div>
-      <div>
+      <div class="opt">
         <label for="autoClipboardNoGrid">Do not copy # character, only RGB color</label> <input type="checkbox" name="autoClipboardNoGrid" id="autoClipboardNoGrid" />
       </div>
-
-
+      <div class="opt">
+        <label for="dropperCursor">Dropper cursor:</label>
+          &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="dropperCursor" value="default" id="dropperCursordefault" /> <img src="img/cursor_default.png" alt="default" style="cursor: default" />
+          &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="dropperCursor" value="crosshair" id="dropperCursorcrosshair" /> <img src="img/cursor_crosshair.png" alt="crosshair" style="cursor: crosshair" />
+          &nbsp;&nbsp;&nbsp;&nbsp;<cite>move mouse over icon to see how it looks like</cite>
+      </div>
     </div>
 
     <div id="tab-2">
-      <div>
+      <div class="opt">
         <label for="disableColorpicker">Completely disable Color picker</label> <input type="checkbox" name="disableColorpicker" id="disableColorpicker" />
       </div>
     </div>

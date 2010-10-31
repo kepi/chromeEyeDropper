@@ -4,8 +4,8 @@
 <script type="text/javascript">
 // vim:ft=javascript
 
-var NEED_DROPPER_VERSION=2;
-var BG_VERSION=3;
+var NEED_DROPPER_VERSION=3;
+var BG_VERSION=4;
 
 // jQuery like functions
 
@@ -162,7 +162,8 @@ var picker = {
 
   pickupActivate: function() {
     // activate picker
-    picker.sendMessage({type: 'pickup-activate'}, function() {});
+    cursor = (window.localStorage.dropperCursor === 'crosshair') ? 'crosshair' : 'default';
+    picker.sendMessage({type: 'pickup-activate', cursor: cursor}, function() {});
 
     ////console.log('activating pickup');
   },

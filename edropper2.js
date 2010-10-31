@@ -1,4 +1,4 @@
-var EDROPPER_VERSION=2;
+var EDROPPER_VERSION=3;
 
 var page = {
   width: $(document).width(),
@@ -9,6 +9,7 @@ var page = {
   dropperActivated: false,
   screenWidth: 0,
   screenHeight: 0,
+  cursor: 'default',
 
   defaults: function() {
     page.canvas = document.createElement("canvas");
@@ -25,7 +26,7 @@ var page = {
     chrome.extension.onRequest.addListener(function(req, sender, sendResponse) {
       switch(req.type) {
         case 'edropper-loaded': sendResponse({version: EDROPPER_VERSION}); break;
-        case 'pickup-activate': page.dropperActivate(); break;
+        case 'pickup-activate': page.dropperActivate(); page.cursor = req.cursor; break;
         case 'pickup-deactivate': page.dropperDeactivate(); break;
         case 'update-image':
           ////console.log('background send me updated screenshot');
@@ -321,7 +322,7 @@ var page = {
       // TODO - je nutne refreshnout ctverecek a nastavit mu spravnou barvu
 
       page.screenshoting = false;
-      document.body.style.cursor = 'default';
+      document.body.style.cursor = page.cursor;
       page.elColorTooltip.show(1);
 
       //page.sendMessage({type: 'debug-tab', image: page.canvas.toDataURL()}, function() {});
