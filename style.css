@@ -90,3 +90,8 @@ br.clear {
 .ui-tabs {
   border: 0px !important;
 }
+
+#paypal-donation-about {
+  text-align: center;
+  margin-top: 20px;
+}
