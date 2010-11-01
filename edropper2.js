@@ -9,7 +9,7 @@ var page = {
   dropperActivated: false,
   screenWidth: 0,
   screenHeight: 0,
-  cursor: 'default',
+  options: {cursor: 'default', enableColorToolbox: true, enableColorTooltip: true},
 
   defaults: function() {
     page.canvas = document.createElement("canvas");
@@ -26,7 +26,7 @@ var page = {
     chrome.extension.onRequest.addListener(function(req, sender, sendResponse) {
       switch(req.type) {
         case 'edropper-loaded': sendResponse({version: EDROPPER_VERSION}); break;
-        case 'pickup-activate': page.cursor = req.cursor; page.dropperActivate(); break;
+        case 'pickup-activate': page.options = req.options; page.dropperActivate(); break;
         case 'pickup-deactivate': page.dropperDeactivate(); break;
         case 'update-image':
           ////console.log('background send me updated screenshot');
@@ -51,15 +51,27 @@ var page = {
       return;
 
     // load external css for cursor changes
-    $("head").append('<link id="eye-dropper-css-cursor" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inject/anchor-cursor-'+page.cursor+'.css')+'" />');
+    $("head").append('<link id="eye-dropper-css-cursor" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inject/anchor-cursor-'+page.options.cursor+'.css')+'" />');
     $("head").append('<link id="eye-dropper-css" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inject/edropper2.css')+'" />');
 
     // insert tooltip and toolbox
-    $("body").append('<div id="color-tooltip"> </div><div id="color-toolbox"><div id="color-toolbox-color" style="background-color: #ffbbca">&nbsp;</div><div id="color-toolbox-text">&nbsp;</div></div>');
-    page.elColorTooltip = $('#color-tooltip');
-    page.elColorToolbox = $('#color-toolbox');
-    page.elColorToolboxColor = $('#color-toolbox-color');
-    page.elColorToolboxText = $('#color-toolbox-text');
+    var inserted = ''
+    if ( page.options.enableColorTooltip === true ) {
+      inserted += '<div id="color-tooltip"> </div>';
+    }
+    if ( page.options.enableColorToolbox === true ) {
+      inserted += '<div id="color-toolbox"><div id="color-toolbox-color" style="background-color: #ffbbca">&nbsp;</div><div id="color-toolbox-text">&nbsp;</div></div>';
+    }
+    $("body").append(inserted);
+
+    if ( page.options.enableColorTooltip === true ) {
+      page.elColorTooltip = $('#color-tooltip');
+    }
+    if ( page.options.enableColorToolbox === true ) {
+      page.elColorToolbox = $('#color-toolbox');
+      page.elColorToolboxColor = $('#color-toolbox-color');
+      page.elColorToolboxText = $('#color-toolbox-text');
+    }
 
     ////console.log('activating page dropper');
     page.defaults();
@@ -91,8 +103,12 @@ var page = {
     document.removeEventListener("keydown", page.onKeyDown, false);
     $(document).unbind('scrollstop', page.onScrollStop);
 
-    page.elColorTooltip.remove();
-    page.elColorToolbox.remove();
+    if ( page.options.enableColorTooltip === true ) {
+      page.elColorTooltip.remove();
+    }
+    if ( page.options.enableColorToolbox === true ) {
+      page.elColorToolbox.remove();
+    }
   },
 
   // ---------------------------------
@@ -173,21 +189,21 @@ var page = {
       fromTop = 15;
 
     // set tooltip
-    page.elColorTooltip.css({ 
+    if ( page.options.enableColorTooltip === true ) {
+      page.elColorTooltip.css({ 
         'background-color': '#'+color.rgbhex,
         'top': e.pageY+fromTop, 
         'left': e.pageX+fromLeft,
         'border-color': '#'+color.opposite
-        }).show();
+      }).show();
+    }
     
     // set toolbox
-    page.elColorToolboxColor.css({
-        'background-color': '#'+color.rgbhex
-    });
-
-    page.elColorToolboxText.html('#'+color.rgbhex+'<br />rgb('+color.r+','+color.g+','+color.b+')');
-
-    page.elColorToolbox.show();
+    if ( page.options.enableColorToolbox === true ) {
+      page.elColorToolboxColor.css({'background-color': '#'+color.rgbhex});
+      page.elColorToolboxText.html('#'+color.rgbhex+'<br />rgb('+color.r+','+color.g+','+color.b+')');
+      page.elColorToolbox.show();
+    }
   },
 
   // return true if rectangle A is whole in rectangle B
@@ -303,11 +319,28 @@ var page = {
     document.body.style.cursor = 'progress';
 
     ////console.log('I want new screenshot');
-    page.elColorTooltip.hide(1, function() {
+    // TODO: this is terrible. It have to be done better way
+    if ( page.options.enableColorTooltip === true && page.options.enableColorToolbox === true) {
+      page.elColorTooltip.hide(1, function() {
+        page.elColorToolbox.hide(1, function() {
+          page.sendMessage({type: 'screenshot'}, function() {});
+        });
+      });
+    }
+    else if ( page.options.enableColorTooltip === true ) {
+      page.elColorTooltip.hide(1, function() {
+        page.sendMessage({type: 'screenshot'}, function() {});
+      });
+    }
+    else if ( page.options.enableColorToolbox === true ) {
       page.elColorToolbox.hide(1, function() {
         page.sendMessage({type: 'screenshot'}, function() {});
       });
-    });
+    }
+    else {
+      page.sendMessage({type: 'screenshot'}, function() {});
+    }
+
   },
   
   // capture actual Screenshot
@@ -347,8 +380,15 @@ var page = {
       // TODO - je nutne refreshnout ctverecek a nastavit mu spravnou barvu
 
       page.screenshoting = false;
-      document.body.style.cursor = page.cursor;
-      page.elColorTooltip.show(1);
+      document.body.style.cursor = page.options.cursor;
+
+      // re-enable tooltip and toolbox
+      if ( page.options.enableColorTooltip === true ) {
+        page.elColorTooltip.show(1);
+      }
+      if ( page.options.enableColorToolbox === true ) {
+        page.elColorToolbox.show(1);
+      }
 
       //page.sendMessage({type: 'debug-tab', image: page.canvas.toDataURL()}, function() {});
     }

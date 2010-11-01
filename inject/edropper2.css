@@ -24,6 +24,7 @@
   color: white;
   font-family: monospace;
   border: 1px solid transparent;
+  position: fixed;
 }
 
 #color-toolbox-color {

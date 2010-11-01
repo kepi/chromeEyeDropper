@@ -161,9 +161,13 @@ var picker = {
   },
 
   pickupActivate: function() {
-    // activate picker
+    // load options
     cursor = (window.localStorage.dropperCursor === 'crosshair') ? 'crosshair' : 'default';
-    picker.sendMessage({type: 'pickup-activate', cursor: cursor}, function() {});
+    enableColorToolbox = (window.localStorage.enableColorToolbox === "false") ? false : true;
+    enableColorTooltip = (window.localStorage.enableColorTooltip === "false") ? false : true;
+
+    // activate picker
+    picker.sendMessage({type: 'pickup-activate', options: { cursor: cursor, enableColorToolbox: enableColorToolbox, enableColorTooltip: enableColorTooltip}}, function() {});
 
     ////console.log('activating pickup');
   },

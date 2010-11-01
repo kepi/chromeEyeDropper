@@ -26,6 +26,12 @@ function save_options() {
 
   window.localStorage.disableColorpicker = 
     document.getElementById("disableColorpicker").checked ? true : false;
+  
+  window.localStorage.enableColorToolbox = 
+    document.getElementById("enableColorToolbox").checked ? true : false;
+  
+  window.localStorage.enableColorTooltip = 
+    document.getElementById("enableColorTooltip").checked ? true : false;
 
   cursor = document.getElementById('dropperCursorcrosshair').checked ? 'crosshair' : 'default';
   window.localStorage.dropperCursor =  cursor;
@@ -47,6 +53,10 @@ function restore_options() {
     (window.localStorage.autoClipboardNoGrid === "true") ? true : false;
   document.getElementById("disableColorpicker").checked = 
     (window.localStorage.disableColorpicker === "true") ? true : false;
+  document.getElementById("enableColorToolbox").checked = 
+    (window.localStorage.enableColorToolbox === "false") ? false : true;
+  document.getElementById("enableColorTooltip").checked = 
+    (window.localStorage.enableColorTooltip === "false") ? false : true;
   
   cursor = (window.localStorage.dropperCursor === 'crosshair') ? 'crosshair' : 'default';
   document.getElementById('dropperCursor'+cursor).checked = true;
@@ -69,7 +79,8 @@ $(document).ready(function() {
   <div id="tabs">
     <ul>
       <li><a href="#tab-1"><span>Main</span></a></li>
-      <li><a href="#tab-2"><span>Color picker</span></a></li>
+      <li><a href="#tab-2"><span>Appearance</span></a></li>
+      <li><a href="#tab-3"><span>Color picker</span></a></li>
     </ul>
 
     <div id="tab-1">
@@ -79,15 +90,24 @@ $(document).ready(function() {
       <div class="opt">
         <label for="autoClipboardNoGrid">Do not copy # character, only RGB color</label> <input type="checkbox" name="autoClipboardNoGrid" id="autoClipboardNoGrid" />
       </div>
+    </div>
+    
+    <div id="tab-2">
       <div class="opt">
         <label for="dropperCursor">Dropper cursor:</label>
           &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="dropperCursor" value="default" id="dropperCursordefault" /> <img src="img/cursor_default.png" alt="default" style="cursor: default" />
           &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="dropperCursor" value="crosshair" id="dropperCursorcrosshair" /> <img src="img/cursor_crosshair.png" alt="crosshair" style="cursor: crosshair" />
           &nbsp;&nbsp;&nbsp;&nbsp;<cite>move mouse over icon to see how it looks like</cite>
       </div>
+      <div class="opt">
+        <label for="enableColorToolbox">Enable box with color information in right bottom corner</label> <input type="checkbox" name="enableColorToolbox" id="enableColorToolbox" />
+      </div>
+      <div class="opt">
+        <label for="enableColorTooltip">Enable color tooltip next to the mouse cursor</label> <input type="checkbox" name="enableColorTooltip" id="enableColorTooltip" />
+      </div>
     </div>
 
-    <div id="tab-2">
+    <div id="tab-3">
       <div class="opt">
         <label for="disableColorpicker">Completely disable Color picker</label> <input type="checkbox" name="disableColorpicker" id="disableColorpicker" />
       </div>
