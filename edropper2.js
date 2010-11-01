@@ -50,11 +50,16 @@ var page = {
     if (page.dropperActivated)
       return;
 
-    $("body").append('<div id="color-tooltip" style="z-index: 1000; width:10px; height: 10px; border: 1px solid #000; display:none; font-size: 15px;"> </div>');
-    page.elColorTooltip = $('#color-tooltip');
+    // load external css for cursor changes
+    $("head").append('<link id="eye-dropper-css-cursor" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inject/anchor-cursor-'+page.cursor+'.css')+'" />');
+    $("head").append('<link id="eye-dropper-css" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inject/edropper2.css')+'" />');
 
-    // load css for cursor changes
-    $("head").append('<link id="eye-dropper-css" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inc/anchor-cursor-'+page.cursor+'.css')+'" />');
+    // insert tooltip and toolbox
+    $("body").append('<div id="color-tooltip"> </div><div id="color-toolbox"><div id="color-toolbox-color" style="background-color: #ffbbca">&nbsp;</div><div id="color-toolbox-text">&nbsp;</div></div>');
+    page.elColorTooltip = $('#color-tooltip');
+    page.elColorToolbox = $('#color-toolbox');
+    page.elColorToolboxColor = $('#color-toolbox-color');
+    page.elColorToolboxText = $('#color-toolbox-text');
 
     ////console.log('activating page dropper');
     page.defaults();
@@ -62,6 +67,7 @@ var page = {
     page.dropperActivated = true;
     page.screenChanged();
 
+    // set listeners
     $(document).bind('scrollstop', page.onScrollStop);
     document.addEventListener("mousemove", page.onMouseMove, false);
     document.addEventListener("click", page.onMouseClick, false);
@@ -75,6 +81,7 @@ var page = {
     // reset cursor changes
     document.body.style.cursor = 'default';
     $("#eye-dropper-css").remove();
+    $("#eye-dropper-css-cursor").remove();
 
     page.dropperActivated = false;
 
@@ -85,6 +92,7 @@ var page = {
     $(document).unbind('scrollstop', page.onScrollStop);
 
     page.elColorTooltip.remove();
+    page.elColorToolbox.remove();
   },
 
   // ---------------------------------
@@ -164,14 +172,22 @@ var page = {
     if ( (e.pageY-page.YOffset) < page.screenHeight/2 )
       fromTop = 15;
 
+    // set tooltip
     page.elColorTooltip.css({ 
         'background-color': '#'+color.rgbhex,
-        'color': 'black',
-        'position': 'absolute',
         'top': e.pageY+fromTop, 
         'left': e.pageX+fromLeft,
         'border-color': '#'+color.opposite
         }).show();
+    
+    // set toolbox
+    page.elColorToolboxColor.css({
+        'background-color': '#'+color.rgbhex
+    });
+
+    page.elColorToolboxText.html('#'+color.rgbhex+'<br />rgb('+color.r+','+color.g+','+color.b+')');
+
+    page.elColorToolbox.show();
   },
 
   // return true if rectangle A is whole in rectangle B
@@ -288,7 +304,9 @@ var page = {
 
     ////console.log('I want new screenshot');
     page.elColorTooltip.hide(1, function() {
-      page.sendMessage({type: 'screenshot'}, function() {});
+      page.elColorToolbox.hide(1, function() {
+        page.sendMessage({type: 'screenshot'}, function() {});
+      });
     });
   },
   
