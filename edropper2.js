@@ -1,4 +1,4 @@
-var EDROPPER_VERSION=3;
+var EDROPPER_VERSION=4;
 
 var page = {
   width: $(document).width(),
@@ -51,8 +51,8 @@ var page = {
       return;
 
     // load external css for cursor changes
-    $("head").append('<link id="eye-dropper-css-cursor" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inject/anchor-cursor-'+page.options.cursor+'.css')+'" />');
-    $("head").append('<link id="eye-dropper-css" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inject/edropper2.css')+'" />');
+    $("head").append('<link id="eye-dropper-css-cursor" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inject/anchor-cursor-'+page.options.cursor+'.css?0.2.3')+'" />');
+    $("head").append('<link id="eye-dropper-css" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inject/edropper2.css?0.2.3')+'" />');
 
     // insert tooltip and toolbox
     var inserted = ''
