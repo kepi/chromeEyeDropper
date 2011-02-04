@@ -9,7 +9,7 @@ var page = {
   dropperActivated: false,
   screenWidth: 0,
   screenHeight: 0,
-  options: {cursor: 'default', enableColorToolbox: true, enableColorTooltip: true},
+  options: {cursor: 'default', enableColorToolbox: true, enableColorTooltip: true, enableRightClickDeactivate: true},
 
   defaults: function() {
     page.canvas = document.createElement("canvas");
@@ -84,7 +84,9 @@ var page = {
     document.addEventListener("mousemove", page.onMouseMove, false);
     document.addEventListener("click", page.onMouseClick, false);
     document.addEventListener("keydown", page.onKeyDown, false);
-    document.addEventListener("contextmenu", page.onContextMenu, false);
+    if ( page.options.enableRightClickDeactivate === true ) {
+      document.addEventListener("contextmenu", page.onContextMenu, false);
+    }
   },
 
   dropperDeactivate: function() {
@@ -102,7 +104,9 @@ var page = {
     document.removeEventListener("mousemove", page.onMouseMove, false);
     document.removeEventListener("click", page.onMouseClick, false);
     document.removeEventListener("keydown", page.onKeyDown, false);
-    document.removeEventListener("contextmenu", page.onContextMenu, false);
+    if ( page.options.enableRightClickDeactivate === true ) {
+      document.removeEventListener("contextmenu", page.onContextMenu, false);
+    }
     $(document).unbind('scrollstop', page.onScrollStop);
 
     if ( page.options.enableColorTooltip === true ) {

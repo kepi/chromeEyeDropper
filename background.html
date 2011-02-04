@@ -165,9 +165,10 @@ var picker = {
     cursor = (window.localStorage.dropperCursor === 'crosshair') ? 'crosshair' : 'default';
     enableColorToolbox = (window.localStorage.enableColorToolbox === "false") ? false : true;
     enableColorTooltip = (window.localStorage.enableColorTooltip === "false") ? false : true;
+    enableRightClickDeactivate = (window.localStorage.enableRightClickDeactivate === "false") ? false : true;
 
     // activate picker
-    picker.sendMessage({type: 'pickup-activate', options: { cursor: cursor, enableColorToolbox: enableColorToolbox, enableColorTooltip: enableColorTooltip}}, function() {});
+    picker.sendMessage({type: 'pickup-activate', options: { cursor: cursor, enableColorToolbox: enableColorToolbox, enableColorTooltip: enableColorTooltip, enableRightClickDeactivate: enableRightClickDeactivate}}, function() {});
 
     ////console.log('activating pickup');
   },
