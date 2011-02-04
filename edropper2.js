@@ -84,6 +84,7 @@ var page = {
     document.addEventListener("mousemove", page.onMouseMove, false);
     document.addEventListener("click", page.onMouseClick, false);
     document.addEventListener("keydown", page.onKeyDown, false);
+    document.addEventListener("contextmenu", page.onContextMenu, false);
   },
 
   dropperDeactivate: function() {
@@ -101,6 +102,7 @@ var page = {
     document.removeEventListener("mousemove", page.onMouseMove, false);
     document.removeEventListener("click", page.onMouseClick, false);
     document.removeEventListener("keydown", page.onKeyDown, false);
+    document.removeEventListener("contextmenu", page.onContextMenu, false);
     $(document).unbind('scrollstop', page.onScrollStop);
 
     if ( page.options.enableColorTooltip === true ) {
@@ -160,6 +162,16 @@ var page = {
       // Esc - stop picking
       case 27: page.dropperDeactivate(); break;
     }
+  },
+
+  // right click
+  onContextMenu: function(e) {
+    if (!page.dropperActivated)
+      return;
+
+    e.preventDefault();
+
+    page.dropperDeactivate();
   },
 
   onWindowResize: function(e) {
