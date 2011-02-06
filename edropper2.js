@@ -54,6 +54,10 @@ var page = {
     $("head").append('<link id="eye-dropper-css-cursor" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inject/anchor-cursor-'+page.options.cursor+'.css?0.2.3')+'" />');
     $("head").append('<link id="eye-dropper-css" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inject/edropper2.css?0.2.3')+'" />');
 
+    // create overlay div
+    overlay_html = '<div id="eye-dropper-overlay" style="position: absolute; width: '+page.width+'px; height: '+page.height+'px; opacity: 1; background: none; border: none; z-index: 5000;">&nbsp;</div>';
+    $("body").before(overlay_html);
+
     // insert tooltip and toolbox
     var inserted = ''
     if ( page.options.enableColorTooltip === true ) {
@@ -62,7 +66,7 @@ var page = {
     if ( page.options.enableColorToolbox === true ) {
       inserted += '<div id="color-toolbox"><div id="color-toolbox-color" style="background-color: #ffbbca">&nbsp;</div><div id="color-toolbox-text">&nbsp;</div></div>';
     }
-    $("body").append(inserted);
+    $("#eye-dropper-overlay").append(inserted);
 
     if ( page.options.enableColorTooltip === true ) {
       page.elColorTooltip = $('#color-tooltip');
@@ -94,7 +98,7 @@ var page = {
       return;
 
     // reset cursor changes
-    document.body.style.cursor = 'default';
+    $("#eye-dropper-overlay").css('cursor','default');
     $("#eye-dropper-css").remove();
     $("#eye-dropper-css-cursor").remove();
 
@@ -332,7 +336,7 @@ var page = {
 
     page.screenshoting = true;
 
-    document.body.style.cursor = 'progress';
+    $("#eye-dropper-overlay").css('cursor','progress');
 
     ////console.log('I want new screenshot');
     // TODO: this is terrible. It have to be done better way
@@ -396,7 +400,7 @@ var page = {
       // TODO - je nutne refreshnout ctverecek a nastavit mu spravnou barvu
 
       page.screenshoting = false;
-      document.body.style.cursor = page.options.cursor;
+      $("#eye-dropper-overlay").css('cursor',page.options.cursor);
 
       // re-enable tooltip and toolbox
       if ( page.options.enableColorTooltip === true ) {
