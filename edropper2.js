@@ -183,12 +183,26 @@ var page = {
     page.dropperDeactivate();
   },
 
+  // window is resized
   onWindowResize: function(e) {
     if (!page.dropperActivated)
       return;
 
     ////console.log('window resized');
+
+    // set defaults
     page.defaults();
+
+    // width and height changed so we have to get new one
+    page.width = $(document).width();
+    page.height = $(document).height();
+    //page.screenWidth = window.innerWidth;
+    //page.screenHeight = window.innerHeight;
+
+    // also don't forget to set overlay
+    $("#eye-dropper-overlay").css('width',page.width).css('height',page.height);
+
+    // call screen chaned
     page.screenChanged();
   },
 
@@ -320,8 +334,8 @@ var page = {
     if (!page.dropperActivated)
       return;
 
-    page.YOffset = $(document).scrollTop(),
-    page.XOffset = $(document).scrollLeft()
+    page.YOffset = $(document).scrollTop();
+    page.XOffset = $(document).scrollLeft();
 
     var rect = {x: page.XOffset, y: page.YOffset, width: page.screenWidth, height: page.screenHeight};
 
@@ -337,7 +351,7 @@ var page = {
 
     page.screenshoting = true;
 
-    $("#eye-dropper-overlay").css('cursor','progress');
+    $("#eye-dropper-overlay").css('cursor','progress')
 
     ////console.log('I want new screenshot');
     // TODO: this is terrible. It have to be done better way
