@@ -119,6 +119,7 @@ var page = {
     if ( page.options.enableColorToolbox === true ) {
       page.elColorToolbox.remove();
     }
+    $("#eye-dropper-overlay").remove();
   },
 
   // ---------------------------------
