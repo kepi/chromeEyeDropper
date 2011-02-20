@@ -210,6 +210,12 @@ var picker = {
   },
   
   init: function() {
+    // show installed or updated page
+    if ( window.localStorage.seenInstalledPage == undefined || window.localStorage.seenInstalledPage === "false" ) {
+      window.localStorage.seenInstalledPage = true;
+      chrome.tabs.create({url: 'pages/installed.html', selected: true});
+    }
+
     // settings from local storage
     if ( window.localStorage.history == undefined )
       window.localStorage.history = "[]";
