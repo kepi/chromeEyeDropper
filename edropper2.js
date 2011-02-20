@@ -51,8 +51,8 @@ var page = {
       return;
 
     // load external css for cursor changes
-    $("head").append('<link id="eye-dropper-css-cursor" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inject/anchor-cursor-'+page.options.cursor+'.css?0.2.3')+'" />');
-    $("head").append('<link id="eye-dropper-css" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inject/edropper2.css?0.2.3')+'" />');
+    $("head").append('<link id="eye-dropper-css-cursor" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inject/anchor-cursor-'+page.options.cursor+'.css?0.2.4')+'" />');
+    $("head").append('<link id="eye-dropper-css" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inject/edropper2.css?0.2.4')+'" />');
 
     // create overlay div
     overlay_html = '<div id="eye-dropper-overlay" style="position: absolute; width: '+page.width+'px; height: '+page.height+'px; opacity: 1; background: none; border: none; z-index: 5000;">&nbsp;</div>';
