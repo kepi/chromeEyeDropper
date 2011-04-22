@@ -136,17 +136,17 @@ var page = {
   onMouseClick: function(e) {
     if (!page.dropperActivated)
       return;
-    
+
     e.preventDefault();
 
     page.dropperDeactivate();
     page.sendMessage({type: "set-color", color: page.pickColor(e)});
   },
-  
+
   onScrollStop: function() {
     if (!page.dropperActivated)
      return;
-    
+
     ////console.log("Scroll stop");
     page.screenChanged();
   },
@@ -165,7 +165,7 @@ var page = {
       // u - Update
       case 85: page.screenChanged(true); break;
       // p - pickUp color
-      case 80:   
+      case 80:
         // FIXME: do mouseClick je potreba predat spravne pozici, ne takto
         mouseClick(e); break;
       // Esc - stop picking
@@ -225,14 +225,14 @@ var page = {
 
     // set tooltip
     if ( page.options.enableColorTooltip === true ) {
-      page.elColorTooltip.css({ 
+      page.elColorTooltip.css({
         'background-color': '#'+color.rgbhex,
-        'top': e.pageY+fromTop, 
+        'top': e.pageY+fromTop,
         'left': e.pageX+fromLeft,
         'border-color': '#'+color.opposite
       }).show();
     }
-    
+
     // set toolbox
     if ( page.options.enableColorToolbox === true ) {
       page.elColorToolboxColor.css({'background-color': '#'+color.rgbhex});
@@ -278,7 +278,7 @@ var page = {
   // ---------------------------------
   // COLORS
   // ---------------------------------
-  
+
   pickColor: function(e) {
     if ( page.canvasData === null )
       return;
@@ -377,7 +377,7 @@ var page = {
     }
 
   },
-  
+
   // capture actual Screenshot
   capture: function() {
     page.checkCanvas();
