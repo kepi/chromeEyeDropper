@@ -249,27 +249,45 @@ var page = {
       return false;
   },
 
+  // found out if two points and length overlaps
+  // and merge it if needed. Helper method for
+  // rectMerge
+  rectMergeGeneric: function(a1, a2, length) {
+    // switch them if a2 is above a1
+    if ( a2 < a1 ) { tmp = a2; a2 = a1; a1 = tmp; }
+
+    // shapes are overlaping
+    if ( a2 <= a1 + length )
+        return {a: a1, length: (a2-a1) + length};
+    else
+        return false;
+
+  },
+
   // merge same x or y positioned rectangles if overlaps
-  // width (or height)  of B has to be bigger or equal to A
+  // width (or height) of B has to be equal to A
   rectMerge: function(A, B) {
-    if ( A.x == B.x && A.width <= B.width ) {
-      if ( A.y < B.y ) {
-        B.y = A.y;
-        B.height = B.height + B.y - A.y;
-      } else {
-        B.height = B.height + A.y - B.y;
-      }
-      return B;
+    var t;
 
-    } else if ( A.y == B.y && A.height <= B.height ) {
-      if ( A.x < B.x ) {
-        B.x = A.x;
-        B.width = B.width + B.x - A.x;
-      } else {
-        B.width = B.width + A.x - B.x;
+    // same x position and same width
+    if ( A.x == B.x && A.width == B.width ) {
+      t = page.rectMergeGeneric(A.y, B.y, A.height);
+
+      if ( t != false ) {
+        A.y = t.a;
+        A.height = length;
+        return A;
       }
 
-      return B;
+    // same y position and same height
+    } else if ( A.y == B.y && A.height == B.height ) {
+      t = page.rectMergeGeneric(A.x, B.x, A.width);
+
+      if ( t != false ) {
+        A.x = t.a;
+        A.width = length;
+        return A;
+      }
     }
 
     return false;
