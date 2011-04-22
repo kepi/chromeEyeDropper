@@ -1,4 +1,4 @@
-var EDROPPER_VERSION=4;
+var EDROPPER_VERSION=5;
 
 var page = {
   width: $(document).width(),
@@ -87,15 +87,19 @@ var page = {
     $(document).bind('scrollstop', page.onScrollStop);
     document.addEventListener("mousemove", page.onMouseMove, false);
     document.addEventListener("click", page.onMouseClick, false);
-    document.addEventListener("keydown", page.onKeyDown, false);
     if ( page.options.enableRightClickDeactivate === true ) {
       document.addEventListener("contextmenu", page.onContextMenu, false);
     }
+    // enable keyboard shortcuts
+    page.shortcuts(true);
   },
 
   dropperDeactivate: function() {
     if (!page.dropperActivated)
       return;
+
+    // disable keyboard shortcuts
+    page.shortcuts(false);
 
     // reset cursor changes
     $("#eye-dropper-overlay").css('cursor','default');
@@ -107,7 +111,6 @@ var page = {
     ////console.log('deactivating page dropper');
     document.removeEventListener("mousemove", page.onMouseMove, false);
     document.removeEventListener("click", page.onMouseClick, false);
-    document.removeEventListener("keydown", page.onKeyDown, false);
     if ( page.options.enableRightClickDeactivate === true ) {
       document.removeEventListener("contextmenu", page.onContextMenu, false);
     }
@@ -157,21 +160,21 @@ var page = {
 
   },
 
-  onKeyDown: function(e) {
-    if (!page.dropperActivated)
-      return;
+  // keyboard shortcuts
+  // enable with argument as true, disable with false
+  shortcuts: function(start) {
+    // enable shortcuts
+    if ( start == true ) {
+      $(document).bind('keydown', 'Esc', function(evt) { page.dropperDeactivate(); });
+      $(document).bind('keydown', 'u', function(evt) { page.screenChanged(true); });
 
-    switch (e.keyCode) {
-      // u - Update
-      case 85: page.screenChanged(true); break;
-      // p - pickUp color
-      case 80:
-        // FIXME: do mouseClick je potreba predat spravne pozici, ne takto
-        mouseClick(e); break;
-      // Esc - stop picking
-      case 27: page.dropperDeactivate(); break;
+    // disable shortcuts
+    } else {
+      $(document).unbind('keydown', 'u');
+      $(document).unbind('keydown', 'Esc');
     }
   },
+
 
   // right click
   onContextMenu: function(e) {

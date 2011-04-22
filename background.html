@@ -4,8 +4,8 @@
 <script type="text/javascript">
 // vim:ft=javascript
 
-var NEED_DROPPER_VERSION=4;
-var BG_VERSION=5;
+var NEED_DROPPER_VERSION=5;
+var BG_VERSION=6;
 
 // jQuery like functions
 
@@ -139,22 +139,29 @@ var picker = {
         ////console.log('jquery injected');
         chrome.tabs.executeScript(picker.tab.id, {allFrames: false, file: "inc/jquery-special-scroll.js"}, function() {
           ////console.log('jquery-special-scroll injected');
-          chrome.tabs.executeScript(picker.tab.id, {allFrames: false, file: "edropper2.js"}, function() {
-            ////console.log('edropper2 injected');
+          chrome.tabs.executeScript(picker.tab.id, {allFrames: false, file: "inc/jquery.hotkeys.js"}, function() {
+            ////console.log('jquery.hotkeys injected');
+            chrome.tabs.executeScript(picker.tab.id, {allFrames: false, file: "edropper2.js"}, function() {
+              ////console.log('edropper2 injected');
 
-            picker.pickupActivate();
+              picker.pickupActivate();
 
+            });
           });
         });
       });
+
     // dropper is loaded but with old version
     } else if ( picker.dropperVersion == undefined || picker.dropperVersion < NEED_DROPPER_VERSION ) {
-        chrome.tabs.executeScript(picker.tab.id, {allFrames: true, file: "edropper2.js"}, function() {
-          ////console.log('new version of edropper2 injected');
+      // we need to explicitly load jquery.hotkeys.js for dropper version lower than 5
+      if ( picker.dropperVersion <= 4 )
+        chrome.tabs.executeScript(picker.tab.id, {allFrames: false, file: "inc/jquery.hotkeys.js"});
 
-          picker.pickupActivate();
+      chrome.tabs.executeScript(picker.tab.id, {allFrames: true, file: "edropper2.js"}, function() {
+        ////console.log('new version of edropper2 injected');
+        picker.pickupActivate();
+      });
 
-        });
     // dropper is loaded, activate
     } else
       picker.pickupActivate();
