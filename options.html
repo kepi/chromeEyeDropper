@@ -68,7 +68,11 @@ function restore_options() {
   cursor = (window.localStorage.dropperCursor === 'crosshair') ? 'crosshair' : 'default';
   document.getElementById('dropperCursor'+cursor).checked = true;
   
-  $("#keyActivate").html( window.localStorage.keyActivate );
+  key = window.localStorage.keyActivate;
+  if ( key == undefined || key == "" )
+    key = "not set";
+
+  $("#keyActivate").html( key );
 }
 
 function keysStartListening() {
@@ -99,8 +103,8 @@ $(document).ready(function() {
 
     $("#keycode-dialog").dialog({
       autoOpen: false,
-      height: 150,
-      width: 200,
+      height: 200,
+      width: 250,
       modal: true,
       title: "Set shortcut",
       buttons: {
@@ -209,7 +213,8 @@ $(document).ready(function() {
   </div>
 
   <div id="keycode-dialog">
-    Shortcut: <span id="shortKeyActivate"></span>
+    <p>Shortcut: <span id="shortKeyActivate">none yet</span></p>
+    <p id="info">Just press any keyboard shortcut you want to assing to this function and press Save when you are done.</p>
   </div>
 </body>
 </html>

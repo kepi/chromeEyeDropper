@@ -139,3 +139,28 @@ br.clear {
   margin-top: 5px;
 }
 
+#keycode-dialog {
+  line-height: 1.5em;
+}
+
+#keycode-dialog p#info {
+  font-style: italic;
+  clear: both;
+  margin-top: 25px;
+}
+
+#keyActivate, #shortKeyActivate {
+  font-weight: bold;
+}
+#shortKeyActivate {
+  font-size: 1.5em;
+  float: right;
+  margin-right: 10px;
+}
+
+#options div.opt a {
+  color: navy;
+}
+#options div.opt a:hover {
+  color: red;
+}
