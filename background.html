@@ -4,8 +4,8 @@
 <script type="text/javascript">
 // vim:ft=javascript
 
-var NEED_DROPPER_VERSION=5;
-var NEED_ED_HELPER_VERSION=1;
+var NEED_DROPPER_VERSION=6;
+var NEED_ED_HELPER_VERSION=3;
 var BG_VERSION=6;
 
 // jQuery like functions
@@ -105,6 +105,7 @@ var picker = {
     if ( tab == undefined )
       tab = picker.tab.id;
 
+    console.log("Injecting " + file + " into tab " + tab.id);
     chrome.tabs.executeScript(picker.tab.id, {allFrames: false, file: file}, function() {});
   },
 
@@ -185,14 +186,11 @@ var picker = {
         ////console.log('jquery injected');
         chrome.tabs.executeScript(picker.tab.id, {allFrames: false, file: "inc/jquery-special-scroll.js"}, function() {
           ////console.log('jquery-special-scroll injected');
-          chrome.tabs.executeScript(picker.tab.id, {allFrames: false, file: "inc/jquery.hotkeys.js"}, function() {
-            ////console.log('jquery.hotkeys injected');
-            chrome.tabs.executeScript(picker.tab.id, {allFrames: false, file: "edropper2.js"}, function() {
-              ////console.log('edropper2 injected');
+          chrome.tabs.executeScript(picker.tab.id, {allFrames: false, file: "edropper2.js"}, function() {
+            ////console.log('edropper2 injected');
 
-              picker.pickupActivate();
+            picker.pickupActivate();
 
-            });
           });
         });
       });

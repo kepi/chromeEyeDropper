@@ -1,4 +1,4 @@
-var EDROPPER_VERSION=5;
+var EDROPPER_VERSION=6;
 
 var page = {
   width: $(document).width(),
@@ -165,13 +165,13 @@ var page = {
   shortcuts: function(start) {
     // enable shortcuts
     if ( start == true ) {
-      $(document).bind('keydown', 'Esc', function(evt) { page.dropperDeactivate(); });
-      $(document).bind('keydown', 'u', function(evt) { page.screenChanged(true); });
+      shortcut.add('Esc', function(evt) { page.dropperDeactivate(); });
+      shortcut.add('U', function(evt) { page.screenChanged(true); });
 
     // disable shortcuts
     } else {
-      $(document).unbind('keydown', 'u');
-      $(document).unbind('keydown', 'Esc');
+      shortcut.remove('U');
+      shortcut.remove('Esc');
     }
   },
 

@@ -1,18 +1,17 @@
-var ED_HELPER_VERSION=1;
+var ED_HELPER_VERSION=3;
 
 var edHelper = {
+  version: null,
   options: null,
 
-  // ---------------------------------
-  // MESSAGING 
-  // ---------------------------------
+  // listen for incoming messages
   messageListener: function() {
     chrome.extension.onRequest.addListener(function(req, sender, sendResponse) {
       switch(req.type) {
-        case 'ed-helper-loaded': sendResponse({version: ED_HELPER_VERSION}); break;
+        // ed-helper-options require options in req
         case 'ed-helper-options':  
           edHelper.options = req.options; 
-          edHelper.optionsSet(); 
+          edHelper.hotKeyStart();
           break;
       }
     });
@@ -20,25 +19,25 @@ var edHelper = {
 
   hotKeyStart: function() {
     if ( edHelper.options.hotkeyActivate != null ) {
+      // activate web page picker
       shortcut.add(edHelper.options.hotkeyActivate, function() {
         edHelper.sendMessage({type: "activate2"}, function() {});
       });
     }
   },
 
-  optionsSet: function() {
-    edHelper.hotKeyStart();
-  },
-  
-  sendMessage: function(message) {
-    message.version = ED_HELPER_VERSION;
-    chrome.extension.connect().postMessage(message);
-  },
-
+  // start helper
   init: function() {
+    edHelper.version = ED_HELPER_VERSION;
     edHelper.messageListener();
     // load options
     edHelper.sendMessage({type: "ed-helper-options"}, function() {});
+  },
+
+  // helper for sending message to bg
+  sendMessage: function(message) {
+    message.version = edHelper.version;
+    chrome.extension.connect().postMessage(message);
   }
 }
 
