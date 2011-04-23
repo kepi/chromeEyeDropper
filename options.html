@@ -7,6 +7,7 @@
 
     <script src="inc/jquery-1.4.2.min.js"></script>
     <script src="inc/jquery-ui/js/jquery-ui-1.8.4.custom.min.js"></script>
+    <script src="inc/keycode.js"></script>
 
     <link href="inc/jquery-ui/css/smoothness/jquery-ui-1.8.4.custom.css" rel="stylesheet" type="text/css"/>
 
@@ -38,7 +39,8 @@ function save_options() {
 
   cursor = document.getElementById('dropperCursorcrosshair').checked ? 'crosshair' : 'default';
   window.localStorage.dropperCursor =  cursor;
-  console.log(window.localStorage.dropperCursor);
+
+  window.localStorage.keyActivate = $("#keyActivate").html();
 
   // Update status to let user know options were saved.
   var status = document.getElementById("status");
@@ -65,13 +67,60 @@ function restore_options() {
   
   cursor = (window.localStorage.dropperCursor === 'crosshair') ? 'crosshair' : 'default';
   document.getElementById('dropperCursor'+cursor).checked = true;
+  
+  $("#keyActivate").html( window.localStorage.keyActivate );
 }
+
+function keysStartListening() {
+  console.log('starting listener');
+  document.addEventListener("keydown", keyDown, false);
+  document.addEventListener("keypress", function(e) { e.preventDefault(); return false; }, false);
+}
+
+function keysStopListening() {
+  console.log('stoping listener');
+  document.removeEventListener("keydown", keyDown, false);
+}
+
+function keyDown(e) {
+  console.log('key down');
+  var k = KeyCode;
+
+  $("#shortKeyActivate").html(k.hot_key(k.translate_event(e)));
+  e.preventDefault();
+}
+
 
 // On document load
 $(document).ready(function() {
     // show tabs
     $("#tabs").tabs();
     restore_options();
+
+    $("#keycode-dialog").dialog({
+      autoOpen: false,
+      height: 150,
+      width: 200,
+      modal: true,
+      title: "Set shortcut",
+      buttons: {
+        "Save": function() { 
+          key = $("#shortKeyActivate").html();
+          $("#keyActivate").html(key);
+          window.localStorage.keyActivate = key;
+          $(this).dialog("close"); 
+         }
+      },
+      close: function() {
+        keysStopListening();
+      }
+    });
+
+    $("#addKeyActivate").click(function(){
+      keysStartListening();
+      $("#keycode-dialog").dialog('open');
+    });
+
 });
 
 </script>
@@ -86,6 +135,7 @@ $(document).ready(function() {
       <li><a href="#tab-1"><span>Main</span></a></li>
       <li><a href="#tab-2"><span>Appearance</span></a></li>
       <li><a href="#tab-3"><span>Color picker</span></a></li>
+      <li><a href="#tab-4"><span>Keyboard Shortcuts</span></a></li>
     </ul>
 
     <div id="tab-1">
@@ -111,13 +161,19 @@ $(document).ready(function() {
         <label for="enableColorToolbox">Enable box with color information in right bottom corner</label> <input type="checkbox" name="enableColorToolbox" id="enableColorToolbox" />
       </div>
       <div class="opt">
-        <label for="enableColorTooltip">Enable color tooltip next to the mouse cursor</label> <input type="checkbox" name="enableColorTooltip" id="enableColorTooltip" />
+        false<label for="enableColorTooltip">Enable color tooltip next to the mouse cursor</label> <input type="checkbox" name="enableColorTooltip" id="enableColorTooltip" />
       </div>
     </div>
 
     <div id="tab-3">
       <div class="opt">
         <label for="disableColorpicker">Completely disable Color picker</label> <input type="checkbox" name="disableColorpicker" id="disableColorpicker" />
+      </div>
+    </div>
+
+    <div id="tab-4">
+      <div class="opt">
+        Pick color from webpage: <span id="keyActivate"></span> <a href="#" id="addKeyActivate">change</a>
       </div>
     </div>
 
@@ -135,6 +191,10 @@ $(document).ready(function() {
     <!-- Begin PayPal Donations --> 
     <form id="paypal-donation-options" action="https://www.paypal.com/cgi-bin/webscr" method="post"><div class="paypal-donations"><input type="hidden" name="cmd" value="_donations" /><input type="hidden" name="business" value="kepi@orthank.net" /><input type="hidden" name="return" value="http://eye-dropper.kepi.cz/thanks-for-your-donation/" /><input type="hidden" name="item_name" value="Eye Dropper" /><input type="hidden" name="currency_code" value="USD" /><input type="image" src="inc/btn_donate_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online." /></div></form> 
     </div>
+  </div>
+
+  <div id="keycode-dialog">
+    Shortcut: <span id="shortKeyActivate"></span>
   </div>
 </body>
 </html>

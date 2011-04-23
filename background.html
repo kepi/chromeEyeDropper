@@ -86,11 +86,34 @@ var picker = {
           // Reload background script
           case 'reload-background': window.location.reload(); break;
 
+          // Activate picker
+          case 'activate2': picker.activate2(); break;
+        
+          // Send options to ed helper
+          case 'ed-helper-options': picker.edHelperOptions(); break;
+
           // Send empty response if unimplemented
           default: sendResponse({});
         }
       });
     });
+  },
+
+  // load options for ed helper and send them
+  edHelperOptions: function() {
+    var hotkeyActivate = null;
+
+    if ( window.localStorage != null ) {
+      if ( window.localStorage.keyActivate != undefined && window.localStorage.keyActivate != "" )
+        hotkeyActivate = window.localStorage.keyActivate;
+    } 
+    
+    chrome.tabs.getSelected(null, function(tab) {
+      picker.tab = tab;
+      // send options back to ed-helper
+      picker.sendMessage({type: "ed-helper-options", options: {hotkeyActivate: hotkeyActivate}}, function() {});
+    });
+
   },
 
   supports: function(what) {
@@ -128,6 +151,14 @@ var picker = {
         }
       }
     }
+  },
+
+  // activate from content script
+  activate2: function() {
+    chrome.tabs.getSelected(null, function(tab) {
+      picker.useTab(tab);
+      picker.activate();
+    });
   },
 
   // activate Pick

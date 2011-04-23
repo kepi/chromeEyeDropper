@@ -17,5 +17,13 @@
     "popup": "popup.html"
   },
 
-  "permissions": [ "tabs", "http://*/*", "https://*/*" ]
+  "permissions": [ "tabs", "http://*/*", "https://*/*" ],
+
+  "content_scripts": [
+  {
+    "matches": ["http://*/*", "https://*/*"],
+    "js": ["inc/shortcut.js", "js/ed_helper.js"],
+    "run_at": "document_start"
+  }
+  ]
 }
