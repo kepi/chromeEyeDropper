@@ -7,12 +7,12 @@
   "options_page": "options.html",
 
   "icons": {
-    "48": "icon_48.png",
-    "128": "icon_128.png"
+    "48": "img/icon_48.png",
+    "128": "img/icon_128.png"
   },
 
   "browser_action": {
-    "default_icon": "icon.png",
+    "default_icon": "img/icon.png",
     "default_title": "EyeDropper",
     "popup": "popup.html"
   },
