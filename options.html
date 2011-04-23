@@ -124,6 +124,17 @@ $(document).ready(function() {
 });
 
 </script>
+<script type="text/javascript">
+  /* <![CDATA[ */
+(function() {
+ var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
+ s.type = 'text/javascript';
+ s.async = true;
+ s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
+ t.parentNode.insertBefore(s, t);
+ })();
+/* ]]> */
+</script>
 </head>
 
 <body id="options-body">
@@ -186,7 +197,11 @@ $(document).ready(function() {
 
   <div id="donation">
     <div>
-    <p>If you find Chrome Eye Dropper usefull and wish to support and encourage its continued development, please consider a donation. Thanks!</p>
+      <h2>Do you like Eye Dropper?</h2>
+    <span id="flattrButtonDonate"><a class="FlattrButton" style="display:none;" href="http://eye-dropper.kepi.cz/"></a><noscript><a href="http://flattr.com/thing/173858/Eye-Dropper" target="_blank"><img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a></noscript></span>
+    <p>First of all - if you like Eye Dropper <a href="https://chrome.google.com/webstore/detail/hmdcmlfkchdmnmnmheododdhjedfccka">rate it on Chrome Webstore</a> please.</p>
+    
+    <p>If you find Eye Dropper useful, you can make donation using Flattr or Paypal. Any amount will help me with its continuous development. Thanks!</p>
 
     <!-- Begin PayPal Donations --> 
     <form id="paypal-donation-options" action="https://www.paypal.com/cgi-bin/webscr" method="post"><div class="paypal-donations"><input type="hidden" name="cmd" value="_donations" /><input type="hidden" name="business" value="kepi@orthank.net" /><input type="hidden" name="return" value="http://eye-dropper.kepi.cz/thanks-for-your-donation/" /><input type="hidden" name="item_name" value="Eye Dropper" /><input type="hidden" name="currency_code" value="USD" /><input type="image" src="inc/btn_donate_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online." /></div></form> 

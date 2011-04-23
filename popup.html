@@ -155,6 +155,17 @@ function showJPicker()
   $('#colorpicker').jPicker({window: {title: '&nbsp;'}, color: {active: active}, images: {clientPath: 'inc/jPicker/images/'}});
 }
 </script>
+<script type="text/javascript">
+  /* <![CDATA[ */
+  (function() {
+     var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
+     s.type = 'text/javascript';
+     s.async = true;
+     s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
+     t.parentNode.insertBefore(s, t);
+   })();
+  /* ]]> */
+</script>
 </head>
 <body id="eyeDropperBody">
 
@@ -197,7 +208,12 @@ function showJPicker()
     
   </div>
 
-  <div id="footer"><a class="ext" href="http://eye-dropper.kepi.cz/">Home page</a> | <a class="ext" href="http://github.com/kepi/chromeEyeDropper/issues">Report a bug</a> | <a class="ext" href="options.html">Options</a></div>
+  <div id="footer">
+    <span id="flattrbutton"><a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://eye-dropper.kepi.cz/"></a><noscript><a href="http://flattr.com/thing/173858/Eye-Dropper" target="_blank"><img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a></noscript></span>
+
+    <a class="ext" href="http://eye-dropper.kepi.cz/">Home page</a> | <a class="ext" href="http://github.com/kepi/chromeEyeDropper/issues">Report a bug</a> | <a class="ext" href="options.html">Options</a>
+    <br class="clear" />
+  </div>
 
 </body>
 </html>

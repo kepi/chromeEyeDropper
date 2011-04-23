@@ -21,6 +21,10 @@ body {
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fdfdfd), to(#e6f2cb));
 }
 
+#footer span#flattrbutton {
+  float: left;
+}
+
 #footer a {
   color: black;
 }
@@ -122,6 +126,16 @@ br.clear {
   height: 100px;
 }
 
+#options-body #donation #flattrButtonDonate {
+  float: left;
+  margin-right: 20px;
+}
+
+#options-body #donation #paypal-donation-options {
+  text-align: right;
+}
+
 .opt {
   margin-top: 5px;
 }
+
