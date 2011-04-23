@@ -105,8 +105,8 @@ var picker = {
     if ( tab == undefined )
       tab = picker.tab.id;
 
-    console.log("Injecting " + file + " into tab " + tab.id);
-    chrome.tabs.executeScript(picker.tab.id, {allFrames: false, file: file}, function() {});
+    ////console.log("Injecting " + file + " into tab " + tab);
+    chrome.tabs.executeScript(tab, {allFrames: false, file: file}, function() {});
   },
 
   // load options for ed helper and send them
