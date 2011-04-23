@@ -31,6 +31,7 @@ var edHelper = {
   },
   
   sendMessage: function(message) {
+    message.version = ED_HELPER_VERSION;
     chrome.extension.connect().postMessage(message);
   },
 

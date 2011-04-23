@@ -5,6 +5,7 @@
 // vim:ft=javascript
 
 var NEED_DROPPER_VERSION=5;
+var NEED_ED_HELPER_VERSION=1;
 var BG_VERSION=6;
 
 // jQuery like functions
@@ -90,7 +91,7 @@ var picker = {
           case 'activate2': picker.activate2(); break;
         
           // Send options to ed helper
-          case 'ed-helper-options': picker.edHelperOptions(); break;
+          case 'ed-helper-options': picker.edHelperOptions(req); break;
 
           // Send empty response if unimplemented
           default: sendResponse({});
@@ -99,8 +100,16 @@ var picker = {
     });
   },
 
+  // shortcut for injecting new content
+  inject: function(file, tab) {
+    if ( tab == undefined )
+      tab = picker.tab.id;
+
+    chrome.tabs.executeScript(picker.tab.id, {allFrames: false, file: file}, function() {});
+  },
+
   // load options for ed helper and send them
-  edHelperOptions: function() {
+  edHelperOptions: function(req) {
     var hotkeyActivate = null;
 
     if ( window.localStorage != null ) {
@@ -108,8 +117,14 @@ var picker = {
         hotkeyActivate = window.localStorage.keyActivate;
     } 
     
+    // we are calling from content script so tab isn't set
     chrome.tabs.getSelected(null, function(tab) {
       picker.tab = tab;
+
+      // inject correct version
+      if ( req.version < NEED_ED_HELPER_VERSION )
+        picker.inject("js/ed_helper.js");
+
       // send options back to ed-helper
       picker.sendMessage({type: "ed-helper-options", options: {hotkeyActivate: hotkeyActivate}}, function() {});
     });
@@ -246,12 +261,43 @@ var picker = {
         picker.sendMessage({type: 'pickup-deactivate'}, function() {});
     });
   },
+
+  handleOlderVersions: function() {
+    // get old version
+    version = window.localStorage.bgVersion || 0;
+
+    if ( version == picker.version )
+      return;
+
+    // pre 0.2.5
+    // global shortcuts added - we have to inject new scripts
+    // to every tab
+    if ( version < 6 ) {
+      chrome.windows.getAll({populate: true}, function(wins) {
+        wins.forEach(function(win) {
+          win.tabs.forEach(function(tab) {
+            picker.inject("inc/shortcut.js", tab.id);
+            picker.inject("js/ed_helper.js", tab.id);
+          });
+        });
+      });
+    }
+
+    window.localStorage.bgVersion = picker.version;
+  },
   
   init: function() {
-    // show installed or updated page
-    if ( window.localStorage.seenInstalledPage == undefined || window.localStorage.seenInstalledPage === "false" ) {
-      window.localStorage.seenInstalledPage = true;
-      chrome.tabs.create({url: 'pages/installed.html', selected: true});
+    // only if we have support for localStorage
+    if ( window.localStorage != null ) {
+
+      // show installed or updated page
+      if ( window.localStorage.seenInstalledPage == undefined || window.localStorage.seenInstalledPage === "false" ) {
+        // TODO: for new installs inject ed helper to all tabs
+        window.localStorage.seenInstalledPage = true;
+        chrome.tabs.create({url: 'pages/installed.html', selected: true});
+      }
+
+      picker.handleOlderVersions();
     }
 
     // settings from local storage
