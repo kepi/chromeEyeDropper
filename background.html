@@ -274,8 +274,10 @@ var picker = {
       chrome.windows.getAll({populate: true}, function(wins) {
         wins.forEach(function(win) {
           win.tabs.forEach(function(tab) {
-            picker.inject("inc/shortcut.js", tab.id);
-            picker.inject("js/ed_helper.js", tab.id);
+            if ( tab != undefined && tab.url.indexOf('http') == 0 ) {
+              picker.inject("inc/shortcut.js", tab.id);
+              picker.inject("js/ed_helper.js", tab.id);
+            }
           });
         });
       });
