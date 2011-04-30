@@ -33,7 +33,6 @@ var page = {
           page.imageData = req.data;
           page.capture();
           break;
-        default: sendResponse({}); break;
       }
     });
   },
@@ -55,8 +54,7 @@ var page = {
     $("head").append('<link id="eye-dropper-css" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inject/edropper2.css?0.2.4')+'" />');
 
     // create overlay div
-    overlay_html = '<div id="eye-dropper-overlay" style="position: absolute; width: '+page.width+'px; height: '+page.height+'px; opacity: 1; background: none; border: none; z-index: 5000;">&nbsp;</div>';
-    $("body").before(overlay_html);
+    $("body").before('<div id="eye-dropper-overlay" style="position: absolute; width: '+page.width+'px; height: '+page.height+'px; opacity: 1; background: none; border: none; z-index: 5000;">&nbsp;</div>');
 
     // insert tooltip and toolbox
     var inserted = ''
