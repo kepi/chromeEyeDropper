@@ -32,7 +32,8 @@ var edHelper = {
 
   // unset previous hotkey
   removeShortcut: function(shortcutName) {
-    shortcut.remove(edHelper.shortcuts[shortcutName]);
+    if ( edHelper.shortcuts[shortcutName] != undefined )
+      shortcut.remove(edHelper.shortcuts[shortcutName]);
   },
 
   changeShortcut: function(shortcutName, key) {
