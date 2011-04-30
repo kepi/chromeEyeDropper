@@ -1,4 +1,4 @@
-var ED_HELPER_VERSION=4;
+var ED_HELPER_VERSION=5;
 
 var edHelper = {
   version: ED_HELPER_VERSION,
@@ -8,7 +8,7 @@ var edHelper = {
   messageListener: function(req, sender, sendResponse) {
       switch(req.type) {
         case 'helper-version':
-          console.log('helper version ' + edHelper.version);
+          ////console.log('helper version ' + edHelper.version + ' in tabid ' + req.tabid);
           sendResponse({version: edHelper.version, tabid: req.tabid});
           break;
       }
@@ -26,7 +26,7 @@ var edHelper = {
 
   // start helper
   init: function() {
-    console.log('init helper version ' + edHelper.version);
+    ////console.log('init helper version ' + edHelper.version);
     // load options
     chrome.extension.sendRequest({type: "ed-helper-options"}, function(response) {
       edHelper.options = response.options;

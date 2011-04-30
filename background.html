@@ -5,7 +5,7 @@
 // vim:ft=javascript
 
 var NEED_DROPPER_VERSION=6;
-var NEED_ED_HELPER_VERSION=4;
+var NEED_ED_HELPER_VERSION=5;
 var BG_VERSION=6;
 
 // jQuery like functions
@@ -78,7 +78,6 @@ var bg = {
     // longer connections
     chrome.extension.onConnect.addListener(function(port) {
       port.onMessage.addListener(function(req) {
-        console.log(req.type);
         switch(req.type) {
           // Taking screenshot for content script
           case 'screenshot': 
@@ -257,7 +256,7 @@ var bg = {
   tabOnUpdatedListener: function() {
     chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
       if ( tab.url.indexOf('http') == 0 && changeInfo.status == "complete" ) {
-        console.log("Injecting");
+        ////console.log("Injecting");
         chrome.tabs.executeScript(tabId, {allFrames: false, file: "inc/shortcut.js"});
         chrome.tabs.executeScript(tabId, {allFrames: false, file: bg.helperFile});
       }
@@ -314,7 +313,7 @@ var bg = {
 
             chrome.tabs.sendRequest(tab.id, {type: 'helper-version', tabid: tab.id}, function(response) {
               if ( response.version >= NEED_ED_HELPER_VERSION ) {
-                console.log("tabid " + tab.id + " is ok. Not injecting.");
+                ////console.log("tabid " + tab.id + " is ok. Not injecting.");
                 bg.tabs.splice(bg.tabs.indexOf(tab.id), 1);
               }
             });
@@ -328,8 +327,8 @@ var bg = {
   // go trough tabs and inject script
   refreshTabs: function() {
     bg.tabs.forEach(function(tabId) {
-      console.log("tabid " + tabId + " bad. Injecting " + bg.helperFile);
-      // TODO has to insert only when missing, not when updating
+      ////console.log("tabid " + tabId + " bad. Injecting " + bg.helperFile);
+      // TODO insert shortcut only when missing, not when updating
       chrome.tabs.executeScript(tabId, {allFrames: false, file: "inc/shortcut.js"});
       chrome.tabs.executeScript(tabId, {allFrames: false, file: bg.helperFile});
     });
