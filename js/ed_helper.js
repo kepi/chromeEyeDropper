@@ -3,6 +3,7 @@ var ED_HELPER_VERSION=5;
 var edHelper = {
   version: ED_HELPER_VERSION,
   options: null,
+  shortcuts: [],
 
   // listen for incoming messages
   messageListener: function(req, sender, sendResponse) {
@@ -11,17 +12,47 @@ var edHelper = {
           ////console.log('helper version ' + edHelper.version + ' in tabid ' + req.tabid);
           sendResponse({version: edHelper.version, tabid: req.tabid});
           break;
+        case 'helper-change-shortcut':
+          edHelper.changeShortcut(req.shortcut, req.key);
+          break;
       }
+  },
+
+  // helper for adding shortcut
+  addShortcut: function(shortcutName, key) {
+    if ( key == null )
+      return;
+
+    // store used key so we can remove it later
+    edHelper.shortcuts[shortcutName] = key;
+
+    // add hotkey function
+    shortcut.add(key, function() { edHelper.handleShortcut(shortcutName); });
+  },
+
+  // unset previous hotkey
+  removeShortcut: function(shortcutName) {
+    shortcut.remove(edHelper.shortcuts[shortcutName]);
+  },
+
+  changeShortcut: function(shortcutName, key) {
+    ////console.log("changing shortcut " + shortcutName + " to key " + key);
+    edHelper.removeShortcut(shortcutName);
+    edHelper.addShortcut(shortcutName, key);
+  },
+
+  handleShortcut: function(shortcutName) {
+    switch(shortcutName) {
+      case 'activate':
+        chrome.extension.sendRequest({type: "activate-from-hotkey"});
+        break;
+    }
   },
 
   // handle hotkeys
   hotKeyStart: function() {
-    if ( edHelper.options.hotkeyActivate != null ) {
-      // activate web page picker
-      shortcut.add(edHelper.options.hotkeyActivate, function() {
-        chrome.extension.sendRequest({type: "activate-from-hotkey"});
-      });
-    }
+    // activate picker
+    edHelper.addShortcut('activate', edHelper.options.hotkeyActivate);
   },
 
   // start helper

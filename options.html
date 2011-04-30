@@ -94,6 +94,18 @@ function keyDown(e) {
   e.preventDefault();
 }
 
+function changeShortcut(shortcutName, key) {
+  console.log('changing shortcut');
+    chrome.windows.getAll({'populate':true}, function(windows){
+      windows.forEach(function(win) {
+        win.tabs.forEach(function(tab) {
+          if ( tab != undefined && tab.url.indexOf('http') == 0 ) {
+            chrome.tabs.sendRequest(tab.id, {type: "helper-change-shortcut", shortcut: shortcutName, key: key});
+          }
+        });
+      });
+    });
+}
 
 // On document load
 $(document).ready(function() {
@@ -112,6 +124,7 @@ $(document).ready(function() {
           key = $("#shortKeyActivate").html();
           $("#keyActivate").html(key);
           window.localStorage.keyActivate = key;
+          changeShortcut('activate', key);
           $(this).dialog("close"); 
          }
       },
