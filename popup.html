@@ -25,7 +25,7 @@ function init() {
     // find current tab 
     chrome.tabs.getSelected(null, function(tab) {
       var message = '';
-      bg.picker.useTab(tab);
+      bg.bg.useTab(tab);
       
       // special chrome pages
       if (tab.url.indexOf('chrome') == 0) {
@@ -56,7 +56,7 @@ function init() {
 
 function activatePick() {
   if ( pickupDisabled === false ) {
-    bg.picker.activate();
+    bg.bg.activate();
     window.close();
   }
 }
@@ -109,7 +109,7 @@ $(document).ready(function() {
         alpha: 0
       };
       color.rgbhex = this.title;
-      bg.picker.setColor({color: color, history: 'no'});
+      bg.bg.setColor({color: color, history: 'no'});
       setPickerColor(color);
     });
 
@@ -148,8 +148,8 @@ function showJPicker()
   $("#tab-colorpicker").show(); //css.display = 'block';
 
   var color = 'ffc000';
-  if ( bg.picker.color != null )
-    color = bg.picker.color;
+  if ( bg.bg.color != null )
+    color = bg.bg.color;
 
   var active = new $.jPicker.Color({hex: color});
   $('#colorpicker').jPicker({window: {title: '&nbsp;'}, color: {active: active}, images: {clientPath: 'inc/jPicker/images/'}});

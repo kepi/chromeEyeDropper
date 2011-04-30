@@ -5,7 +5,7 @@
 // vim:ft=javascript
 
 var NEED_DROPPER_VERSION=6;
-var NEED_ED_HELPER_VERSION=3;
+var NEED_ED_HELPER_VERSION=4;
 var BG_VERSION=6;
 
 // jQuery like functions
@@ -27,6 +27,8 @@ function inArray(value, array) {
 // base bg object
 var bg = {
   tab: 0,
+  tabs: [],
+  helperFile: "js/ed_helper.js",
   version: BG_VERSION,
   dropperLoaded: false,
   dropperVersion: 0,
@@ -60,9 +62,23 @@ var bg = {
   },
 
   messageListener: function() {
-    ////console.log('message listener called');
+    // simple messages
+    chrome.extension.onRequest.addListener(function(req, sender, sendResponse) {
+      switch(req.type) {
+        case 'ed-helper-options':
+          sendResponse(bg.edHelperOptions(req));
+          break;
+        case 'activate-from-hotkey':
+          bg.activate2();
+          sendResponse({});
+          break;
+      }
+    });
+
+    // longer connections
     chrome.extension.onConnect.addListener(function(port) {
       port.onMessage.addListener(function(req) {
+        console.log(req.type);
         switch(req.type) {
           // Taking screenshot for content script
           case 'screenshot': 
@@ -86,12 +102,6 @@ var bg = {
 
           // Reload background script
           case 'reload-background': window.location.reload(); break;
-
-          // Activate bg
-          case 'activate2': bg.activate2(); break;
-        
-          // Send options to ed helper
-          case 'ed-helper-options': bg.edHelperOptions(req); break;
 
           // Send empty response if unimplemented
           default: sendResponse({});
@@ -117,19 +127,8 @@ var bg = {
       if ( window.localStorage.keyActivate != undefined && window.localStorage.keyActivate != "" )
         hotkeyActivate = window.localStorage.keyActivate;
     } 
-    
-    // we are calling from content script so tab isn't set
-    chrome.tabs.getSelected(null, function(tab) {
-      bg.tab = tab;
 
-      // inject correct version
-      if ( req.version < NEED_ED_HELPER_VERSION )
-        bg.inject("js/ed_helper.js");
-
-      // send options back to ed-helper
-      bg.sendMessage({type: "ed-helper-options", options: {hotkeyActivate: hotkeyActivate}}, function() {});
-    });
-
+    return {options: {hotkeyActivate: hotkeyActivate}};
   },
 
   supports: function(what) {
@@ -258,32 +257,17 @@ var bg = {
       if ( bg.tab.id == tabId )
         bg.sendMessage({type: 'pickup-deactivate'}, function() {});
     });
+
   },
 
-  handleOlderVersions: function() {
-    // get old version
-    version = window.localStorage.bgVersion || 0;
-
-    if ( version == bg.version )
-      return;
-
-    // pre 0.2.5
-    // global shortcuts added - we have to inject new scripts
-    // to every tab
-    if ( version < 6 ) {
-      chrome.windows.getAll({populate: true}, function(wins) {
-        wins.forEach(function(win) {
-          win.tabs.forEach(function(tab) {
-            if ( tab != undefined && tab.url.indexOf('http') == 0 ) {
-              bg.inject("inc/shortcut.js", tab.id);
-              bg.inject("js/ed_helper.js", tab.id);
-            }
-          });
-        });
-      });
-    }
-
-    window.localStorage.bgVersion = bg.version;
+  tabOnUpdatedListener: function() {
+    chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+      if ( tab.url.indexOf('http') == 0 && changeInfo.status == "complete" ) {
+        console.log("Injecting");
+        chrome.tabs.executeScript(tabId, {allFrames: false, file: "inc/shortcut.js"});
+        chrome.tabs.executeScript(tabId, {allFrames: false, file: bg.helperFile});
+      }
+    });
   },
   
   init: function() {
@@ -296,8 +280,6 @@ var bg = {
         window.localStorage.seenInstalledPage = true;
         chrome.tabs.create({url: 'pages/installed.html', selected: true});
       }
-
-      bg.handleOlderVersions();
     }
 
     // settings from local storage
@@ -310,7 +292,53 @@ var bg = {
     bg.messageListener();
     
     // act when tab is changed
+    // TODO: call only when needed? this is now used also if picker isn't active
     bg.tabOnChangeListener();
+
+    // TODO: call only when shortcuts enabled now?
+    bg.tabOnUpdatedListener();
+
+    // refresh content scripts
+    bg.refreshContentScripts();
+  },
+
+  // handle finding all tabs and inject where needed
+  refreshContentScripts: function() {
+    bg.tabs = [];
+    bg.findContentScriptTabs();
+    window.setTimeout(function() { bg.refreshTabs(); }, 200);
+  },
+
+  // find all tabs in all windows and check injected version
+  findContentScriptTabs: function() {
+
+    chrome.windows.getAll({'populate':true}, function(windows){
+      windows.forEach(function(win) {
+        win.tabs.forEach(function(tab) {
+          if ( tab != undefined && tab.url.indexOf('http') == 0 ) {
+            bg.tabs.push(tab.id);
+
+            chrome.tabs.sendRequest(tab.id, {type: 'helper-version', tabid: tab.id}, function(response) {
+              if ( response.version >= NEED_ED_HELPER_VERSION ) {
+                console.log("tabid " + tab.id + " is ok. Not injecting.");
+                bg.tabs.splice(bg.tabs.indexOf(tab.id), 1);
+              }
+            });
+          }
+        });
+      });
+
+    });
+  },
+
+  // go trough tabs and inject script
+  refreshTabs: function() {
+    bg.tabs.forEach(function(tabId) {
+      console.log("tabid " + tabId + " bad. Injecting " + bg.helperFile);
+      // TODO has to insert only when missing, not when updating
+      chrome.tabs.executeScript(tabId, {allFrames: false, file: "inc/shortcut.js"});
+      chrome.tabs.executeScript(tabId, {allFrames: false, file: bg.helperFile});
+    });
   }
 };
 
