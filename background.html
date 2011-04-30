@@ -24,8 +24,8 @@ function inArray(value, array) {
   return -1;
 }
 
-// base picker object
-var picker = {
+// base bg object
+var bg = {
   tab: 0,
   version: BG_VERSION,
   dropperLoaded: false,
@@ -41,22 +41,22 @@ var picker = {
   // use selected tab
   // need to null all tab-specific variables
   useTab: function(tab) {
-    picker.tab = tab;
-    picker.dropperLoaded = false;
-    picker.dropperVersion = 0;
-    picker.screenshotData = '';
-    picker.canvas = document.createElement("canvas");
-    picker.canvasContext = null;
+    bg.tab = tab;
+    bg.dropperLoaded = false;
+    bg.dropperVersion = 0;
+    bg.screenshotData = '';
+    bg.canvas = document.createElement("canvas");
+    bg.canvasContext = null;
 
-    picker.sendMessage({type: 'edropper-loaded'}, function(res) {
-      picker.dropperLoaded = true; 
-      picker.dropperVersion = res.version;
-      ////console.log('Picker is loaded with version ' + picker.dropperVersion);
+    bg.sendMessage({type: 'edropper-loaded'}, function(res) {
+      bg.dropperLoaded = true; 
+      bg.dropperVersion = res.version;
+      ////console.log('Picker is loaded with version ' + bg.dropperVersion);
     });
   },
 
   sendMessage: function(message, callback) {
-    chrome.tabs.sendRequest(picker.tab.id, message, callback);
+    chrome.tabs.sendRequest(bg.tab.id, message, callback);
   },
 
   messageListener: function() {
@@ -67,31 +67,31 @@ var picker = {
           // Taking screenshot for content script
           case 'screenshot': 
             ////console.log('received screenshot request');
-            picker.capture(); break;
+            bg.capture(); break;
           
           // Creating debug tab
           case 'debug-tab': 
-            picker.debugImage = req.image;
-            picker.createDebugTab();
+            bg.debugImage = req.image;
+            bg.createDebugTab();
             break;
 
           // Define what background script supports
-          case 'supports': picker.supports(req.what); break;
+          case 'supports': bg.supports(req.what); break;
 
           // Set color given in req
-          case 'set-color': picker.setColor(req); break;
+          case 'set-color': bg.setColor(req); break;
                             
           // Get picked color
-          case 'get-color': sendResponse({color: picker.color}); break;
+          case 'get-color': sendResponse({color: bg.color}); break;
 
           // Reload background script
           case 'reload-background': window.location.reload(); break;
 
-          // Activate picker
-          case 'activate2': picker.activate2(); break;
+          // Activate bg
+          case 'activate2': bg.activate2(); break;
         
           // Send options to ed helper
-          case 'ed-helper-options': picker.edHelperOptions(req); break;
+          case 'ed-helper-options': bg.edHelperOptions(req); break;
 
           // Send empty response if unimplemented
           default: sendResponse({});
@@ -103,7 +103,7 @@ var picker = {
   // shortcut for injecting new content
   inject: function(file, tab) {
     if ( tab == undefined )
-      tab = picker.tab.id;
+      tab = bg.tab.id;
 
     ////console.log("Injecting " + file + " into tab " + tab);
     chrome.tabs.executeScript(tab, {allFrames: false, file: file}, function() {});
@@ -120,14 +120,14 @@ var picker = {
     
     // we are calling from content script so tab isn't set
     chrome.tabs.getSelected(null, function(tab) {
-      picker.tab = tab;
+      bg.tab = tab;
 
       // inject correct version
       if ( req.version < NEED_ED_HELPER_VERSION )
-        picker.inject("js/ed_helper.js");
+        bg.inject("js/ed_helper.js");
 
       // send options back to ed-helper
-      picker.sendMessage({type: "ed-helper-options", options: {hotkeyActivate: hotkeyActivate}}, function() {});
+      bg.sendMessage({type: "ed-helper-options", options: {hotkeyActivate: hotkeyActivate}}, function() {});
     });
 
   },
@@ -140,9 +140,9 @@ var picker = {
     sendResponse({state: state});
   },
 
-  // method for setting color. It set picker color, update badge and save to history if possible
+  // method for setting color. It set bg color, update badge and save to history if possible
   setColor: function(req) {
-    picker.color = req.color.rgbhex;
+    bg.color = req.color.rgbhex;
     chrome.browserAction.setBadgeText({text: 'N'});
     chrome.browserAction.setBadgeBackgroundColor({color: [req.color.r, req.color.g, req.color.b, 255]});
 
@@ -151,7 +151,7 @@ var picker = {
       // save to clipboard through small hack
       if ( window.localStorage['autoClipboard'] === "true" ) {
         var edCb = $('edClipboard');
-        edCb.value = window.localStorage['autoClipboardNoGrid'] === "true" ? picker.color : '#' + picker.color; 
+        edCb.value = window.localStorage['autoClipboardNoGrid'] === "true" ? bg.color : '#' + bg.color; 
         edCb.select();
         document.execCommand("copy", false, null);
       }
@@ -161,8 +161,8 @@ var picker = {
       if ( req.history == undefined || req.history != 'no' ) {
         var history = JSON.parse(window.localStorage.history);
         // first check if there isn't same color in history
-        if ( inArray(picker.color, history) < 0 ) {
-          history.push(picker.color);
+        if ( inArray(bg.color, history) < 0 ) {
+          history.push(bg.color);
           window.localStorage.history = JSON.stringify(history);
         }
       }
@@ -172,43 +172,43 @@ var picker = {
   // activate from content script
   activate2: function() {
     chrome.tabs.getSelected(null, function(tab) {
-      picker.useTab(tab);
-      picker.activate();
+      bg.useTab(tab);
+      bg.activate();
     });
   },
 
   // activate Pick
   activate: function() {
     // inject javascript if needed
-    if ( picker.dropperLoaded === false ) {
+    if ( bg.dropperLoaded === false ) {
       ////console.log('trying to inject jquery');
-      chrome.tabs.executeScript(picker.tab.id, {allFrames: false, file: "inc/jquery-1.4.2.min.js"}, function() {
+      chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/jquery-1.4.2.min.js"}, function() {
         ////console.log('jquery injected');
-        chrome.tabs.executeScript(picker.tab.id, {allFrames: false, file: "inc/jquery-special-scroll.js"}, function() {
+        chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/jquery-special-scroll.js"}, function() {
           ////console.log('jquery-special-scroll injected');
-          chrome.tabs.executeScript(picker.tab.id, {allFrames: false, file: "edropper2.js"}, function() {
+          chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "edropper2.js"}, function() {
             ////console.log('edropper2 injected');
 
-            picker.pickupActivate();
+            bg.pickupActivate();
 
           });
         });
       });
 
     // dropper is loaded but with old version
-    } else if ( picker.dropperVersion == undefined || picker.dropperVersion < NEED_DROPPER_VERSION ) {
+    } else if ( bg.dropperVersion == undefined || bg.dropperVersion < NEED_DROPPER_VERSION ) {
       // we need to explicitly load jquery.hotkeys.js for dropper version lower than 5
-      if ( picker.dropperVersion <= 4 )
-        chrome.tabs.executeScript(picker.tab.id, {allFrames: false, file: "inc/jquery.hotkeys.js"});
+      if ( bg.dropperVersion <= 4 )
+        chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/jquery.hotkeys.js"});
 
-      chrome.tabs.executeScript(picker.tab.id, {allFrames: true, file: "edropper2.js"}, function() {
+      chrome.tabs.executeScript(bg.tab.id, {allFrames: true, file: "edropper2.js"}, function() {
         ////console.log('new version of edropper2 injected');
-        picker.pickupActivate();
+        bg.pickupActivate();
       });
 
     // dropper is loaded, activate
     } else
-      picker.pickupActivate();
+      bg.pickupActivate();
   },
 
   pickupActivate: function() {
@@ -219,7 +219,7 @@ var picker = {
     enableRightClickDeactivate = (window.localStorage.enableRightClickDeactivate === "false") ? false : true;
 
     // activate picker
-    picker.sendMessage({type: 'pickup-activate', options: { cursor: cursor, enableColorToolbox: enableColorToolbox, enableColorTooltip: enableColorTooltip, enableRightClickDeactivate: enableRightClickDeactivate}}, function() {});
+    bg.sendMessage({type: 'pickup-activate', options: { cursor: cursor, enableColorToolbox: enableColorToolbox, enableColorTooltip: enableColorTooltip, enableRightClickDeactivate: enableRightClickDeactivate}}, function() {});
 
     ////console.log('activating pickup');
   },
@@ -228,24 +228,24 @@ var picker = {
   capture: function() {
     ////console.log('capturing');
     try {
-      chrome.tabs.captureVisibleTab(null, {format: picker.screenshotFormat, quality: 100}, picker.doCapture);
+      chrome.tabs.captureVisibleTab(null, {format: bg.screenshotFormat, quality: 100}, bg.doCapture);
     // fallback for chrome before 5.0.372.0
     } catch(e) {
-      chrome.tabs.captureVisibleTab(null, picker.doCapture);
+      chrome.tabs.captureVisibleTab(null, bg.doCapture);
     }
   },
 
   doCapture: function(data) {
       ////console.log('sending updated image');
-      picker.sendMessage({type: 'update-image', data: data}, function() {});
+      bg.sendMessage({type: 'update-image', data: data}, function() {});
   },
 
   createDebugTab: function() {
     // DEBUG
-    if ( picker.debugTab != 0 ) {
-      chrome.tabs.sendRequest(picker.debugTab, {type: 'update'});
+    if ( bg.debugTab != 0 ) {
+      chrome.tabs.sendRequest(bg.debugTab, {type: 'update'});
     } else
-      chrome.tabs.create({url: 'debugimage.html', selected: false}, function(tab) { picker.debugTab = tab.id });
+      chrome.tabs.create({url: 'debugimage.html', selected: false}, function(tab) { bg.debugTab = tab.id });
   },
 
   isThisPlatform: function(operationSystem) {
@@ -255,8 +255,8 @@ var picker = {
   tabOnChangeListener: function() {
     // deactivate dropper if tab changed
     chrome.tabs.onSelectionChanged.addListener(function(tabId, selectInfo) {
-      if ( picker.tab.id == tabId )
-        picker.sendMessage({type: 'pickup-deactivate'}, function() {});
+      if ( bg.tab.id == tabId )
+        bg.sendMessage({type: 'pickup-deactivate'}, function() {});
     });
   },
 
@@ -264,7 +264,7 @@ var picker = {
     // get old version
     version = window.localStorage.bgVersion || 0;
 
-    if ( version == picker.version )
+    if ( version == bg.version )
       return;
 
     // pre 0.2.5
@@ -275,15 +275,15 @@ var picker = {
         wins.forEach(function(win) {
           win.tabs.forEach(function(tab) {
             if ( tab != undefined && tab.url.indexOf('http') == 0 ) {
-              picker.inject("inc/shortcut.js", tab.id);
-              picker.inject("js/ed_helper.js", tab.id);
+              bg.inject("inc/shortcut.js", tab.id);
+              bg.inject("js/ed_helper.js", tab.id);
             }
           });
         });
       });
     }
 
-    window.localStorage.bgVersion = picker.version;
+    window.localStorage.bgVersion = bg.version;
   },
   
   init: function() {
@@ -297,26 +297,26 @@ var picker = {
         chrome.tabs.create({url: 'pages/installed.html', selected: true});
       }
 
-      picker.handleOlderVersions();
+      bg.handleOlderVersions();
     }
 
     // settings from local storage
     if ( window.localStorage.history == undefined )
       window.localStorage.history = "[]";
     // windows support jpeg only
-    picker.screenshotFormat = picker.isThisPlatform('windows') ? 'jpeg' : 'png';
+    bg.screenshotFormat = bg.isThisPlatform('windows') ? 'jpeg' : 'png';
 
     // we have to listen for messages
-    picker.messageListener();
+    bg.messageListener();
     
     // act when tab is changed
-    picker.tabOnChangeListener();
+    bg.tabOnChangeListener();
   }
 };
 
 </script>
 </head>
-<body onload="picker.init()">
+<body onload="bg.init()">
   <textarea id="edClipboard"></textarea>
 </body>
 </html>
