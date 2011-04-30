@@ -97,14 +97,8 @@ var bg = {
           // Set color given in req
           case 'set-color': bg.setColor(req); break;
                             
-          // Get picked color
-          case 'get-color': sendResponse({color: bg.color}); break;
-
           // Reload background script
           case 'reload-background': window.location.reload(); break;
-
-          // Send empty response if unimplemented
-          default: sendResponse({});
         }
       });
     });
