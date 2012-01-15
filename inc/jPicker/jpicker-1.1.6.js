@@ -838,12 +838,26 @@
         },
       ColorMethods: // color conversion methods  - make public to give use to external scripts
         {
+          hexToShorthex:
+            function(hex) {
+              return hex[0]+hex[2]+hex[4];
+            },
+          shorthexToHex:
+            function(shorthex) {
+              return shorthex[0]+shorthex[0]+shorthex[1]+shorthex[1]+shorthex[2]+shorthex[2];
+            },
+          hexShorthexable:
+            function(hex) {
+              return ( hex[0] == hex[1] && hex[2] == hex[3] && hex[4] == hex[5] ) ? true : false;
+            },
           hexToRgba:
             function(hex)
             {
               hex = this.validateHex(hex);
               if (hex == '') return { r: null, g: null, b: null, a: null };
               var r = '00', g = '00', b = '00', a = '255';
+              //if TODO: settings.window.shorthandHexSupport
+              if (hex.length == 3) hex = this.shorthexToHex(hex);
               if (hex.length == 6) hex += 'ff';
               if (hex.length > 6)
               {
@@ -878,7 +892,9 @@
           rgbaToHex:
             function(rgba)
             {
-              return this.intToHex(rgba.r) + this.intToHex(rgba.g) + this.intToHex(rgba.b) + this.intToHex(rgba.a);
+              //if TODO: settings.window.shorthandHexSupport
+              hex = this.intToHex(rgba.r) + this.intToHex(rgba.g) + this.intToHex(rgba.b) + this.intToHex(rgba.a);
+              return (this.hexShorthexable(hex)) ? this.hexToShorthex(hex) : hex;
             },
           intToHex:
             function(dec)
@@ -1904,7 +1920,8 @@
           liveUpdate: true, /* set false if you want the user to have to click "OK" before the binded input box updates values (always "true" for expandable picker) */
           alphaSupport: false, /* set to true to enable alpha picking */
           alphaPrecision: 0, /* set decimal precision for alpha percentage display - hex codes do not map directly to percentage integers - range 0-2 */
-          updateInputColor: true /* set to false to prevent binded input colors from changing */
+          updateInputColor: true /* set to false to prevent binded input colors from changing */,
+          shorthandHexSupport: false /* set to true if you want to support shorthand hex color */
         },
       color:
         {
