@@ -87,7 +87,7 @@ $(document).ready(function() {
   disableColorpicker = window.localStorage.disableColorpicker;
   if ( disableColorpicker !== "true" ) {
     $("head").append('<link "text/css" rel="stylesheet" href="inc/jPicker/css/jPicker-1.1.6.min.css" />');
-    $.getScript('inc/jPicker/jpicker-1.1.6.min.js', function() { setTimeout('showJPicker()', 250); });
+    $.getScript('inc/jPicker/jpicker-1.1.6.js', function() { setTimeout('showJPicker()', 250); });
 
   }
 
