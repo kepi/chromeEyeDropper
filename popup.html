@@ -5,7 +5,7 @@
   <link type="text/css" rel="stylesheet" href="style.css?0.2.5" />
   <link href="inc/jquery-ui/css/smoothness/jquery-ui-1.8.4.custom.css" rel="stylesheet" type="text/css"/>
 
-  <script type="text/javascript" src="inc/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="inc/jquery-1.7.1.min.js"></script>
   <script src="inc/jquery-ui/js/jquery-ui-1.8.4.custom.min.js"></script>
 
 
@@ -86,8 +86,8 @@ $(document).ready(function() {
   // Color Picker 
   disableColorpicker = window.localStorage.disableColorpicker;
   if ( disableColorpicker !== "true" ) {
-    $("head").append('<link "text/css" rel="stylesheet" href="inc/jPicker/css/jPicker-1.1.2.min.css" />');
-    $.getScript('inc/jPicker/jpicker-1.1.2.min.js', function() { setTimeout('showJPicker()', 250); });
+    $("head").append('<link "text/css" rel="stylesheet" href="inc/jPicker/css/jPicker-1.1.6.min.css" />');
+    $.getScript('inc/jPicker/jpicker-1.1.6.min.js', function() { setTimeout('showJPicker()', 250); });
 
   }
 
