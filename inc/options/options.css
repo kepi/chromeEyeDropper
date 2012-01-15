@@ -1,0 +1,85 @@
+#options, #donation div {
+  max-width: 600px;
+  margin: 0px auto;
+}
+
+#options {
+  min-height: 150px;
+}
+
+#options-body {
+  background: #fdfdfd;
+  margin: 0px; padding: 0px;
+}
+
+#options-body h1 { 
+  background: black;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#3C3C3C), to(#111));
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+#options-body #donation {
+  margin-top: 30px;
+  font-size: 11px;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#d9f2d0), to(#fdfdfd));
+  padding: 10px;
+  height: 100px;
+}
+
+#options-body #donation #flattrButtonDonate {
+  float: left;
+  margin-right: 20px;
+}
+
+#options-body #donation #paypal-donation-options, 
+#options-body #donation #pledgie-donation-options {
+  text-align: right;
+}
+
+.opt {
+  margin-top: 5px;
+}
+
+#keycode-dialog {
+  line-height: 1.5em;
+}
+
+#keycode-dialog p#info {
+  font-style: italic;
+  clear: both;
+  margin-top: 25px;
+}
+
+#keyActivate, #shortKeyActivate {
+  font-weight: bold;
+}
+#shortKeyActivate {
+  font-size: 1.5em;
+  float: right;
+  margin-right: 10px;
+}
+
+#options div.opt a {
+  color: navy;
+}
+#options div.opt a:hover {
+  color: red;
+}
+
+#tab-1.options div {
+    height: 33px;
+}
+
+.ui-tabs {
+  border: 0px !important;
+}
+
+button.save {
+  margin: 10px;
+}
+
+#status {
+  color: green;
+}
