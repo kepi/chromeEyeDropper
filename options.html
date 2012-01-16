@@ -71,7 +71,7 @@ function restore_options() {
   
   key = window.localStorage.keyActivate;
   if ( key == undefined || key == "" )
-    key = "not set";
+    key = "none";
 
   $("#keyActivate").html( key );
 }
@@ -116,17 +116,22 @@ $(document).ready(function() {
 
     $("#keycode-dialog").dialog({
       autoOpen: false,
-      height: 200,
-      width: 250,
+      height: 220,
+      width: 270,
       modal: true,
       title: "Set shortcut",
       buttons: {
-        "Save": function() { 
+        "Disable shortcut": function() {
+          key = "none";
+          $("#keyActivate").html(key);
+          $(this).dialog("close");
+        },
+        "Save shortcut": function() {
           key = $("#shortKeyActivate").html();
           $("#keyActivate").html(key);
           window.localStorage.keyActivate = key;
           changeShortcut('activate', key);
-          $(this).dialog("close"); 
+          $(this).dialog("close");
          }
       },
       close: function() {
@@ -202,7 +207,7 @@ $(document).ready(function() {
 
     <div id="tab-4">
       <div class="opt">
-        Pick color from webpage: <span id="keyActivate"></span> <a href="#" id="addKeyActivate">change</a>
+        Pick color from webpage: <a href="#" id="addKeyActivate"><span id="keyActivate"></span></a>
       </div>
     </div>
 
@@ -227,7 +232,7 @@ $(document).ready(function() {
   </div>
 
   <div id="keycode-dialog">
-    <p>Shortcut: <span id="shortKeyActivate">none yet</span></p>
+    <p>Shortcut: <span id="shortKeyActivate">none</span></p>
     <p id="info">Just press any keyboard shortcut you want to assign to this function and press Save when you are done.</p>
   </div>
 </body>
