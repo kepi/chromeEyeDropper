@@ -67,7 +67,7 @@ var page = {
       inserted += '<div id="color-tooltip"> </div>';
     }
     if ( page.options.enableColorToolbox === true ) {
-      inserted += '<div id="color-toolbox"><div id="color-toolbox-color" style="background-color: #ffbbca"></div><div id="color-toolbox-text"></div></div>';
+      inserted += '<div id="color-toolbox"><div id="color-toolbox-color"></div><div id="color-toolbox-text"></div></div>';
     }
     $("#eye-dropper-overlay").append(inserted);
 

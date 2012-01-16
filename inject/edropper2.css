@@ -1,5 +1,5 @@
-#color-tooltip,
-#color-toolbox {
+#eye-dropper-overlay #color-tooltip,
+#eye-dropper-overlay #color-toolbox {
   z-index: 1000;
   color: black;
   position: absolute;
@@ -8,12 +8,12 @@
   border: 1px solid black;
 }
 
-#color-tooltip {
+#eye-dropper-overlay #color-tooltip {
   width: 10px;
   height: 10px;
 }
 
-#color-toolbox {
+#eye-dropper-overlay #color-toolbox {
   width: 160px;
   height: 42px;
   bottom: 4px;
@@ -27,7 +27,7 @@
   position: fixed;
 }
 
-#color-toolbox-color {
+#eye-dropper-overlay #color-toolbox-color {
   width: 32px;
   height: 32px;
   margin: 4px;
@@ -35,12 +35,13 @@
   float: left;
   /* -webkit-box-shadow: 2px 2px 0px white; */
   border: 1px solid white;
+  background-color: #ffbbca;
 }
 
-#color-toolbox-text {
+#eye-dropper-overlay #color-toolbox-text {
   font-size: 11px;
   padding: 5px 0px;
   overflow: hidden;
   text-align: center;
+  color: white;
 }
-
