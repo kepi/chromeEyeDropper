@@ -135,7 +135,7 @@ var bg = {
   // method for setting color. It set bg color, update badge and save to history if possible
   setColor: function(req) {
     bg.color = req.color.rgbhex;
-    chrome.browserAction.setBadgeText({text: 'N'});
+    chrome.browserAction.setBadgeText({text: ' '});
     chrome.browserAction.setBadgeBackgroundColor({color: [req.color.r, req.color.g, req.color.b, 255]});
 
     // local storage only if available
