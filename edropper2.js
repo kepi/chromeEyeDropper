@@ -59,7 +59,7 @@ var page = {
     }
 
     // create overlay div
-    $("body").before('<div id="eye-dropper-overlay" style="position: absolute; width: '+page.width+'px; height: '+page.height+'px; opacity: 1; background: none; border: none; z-index: 5000;">&nbsp;</div>');
+    $("body").before('<div id="eye-dropper-overlay" style="position: absolute; width: '+page.width+'px; height: '+page.height+'px; opacity: 1; background: none; border: none; z-index: 5000;"></div>');
 
     // insert tooltip and toolbox
     var inserted = ''
@@ -67,7 +67,7 @@ var page = {
       inserted += '<div id="color-tooltip"> </div>';
     }
     if ( page.options.enableColorToolbox === true ) {
-      inserted += '<div id="color-toolbox"><div id="color-toolbox-color" style="background-color: #ffbbca">&nbsp;</div><div id="color-toolbox-text">&nbsp;</div></div>';
+      inserted += '<div id="color-toolbox"><div id="color-toolbox-color" style="background-color: #ffbbca"></div><div id="color-toolbox-text"></div></div>';
     }
     $("#eye-dropper-overlay").append(inserted);
 
