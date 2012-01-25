@@ -1,8 +1,11 @@
-#chrome Eye Dropper
+Eye Dropper for Google Chrome™
+==============================
 
-chrome Eye Dropper is eye dropper and color picker extension for Google Chrome.
+Eye Dropper is cool extension for Google Chrome™ that helps you pick colors directly from websites or from nice color picker.
 
-You can find more info, help and FAQ at [wiki](http://github.com/kepi/chromeEyeDropper/wiki)
+[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/thing/173858)
+
+You can find more info, help and FAQ at [homepage](http://eye-dropper.kepi.cz/)
 
 ##LICENSE
 

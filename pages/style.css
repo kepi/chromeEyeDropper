@@ -576,3 +576,8 @@ body.fixed.col-2-right #sidebar{width:310px;}
   margin-top: 1em;
 }
 
+div#___plus_0 {
+  position: absolute;
+  top: 4px;
+  right: 0px;
+}

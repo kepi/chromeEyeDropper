@@ -50,7 +50,7 @@ var page = {
       return;
 
     // load external css for cursor changes
-    var injectedCss = '<link id="eye-dropper-css-cursor" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inject/anchor-cursor-'+page.options.cursor+'.css?0.2.5')+'" /><link id="eye-dropper-css" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inject/edropper2.css?0.2.5')+'" />';
+    var injectedCss = '<link id="eye-dropper-css-cursor" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inject/anchor-cursor-'+page.options.cursor+'.css?0.2.6')+'" /><link id="eye-dropper-css" rel="stylesheet" type="text/css" href="'+chrome.extension.getURL('inject/edropper2.css?0.2.6')+'" />';
 
     if ($("head").length == 0) { // rare cases as i.e. image page
       $("body").before(injectedCss);
