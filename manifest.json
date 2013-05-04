@@ -5,7 +5,8 @@
   "description": "Eye Dropper is open source extension which allows you to pick colors from web pages, color picker and your personal color history.",
 
   "background": {
-      "page": "background.html"
+      "page": "background.html",
+      "persistent": true
   },
   "options_page": "options.html",
 
@@ -20,5 +21,14 @@
     "default_popup": "popup.html"
   },
 
-  "permissions": [ "tabs", "http://*/*", "https://*/*" ]
+  "permissions": [ "tabs", "http://*/*", "https://*/*" ],
+
+  "web_accessible_resources": [
+      "inc/jquery-1.7.1.min.js",
+      "inc/jquery-special-scroll.js",
+      "edropper2.js",
+      "inc/jquery.hotkeys.js",
+      "inject/anchor-cursor-default.css",
+      "inject/edropper2.css"
+  ]
 }

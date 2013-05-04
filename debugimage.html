@@ -6,7 +6,7 @@
 </style>
 <script type="text/javascript">
   function init() {
-    var bg = chrome.extension.getBackgroundPage();
+    var bg = chrome.runtime.getBackgroundPage();
     $('debugImage').src = bg.picker.debugImage;
 
     chrome.runtime.onMessage.addListener(function(req, sender, sendResponse) {

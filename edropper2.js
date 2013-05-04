@@ -407,7 +407,8 @@ var page = {
     page.checkCanvas();
     ////console.log(page.rects);
 
-    var image = new Image();
+//    var image = new Image();
+    var image = document.createElement('img');
 
     image.onload = function() {
       page.screenWidth = image.width;
