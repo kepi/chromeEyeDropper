@@ -9,7 +9,7 @@
     var bg = chrome.extension.getBackgroundPage();
     $('debugImage').src = bg.picker.debugImage;
 
-    chrome.extension.onRequest.addListener(function(req, sender, sendResponse) {
+    chrome.runtime.onMessage.addListener(function(req, sender, sendResponse) {
       if(req.reqtype == "update")
         window.location.reload();
     });

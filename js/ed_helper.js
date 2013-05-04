@@ -45,7 +45,7 @@ var edHelper = {
   handleShortcut: function(shortcutName) {
     switch(shortcutName) {
       case 'activate':
-        chrome.extension.sendRequest({type: "activate-from-hotkey"});
+        chrome.runtime.sendMessage({type: "activate-from-hotkey"});
         break;
     }
   },
@@ -60,7 +60,7 @@ var edHelper = {
   init: function() {
     ////console.log('init helper version ' + edHelper.version);
     // load options
-    chrome.extension.sendRequest({type: "ed-helper-options"}, function(response) {
+    chrome.runtime.sendMessage({type: "ed-helper-options"}, function(response) {
       edHelper.options = response.options;
       edHelper.hotKeyStart();
     });
@@ -71,5 +71,5 @@ var edHelper = {
 edHelper.init();
 
 // add listener if missing
-if ( !chrome.extension.onRequest.hasListeners() )
-  chrome.extension.onRequest.addListener(function(req, sender, sendResponse) { edHelper.messageListener(req, sender, sendResponse); });
+if ( !chrome.runtime.onMessage.hasListeners() )
+  chrome.runtime.onMessage.addListener(function(req, sender, sendResponse) { edHelper.messageListener(req, sender, sendResponse); });

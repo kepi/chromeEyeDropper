@@ -58,12 +58,12 @@ var bg = {
   },
 
   sendMessage: function(message, callback) {
-    chrome.tabs.sendRequest(bg.tab.id, message, callback);
+    chrome.tabs.sendMessage(bg.tab.id, message, callback);
   },
 
   messageListener: function() {
     // simple messages
-    chrome.extension.onRequest.addListener(function(req, sender, sendResponse) {
+    chrome.runtime.onMessage.addListener(function(req, sender, sendResponse) {
       switch(req.type) {
         case 'ed-helper-options':
           sendResponse(bg.edHelperOptions(req));
@@ -235,7 +235,7 @@ var bg = {
   createDebugTab: function() {
     // DEBUG
     if ( bg.debugTab != 0 ) {
-      chrome.tabs.sendRequest(bg.debugTab, {type: 'update'});
+      chrome.tabs.sendMessage(bg.debugTab, {type: 'update'});
     } else
       chrome.tabs.create({url: 'debugimage.html', selected: false}, function(tab) { bg.debugTab = tab.id });
   },
@@ -311,7 +311,7 @@ var bg = {
           if ( tab != undefined && tab.url.indexOf('http') == 0 ) {
             bg.tabs.push(tab.id);
 
-            chrome.tabs.sendRequest(tab.id, {type: 'helper-version', tabid: tab.id}, function(response) {
+            chrome.tabs.sendMessage(tab.id, {type: 'helper-version', tabid: tab.id}, function(response) {
               if ( response.version >= NEED_ED_HELPER_VERSION ) {
                 ////console.log("tabid " + tab.id + " is ok. Not injecting.");
                 bg.tabs.splice(bg.tabs.indexOf(tab.id), 1);

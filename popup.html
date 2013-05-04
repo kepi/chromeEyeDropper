@@ -17,7 +17,7 @@ var pickupDisabled = false;
 
 // reload background if we need new version
 if ( bg.version == undefined || bg.version < NEED_BG_VERSION ) {
-      chrome.extension.sendRequest({reqtype: "reload-background"});
+      chrome.runtime.sendMessage({reqtype: "reload-background"});
 }
 
 // init tab
@@ -133,10 +133,10 @@ function clearHistory()
 
 function check_support(what)
 {
-    chrome.extension.sendRequest({reqtype: "supports", what: what}, function(response) { 
+    chrome.runtime.sendMessage({reqtype: "supports", what: what}, function(response) {
       if ( !response || response.state != 'ok' ) {
         ////console.log("Doesn't support " + what + ". Reloading background.");
-        chrome.extension.sendRequest({reqtype: "reload-background"});
+        chrome.runtime.sendMessage({reqtype: "reload-background"});
       }
     });
 }

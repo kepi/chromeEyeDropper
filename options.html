@@ -101,7 +101,7 @@ function changeShortcut(shortcutName, key) {
       windows.forEach(function(win) {
         win.tabs.forEach(function(tab) {
           if ( tab != undefined && tab.url.indexOf('http') == 0 ) {
-            chrome.tabs.sendRequest(tab.id, {type: "helper-change-shortcut", shortcut: shortcutName, key: key});
+            chrome.tabs.sendMessage(tab.id, {type: "helper-change-shortcut", shortcut: shortcutName, key: key});
           }
         });
       });

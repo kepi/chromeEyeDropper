@@ -23,7 +23,7 @@ var page = {
   messageListener: function() {
     // Listen for pickup activate
     ////console.log('page activated');
-    chrome.extension.onRequest.addListener(function(req, sender, sendResponse) {
+    chrome.runtime.onMessage.addListener(function(req, sender, sendResponse) {
       switch(req.type) {
         case 'edropper-loaded': sendResponse({version: EDROPPER_VERSION}); break;
         case 'pickup-activate': page.options = req.options; page.dropperActivate(); break;
