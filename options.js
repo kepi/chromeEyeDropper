@@ -129,6 +129,8 @@ $(document).ready(function() {
         $("#keycode-dialog").dialog('open');
     });
 
+    $("#saveButton").click(function() { save_options() });
+
     FlattrLoader.setup();
 
 });
