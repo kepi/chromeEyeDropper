@@ -1,6 +1,7 @@
 var NEED_BG_VERSION=6;
 var bg = null;
 var pickupDisabled = false;
+var disableColorpicker = window.localStorage.disableColorpicker;
 
 chrome.runtime.getBackgroundPage(function(backgroundPage) {
     bg = backgroundPage;
@@ -14,7 +15,7 @@ chrome.runtime.getBackgroundPage(function(backgroundPage) {
 // init tab
 function init() {
     // find current tab
-    chrome.tabs.getSelected(null, function(tab) {
+    chrome.tabs.getSelected(null, function (tab) {
         var message = '';
         // special chrome pages
         if (tab.url.indexOf('chrome') == 0) {
@@ -33,14 +34,15 @@ function init() {
         }
 
         // disable or enable pickup button
-        if ( pickupDisabled === true ) {
-            $("#pickButton").attr("disabled","disabled");
+        if (pickupDisabled === true) {
+            $("#pickButton").attr("disabled", "disabled");
             $("#pickupMessage").html(message).show();
         } else {
             bg.bg.useTab(tab);
             $("#pickButton").click(activatePick);
         }
 
+        if (disableColorpicker !== "true") { showJPicker() }
     });
 }
 
@@ -74,11 +76,8 @@ $(document).ready(function() {
     $("a.ext").click(function() { goto(this.href); });
 
     // Color Picker
-    disableColorpicker = window.localStorage.disableColorpicker;
     if ( disableColorpicker !== "true" ) {
-        $("head").append('<link "text/css" rel="stylesheet" href="inc/jPicker/css/jPicker-1.1.6.min.css" />');
-        $.getScript('inc/jPicker/jpicker-1.1.6.js', function() { setTimeout('showJPicker()', 250); });
-
+        $("head").append('<link "text/css" rel="stylesheet" href="inc/jPicker/css/jPicker-1.1.6.min.css">');
     }
 
     // History
@@ -88,7 +87,7 @@ $(document).ready(function() {
         for ( c in history ) {
             output += '<div class="historySquare" style="background: #' + history[c] + '" title="' + history[c] + '">&nbsp;</div>';
         }
-        $("#history").html(output+'<br class="clear" /><div id="pickedColorDiv">Color: <span id="pickedColor">Move mouse over history squares to display hex</div><div id="clearHistory"><input type="button" onClick="clearHistory()" value="Clear colors history" />');
+        $("#history").html(output+'<br class="clear" /><div id="pickedColorDiv">Color: <span id="pickedColor">Move mouse over history squares to display hex</div><div id="clearHistory"><input type="button" id="clearHistoryButton" value="Clear colors history" />');
 
         $('.historySquare').hover(function() { $('#pickedColor').html('#'+this.title) });
         $('.historySquare').click(function() {
@@ -102,6 +101,8 @@ $(document).ready(function() {
             bg.bg.setColor({color: color, history: 'no'});
             setPickerColor(color);
         });
+
+        $("#clearHistoryButton").click(function() { clearHistory() });
 
     } else {
         check_support('history');
