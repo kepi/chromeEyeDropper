@@ -9,6 +9,7 @@
   <script src="inc/jquery-ui/js/jquery-ui-1.8.4.custom.min.js"></script>
 
   <script src="popup.js"></script>
+  <script src="inc/flattr/load.js"></script>
 </head>
 
 <body id="eyeDropperBody">
@@ -21,7 +22,7 @@
     </ul>
 
     <div id="tab-pick" class="ui-tabs-hide">
-      <img src="img/icon.png" alt="Eye Dropper" class="icon" /> <input type="button" id="pickButton" value="Pick color from webpage" />
+      <img src="img/icon.png" alt="Eye Dropper" class="icon" /> <input type="button" id="pickButton" value="Pick color from webpage">
       <div id="pickupMessage" style="display: none">&nbsp;</div>
 
       <h3>Picked colors history</h3>
@@ -34,10 +35,11 @@
 
     <div id="tab-about" class="ui-tabs-hide">
       <h3>About chrome Eye Dropper</h3>
-      <p><img src="img/icon.png" alt="Eye Dropper" class="icon" /> chrome Eye Dropper is eye dropper and color picker extension for Google Chrome.</p>
+      <p><img src="img/icon.png" alt="Eye Dropper" class="icon"> chrome Eye Dropper is eye dropper and color picker extension for Google Chrome.</p>
       <p>Version 0.2.6 &ndash; <a class="ext" href="http://eye-dropper.kepi.cz/category/changelog/?utm_source=extension&utm_medium=welcome&utm_campaign=About%2Btab">Changelog</a></p>
 
       <h3>Credits</h3>
+
       <p>This extension was written by <a class="ext" href="http://kepi.cz/">Ondra 'Kepi' Kudlík</a>. Part of work is sponsored by <a class="ext" href="http://www.igloonet.cz/">IglooNET</a> company.</p>
 
       <p>Color Picker code thanks to Chris Tillman <a class="ext" href="http://www.digitalmagicpro.com/jPicker/">jPicker jQuery plugin</a>.</p>
@@ -53,8 +55,15 @@
   </div>
 
   <div id="footer">
-    <span id="flattrbutton"><a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://eye-dropper.kepi.cz/"></a><noscript><a href="http://flattr.com/thing/173858/Eye-Dropper" target="_blank"><img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a></noscript></span>
-
+    <span id="flattrbutton">
+        <a class="FlattrButton"
+           style="display:none;"
+           title="Flattr Eye Dropper"
+           data-flattr-url="http://eye-dropper.kepi.cz/"
+           data-flattr-popout="0"
+           data-flattr-button="compact"
+           href="https://flattr.com/thing/173858/Eye-Dropper">Flattr Eye Dropper</a>
+    </span>
     <a class="ext" href="http://eye-dropper.kepi.cz/">Home page</a> | <a class="ext" href="http://github.com/kepi/chromeEyeDropper/issues">Report a bug</a> | <a class="ext" href="options.html">Options</a>
     <br class="clear" />
   </div>
