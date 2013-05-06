@@ -165,10 +165,11 @@ function setColor(what, color, dontsave, history) {
     formats = [color.hex6(), color.hex3(), color.html('keyword'), color.html('hsl'), color.html('rgb')];
 
     var out = '';
-    out = '<div class="colorPreviewBox bs-docs-example" style="background-color: '+color.hex6()+';">';
+    out = '<div class="colorPreviewBox" style="background-color: '+color.hex6()+';">';
     for ( key in formats ) {
         format = formats[key];
         out += '<span class="label">' + format + '</span>&nbsp;';
+        out += key > 0 ? '<br>' : '&nbsp;'
     }
     out += '</div>';
 
