@@ -74,7 +74,7 @@ function drawHistory() {
         for ( c in history ) {
             output += '<div class="historySquare" style="background: ' + history[c] + '" title="' + history[c] + '">&nbsp;</div>';
         }
-        $("#historyColors").html(output+'<br class="clearfix" /><div id="pickedColorDiv">Color: <span id="pickedColor">Move mouse over history squares to display hex</div><div id="clearHistory"><input type="button" id="clearHistoryButton" value="Clear colors history" />');
+        $("#historyColors").html(output+'<br class="clearfix" /><div id="pickedColorDiv">Color: <span id="pickedColor">Move mouse over history squares to display hex</div>');
 
         $('.historySquare').hover(function() {
             setColor('new', this.title);
@@ -84,11 +84,11 @@ function drawHistory() {
             setColor('cur', this.title);
         });
 
-        $("#clearHistoryButton").click(function() { clearHistory() });
-
+        $("#clearHistory").show().click(function() { clearHistory() });
     } else {
+        $("#clearHistory").hide();
         check_support('history');
-        $("#historyColors").html("No history yet. Try to pick some colors from web.");
+        $("#historyColors").html("No history yet. Try to pick some colors from web or color picker.");
 
     }
 }
@@ -98,6 +98,7 @@ $(document).ready(function() {
     init();
 
     $("a.ext").click(function() { goto(this.href); });
+    $("button.ext").click(function() { goto(this.data-href); });
 
     // Color Picker
     if ( disableColorpicker !== "true" ) {
@@ -112,6 +113,10 @@ $(document).ready(function() {
 //    $("[data-toggle=tooltip-bottom]").tooltip({placement: 'bottom'});
 //    $("[data-toggle=tooltip-right]").tooltip({placement: 'right'});
 
+    $("#buttonAbout").click(function() {
+        $("#eyeDropperMain").toggle();
+        $("#eyeDropperAbout").toggle();
+    })
 });
 
 

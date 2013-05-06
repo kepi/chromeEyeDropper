@@ -1,51 +1,3 @@
-html {
-  height: auto;
-}
-
-body {
-  font-family: Arial, Verdana, sans-serif;
-  font-size: 10px;
-  text-align: left;
-  min-width: 500px;
-  height: auto;
-  margin: 0px; padding: 0px;
-  background: transparent;
-}
-
-#footer {
-  font-family: Arial, Verdana, sans-serif;
-  text-align: right;  
-  margin-top: 5px;
-  padding: 10px;
-  padding-top: 15px;
-}
-
-#footer span#flattrbutton {
-  float: left;
-}
-
-#footer a {
-  color: black;
-}
-
-#footer a:hover {
-  color: navy;
-}
-
-.small {
-  width: 40px;
-}
-
-.icon { 
-  float: left; 
-  margin-right: 10px;
-}
-
-.pledgie {
-  margin-top: 20px;
-  text-align: center;
-}
-
 .historySquare {
   width: 15px;
   height: 15px;
@@ -53,22 +5,6 @@ body {
   float: left;
   margin-right: 2px;
   margin-bottom: 2px;
-}
-
-/*#history {*/
-#history {
-    margin-left: 10px;
-}
-
-#colorPreview {
-    float: right;
-    max-width: 200px;
-    min-width: 140px;
-}
-
-#tabs {
-    float: left;
-    max-width: 355px;
 }
 
 br.clear {
@@ -79,29 +15,9 @@ br.clear {
   margin-top: 20px;
 }
 
-#clearHistory {
-  margin-top: 20px;
-  text-align: right;
-}
-
-.nav-tabs .ui-tabs-hide {
-  display: none;
-  position: absolute;
-  left: -10000px;
-}
-
-.nav-tabs {
-  border: 0px !important;
-}
-
 #paypal-donation-about {
   text-align: center;
   margin-top: 20px;
-}
-
-#colorPreview {
-    margin-top: 10px;
-    margin-left: 10px;
 }
 
 #colorPreview .preview {
@@ -126,6 +42,25 @@ br.clear {
 
 }
 
-.tab-content {
-    padding-left: 10px;
+html {
+    min-width: 538px;
 }
+
+/* Fix for button shifting when using tooltip
+ * see https://github.com/twitter/bootstrap/issues/5704
+ */
+.btn-group > .tooltip + .btn,
+.btn-group > .popover + .btn{
+    margin-left:-1px;
+}
+
+.btn-group > .btn:last-of-type {
+    -webkit-border-top-right-radius: 4px;
+    -moz-border-top-right-radius: 4px;
+    border-top-right-radius: 4px;
+    -webkit-border-bottom-right-radius: 4px;
+    -moz-border-bottom-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+/* End of fix */
