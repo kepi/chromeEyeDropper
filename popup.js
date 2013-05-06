@@ -136,17 +136,43 @@ function setColor(what, color, dontsave, history) {
         $("#colorpicker").spectrum("set", color.hex6());
     }
 
-    obj = $("#"+what+"Color");
+    var out;
+//    out = '<div class="preview pull-left" style="background-color: '+color.hex6()+'; color: '+color.contrastWhiteBlack().hex6()+'">&nbsp;</div>';
+//    out += '<div class="hex pull-left">'+color.hex6()+'<br>'+color.hex3()+'<br>'+color.html('keyword');
+//    out += '<br>'
+//    out += color.html('hsl');
+//    out += '<br>'
+//    out += color.html('rgb');
+//    out += '</div>'
 
-    out = '<div class="preview pull-left" style="background-color: '+color.hex6()+'; color: '+color.contrastWhiteBlack().hex6()+'">&nbsp;</div>';
-    out += '<div class="hex pull-left">'+color.hex6()+'<br>'+color.hex3()+'<br>'+color.html('keyword');
-    out += '<br>'
-    out += color.html('hsl');
-    out += '<br>'
-    out += color.html('rgb');
-    out += '</div>'
+//    out = '<div style="background-color: '+color.hex6()+';">';
+//    out += '<div class="pull-left cprev">';
+//    out += color.hex6();
+//    out += '<br>';
+//    out += color.hex3();
+//    out += '<br>';
+//    out += color.html('keyword');
+//    out += '</div>';
+//
+//    out += '<div class="pull-left cpreview cpreviewRight">';
+//    out += color.html('hsl');
+//    out += '<br>';
+//    out += color.html('rgb');
+//    out += '</div>';
+//    out += '<br class="clear">';
+//    out += '</div>';
 
-    obj.html(out);
+    formats = [color.hex6(), color.hex3(), color.html('keyword'), color.html('hsl'), color.html('rgb')];
+
+    var out = '';
+    out = '<div class="colorPreviewBox bs-docs-example" style="background-color: '+color.hex6()+';">';
+    for ( key in formats ) {
+        format = formats[key];
+        out += '<span class="label">' + format + '</span>&nbsp;';
+    }
+    out += '</div>';
+
+    $("#"+what+"Color").html(out);
 }
 
 function clearHistory()

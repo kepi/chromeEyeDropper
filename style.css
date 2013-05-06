@@ -20,30 +20,57 @@ br.clear {
   margin-top: 20px;
 }
 
-#colorPreview .preview {
-    padding: 4px;
-    font-size: 11px;
-    line-height: 16px;
-    text-align: center;
-    width: 28px;
-    height: 16px;
-    margin: 2px;
-    margin-right: 8px;
+/*#colorPreview .preview {*/
+    /*padding: 4px;*/
+    /*font-size: 10px;*/
+    /*line-height: 16px;*/
+    /*text-align: center;*/
+    /*width: 28px;*/
+    /*height: 16px;*/
+    /*margin: 2px;*/
+    /*margin-right: 8px;*/
     /* -webkit-box-shadow: 2px 2px 0px white; */
-    border: 1px solid #666;
-    background-color: #ffbbca;
-}
+    /*border: 1px solid #666;*/
+    /*background-color: #ffbbca;*/
+/*}*/
 
+#colorPreview {
+    margin-top: 60px;
+    max-width: 180px;
+}
 #colorPreview .colRow {
-    height: 28px;
     clear: both;
     font-family: monospace;
     font-size: 10px;
-
 }
 
+.colorPreviewBox {
+    padding: 8px;
+    margin-bottom: 20px;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+    background-color: #fcf8e3;
+    border: 1px solid #fbeed5;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+/* We have to set min-width so extension doesn't look like crap */
 html {
     min-width: 538px;
+}
+
+/* Footer design */
+#footer {
+    height: 50px;
+    line-height: 50px;
+    background-color: #f5f5f5;
+    margin-top: 10px;
+}
+
+#footer div#flattrbutton {
+    margin-top: 15px;
+    margin-left: 19px;
 }
 
 /* Fix for button shifting when using tooltip
@@ -64,3 +91,53 @@ html {
 }
 
 /* End of fix */
+
+/* Base class */
+.bs-docs-example {
+    position: relative;
+    padding: 9px 9px 4px 35px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+/* Echo out a label for the example */
+.bs-docs-example:after {
+    position: absolute;
+    bottom: 24px;
+    left: -26px;
+
+    width: 58px;
+
+    padding: 1px 7px;
+
+    font-size: 12px;
+    font-weight: bold;
+
+    background-color: #f5f5f5;
+    color: #9da0a4;
+
+    border: 1px solid #ddd;
+    -webkit-border-radius: 4px 0 4px 0;
+    -moz-border-radius: 4px 0 4px 0;
+    border-radius: 4px 0 4px 0;
+
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+}
+
+#curColor div.bs-docs-example:after {
+    content: "Selected";
+}
+#newColor div.bs-docs-example:after {
+    content: "New";
+}
+
+.colRow .label {
+    background-color: rgba(153,153,153,153,0.63);
+}
