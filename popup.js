@@ -35,14 +35,20 @@ function init() {
 
         // disable or enable pickup button
         if (pickupDisabled === true) {
-            $("#pickButton").attr("disabled", "disabled");
+            $("#pickupButton").addClass("disabled");
             $("#pickupMessage").html(message).show();
         } else {
             bg.bg.useTab(tab);
-            $("#pickButton").click(activatePick);
+            $("#pickupButton").click(activatePick);
         }
 
-        if (disableColorpicker !== "true") { showJPicker() }
+        if (disableColorpicker !== "true") { showColorPicker() }
+
+        if ( bg.bg.color !== null ) {
+            console.log(bg.bg.color);
+            setColor('cur', bg.bg.color, true);
+            setColor('new', bg.bg.color);
+        }
     });
 }
 
@@ -60,68 +66,88 @@ function goto(url) {
         window.close();
 }
 
-$(document).ready(function() {
-    // initialize script
-    init();
-
-    // show tabs
-    $("#tabs").tabs().bind('tabsshow', function(event, ui) {
-        if ( ui.panel.id == 'tab-pick' ) {
-            $("#eyeDropperBody").css('height', '250px');
-            $("html").css('height', '250px');
-        }
-    });
-
-
-    $("a.ext").click(function() { goto(this.href); });
-
-    // Color Picker
-    if ( disableColorpicker !== "true" ) {
-        $("head").append('<link "text/css" rel="stylesheet" href="inc/jPicker/css/jPicker-1.1.6.min.css">');
-    }
-
+function drawHistory() {
     // History
     if ( window.localStorage.history != undefined && window.localStorage.history.length > 3 ) {
         var history = JSON.parse(window.localStorage.history);
         output = ''
         for ( c in history ) {
-            output += '<div class="historySquare" style="background: #' + history[c] + '" title="' + history[c] + '">&nbsp;</div>';
+            output += '<div class="historySquare" style="background: ' + history[c] + '" title="' + history[c] + '">&nbsp;</div>';
         }
-        $("#history").html(output+'<br class="clear" /><div id="pickedColorDiv">Color: <span id="pickedColor">Move mouse over history squares to display hex</div><div id="clearHistory"><input type="button" id="clearHistoryButton" value="Clear colors history" />');
+        $("#historyColors").html(output+'<br class="clearfix" /><div id="pickedColorDiv">Color: <span id="pickedColor">Move mouse over history squares to display hex</div><div id="clearHistory"><input type="button" id="clearHistoryButton" value="Clear colors history" />');
 
-        $('.historySquare').hover(function() { $('#pickedColor').html('#'+this.title) });
+        $('.historySquare').hover(function() {
+            setColor('new', this.title);
+        });
+
         $('.historySquare').click(function() {
-            var color = {
-                r: parseInt(this.title.substring(0, 2), 16),
-                g: parseInt(this.title.substring(2, 4), 16),
-                b: parseInt(this.title.substring(4, 6), 16),
-                alpha: 0
-            };
-            color.rgbhex = this.title;
-            bg.bg.setColor({color: color, history: 'no'});
-            setPickerColor(color);
+            setColor('cur', this.title);
         });
 
         $("#clearHistoryButton").click(function() { clearHistory() });
 
     } else {
         check_support('history');
-        $("#history").html("No history yet. Try to pick some colors from web.");
+        $("#historyColors").html("No history yet. Try to pick some colors from web.");
 
     }
+}
+
+$(document).ready(function() {
+    // initialize script
+    init();
+
+    $("a.ext").click(function() { goto(this.href); });
+
+    // Color Picker
+    if ( disableColorpicker !== "true" ) {
+        $("head").append('<link "text/css" rel="stylesheet" href="inc/bgrins-spectrum-6b5b0e9/spectrum.css">');
+    }
+
+    drawHistory();
 
     FlattrLoader.setup();
+    $("[data-toggle=tooltip]").tooltip();
+//    $("[data-toggle=tooltip-left]").tooltip({placement: 'left'});
+//    $("[data-toggle=tooltip-bottom]").tooltip({placement: 'bottom'});
+//    $("[data-toggle=tooltip-right]").tooltip({placement: 'right'});
+
 });
 
-function setPickerColor(color)
-{
-    $.jPicker.List[0].color.active.val('rgb', {r: color.r, g: color.g, b: color.b});
+
+
+function setColor(what, color, dontsave, history) {
+    color = pusher.color(color);
+    console.log(color.hex6());
+    // TODO jak se bude chovat kdyz je undefined?
+    if ( what == 'cur'&& color !== undefined ) {
+        if ( dontsave !== true  ) {
+            console.log('saving to bg');
+            color_arr = color.rgba8();
+            bg.bg.setColor({color: { r: color_arr[0], g: color_arr[1], b: color_arr[2], rgbhex: color.hex6() }, history: history});
+            if ( history === true ) { drawHistory(); }
+        }
+
+        $("#colorpicker").spectrum("set", color.hex6());
+    }
+
+    obj = $("#"+what+"Color");
+
+    out = '<div class="preview pull-left" style="background-color: '+color.hex6()+'; color: '+color.contrastWhiteBlack().hex6()+'">&nbsp;</div>';
+    out += '<div class="hex pull-left">'+color.hex6()+'<br>'+color.hex3()+'<br>'+color.html('keyword');
+    out += '<br>'
+    out += color.html('hsl');
+    out += '<br>'
+    out += color.html('rgb');
+    out += '</div>'
+
+    obj.html(out);
 }
 
 function clearHistory()
 {
     window.localStorage.history = '[]';
-    window.location.reload();
+    drawHistory();
 }
 
 function check_support(what)
@@ -135,16 +161,24 @@ function check_support(what)
 }
 
 // show jPicker tab and set color
-function showJPicker()
+function showColorPicker()
 {
-    $("#li-colorpicker").show(); //css.display = 'block';
-    $("#tab-colorpicker").show(); //css.display = 'block';
+    var activeColor = (bg.bg.color !== null) ? bg.bg.color : '000';
 
-    var color = 'ffc000';
-    if ( bg.bg.color != null )
-        color = bg.bg.color;
+    $("#colorpicker").spectrum({
+        flat: true,
+        showInput: false,
+        showInitial: true,
+        preferredFormat: "hex",
+        chooseText: "select",
+        color: activeColor,
+        move: function(tinycolor) {
+            setColor('new', tinycolor.toHexString());
+        },
+        change: function(tinycolor) {
+            setColor('cur', tinycolor.toHexString(), false, true);
+        }
+    });
 
-    var active = new $.jPicker.Color({hex: color});
-    $('#colorpicker').jPicker({window: {title: '&nbsp;'}, color: {active: active}, images: {clientPath: 'inc/jPicker/images/'}});
 }
 

@@ -3,57 +3,78 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
 
   <link type="text/css" rel="stylesheet" href="style.css?0.2.6" />
-  <link href="inc/jquery-ui/css/smoothness/jquery-ui-1.8.4.custom.css" rel="stylesheet" type="text/css"/>
+  <link type="text/css" rel="stylesheet" href="inc/bootstrap/css/bootstrap.min.css" />
 
   <script type="text/javascript" src="inc/jquery-1.7.1.min.js"></script>
-  <script src="inc/jquery-ui/js/jquery-ui-1.8.4.custom.min.js"></script>
+  <script type="text/javascript" src="inc/bootstrap/js/bootstrap.min.js"></script>
 
+  <script src="inc/pusher.color.min.js"></script>
   <script src="popup.js"></script>
+  <script src="inc/bgrins-spectrum-6b5b0e9/spectrum.js"></script>
   <script src="inc/flattr/load.js"></script>
-  <script src="inc/jPicker/jpicker-1.1.6.js"></script>
 </head>
 
 <body id="eyeDropperBody">
 
-  <div id="tabs" class="ui-tabs">
-    <ul>
-      <li><a href="#tab-pick"><span>Pick from web</span></a></li>
-      <li id="li-colorpicker" style="display: none"><a href="#tab-colorpicker"><span>Color picker</span></a></li>
-      <li><a href="#tab-about"><span>About</span></a></li>
+  <div id="tabs">
+
+    <ul id="pickTab" class="nav nav-tabs">
+      <li class="active"><a href="#tab-pick" data-toggle="tab"><span>Pick from web</span></a></li>
+      <li id="li-colorpicker"><a href="#tab-colorpicker" data-toggle="tab"><span>Color picker</span></a></li>
+      <li><a href="#tab-about" data-toggle="tab"><span>About</span></a></li>
     </ul>
 
-    <div id="tab-pick" class="ui-tabs-hide">
-      <img src="img/icon_19.png" alt="Eye Dropper" class="icon" /> <input type="button" id="pickButton" value="Pick color from webpage">
-      <div id="pickupMessage" style="display: none">&nbsp;</div>
+    <div id="pickTabContent" class="tab-content">
+        <!-- Web picker -->
+        <div id="tab-pick" class="tab-pane active">
+          <div id="pickupMessage" style="display: none" class="alert alert-error">&nbsp;</div>
+          <button href="#" class="btn btn-medium" id="pickupButton"><i class="icon-tint"></i> Pick color from web page</button>
+        </div>
 
-      <h3>Picked colors history</h3>
-      <div id="history">&nbsp;</div>
-    </div>
+        <!-- Color picker -->
+        <div id="tab-colorpicker" class="tab-pane">
+          <div id="colorpicker"></div>
+        </div>
 
-    <div id="tab-colorpicker" class="ui-tabs-hide" style="display: none">
-      <div id="colorpicker"></div>
-    </div>
+        <!-- About -->
+        <div id="tab-about" class="tab-pane">
+          <h3>About chrome Eye Dropper</h3>
+          <p><img src="img/icon_19.png" alt="Eye Dropper" class="icon"> chrome Eye Dropper is eye dropper and color picker extension for Google Chrome.</p>
+          <p>Version 0.2.6 &ndash; <a class="ext" href="http://eye-dropper.kepi.cz/category/changelog/?utm_source=extension&utm_medium=welcome&utm_campaign=About%2Btab">Changelog</a></p>
 
-    <div id="tab-about" class="ui-tabs-hide">
-      <h3>About chrome Eye Dropper</h3>
-      <p><img src="img/icon_19.png" alt="Eye Dropper" class="icon"> chrome Eye Dropper is eye dropper and color picker extension for Google Chrome.</p>
-      <p>Version 0.2.6 &ndash; <a class="ext" href="http://eye-dropper.kepi.cz/category/changelog/?utm_source=extension&utm_medium=welcome&utm_campaign=About%2Btab">Changelog</a></p>
+          <h3>Credits</h3>
 
-      <h3>Credits</h3>
+          <p>This extension was written by <a class="ext" href="http://kepi.cz/">Ondra 'Kepi' Kudlík</a>. Part of work is sponsored by <a class="ext" href="http://www.igloonet.cz/">igloonet</a> company.</p>
 
-      <p>This extension was written by <a class="ext" href="http://kepi.cz/">Ondra 'Kepi' Kudlík</a>. Part of work is sponsored by <a class="ext" href="http://www.igloonet.cz/">igloonet</a> company.</p>
+          <p>Color Picker code thanks to Chris Tillman <a class="ext" href="http://www.digitalmagicpro.com/jPicker/">jPicker jQuery plugin</a>.</p>
 
-      <p>Color Picker code thanks to Chris Tillman <a class="ext" href="http://www.digitalmagicpro.com/jPicker/">jPicker jQuery plugin</a>.</p>
+          <p>Many work done thanks to amazing <a class="ext" href="http://www.jquery.com/">jQuery</a> and its plugins as <a class="ext" href="http://james.padolsey.com/javascript/special-scroll-events-for-jquery/">Special Scroll Events for jQuery</a>.</p>
 
-      <p>Many work done thanks to amazing <a class="ext" href="http://www.jquery.com/">jQuery</a> and its plugins as <a class="ext" href="http://james.padolsey.com/javascript/special-scroll-events-for-jquery/">Special Scroll Events for jQuery</a>.</p>
+          <!-- Begin PayPal Donations -->
+          <form id="paypal-donation-about" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank"><div class="paypal-donations"><input type="hidden" name="cmd" value="_donations" /><input type="hidden" name="business" value="kepi@orthank.net" /><input type="hidden" name="return" value="http://eye-dropper.kepi.cz/thanks-for-your-donation/" /><input type="hidden" name="item_name" value="Eye Dropper" /><input type="hidden" name="currency_code" value="USD" /><input type="image" src="inc/btn_donate_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online." /></div></form>
+          <!-- End PayPal Donations -->
 
-      <!-- Begin PayPal Donations --> 
-      <form id="paypal-donation-about" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank"><div class="paypal-donations"><input type="hidden" name="cmd" value="_donations" /><input type="hidden" name="business" value="kepi@orthank.net" /><input type="hidden" name="return" value="http://eye-dropper.kepi.cz/thanks-for-your-donation/" /><input type="hidden" name="item_name" value="Eye Dropper" /><input type="hidden" name="currency_code" value="USD" /><input type="image" src="inc/btn_donate_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online." /></div></form> 
-      <!-- End PayPal Donations --> 
-
+        </div>
     </div>
     
   </div>
+  <div id="colorPreview">
+      <h6>Selected color</h6>
+      <div id="curColor" class="colRow">&nbsp;</div>
+      <br class="clear">
+      <h6>New color</h6>
+      <div id="newColor" class="colRow">&nbsp;</div>
+      <br class="clear">
+  </div>
+
+
+  <br class="clear">
+
+  <div id="history">
+      <h5>Color History</h5>
+      <div id="historyColors">&nbsp;</div>
+  </div>
+
 
   <div id="footer">
     <span id="flattrbutton">
@@ -65,8 +86,13 @@
            data-flattr-button="compact"
            href="https://flattr.com/thing/173858/Eye-Dropper">Flattr Eye Dropper</a>
     </span>
-    <a class="ext" href="http://eye-dropper.kepi.cz/">Home page</a> | <a class="ext" href="http://github.com/kepi/chromeEyeDropper/issues">Report a bug</a> | <a class="ext" href="options.html">Options</a>
-    <br class="clear" />
+
+    <div class="btn-group">
+      <a class="ext btn" title="Homepage" href="http://eye-dropper.kepi.cz/" data-toggle="tooltip"><i class="icon-home"></i></a>
+      <a class="ext btn" title="About Eye Dropper" href="#" data-toggle="tooltip"><i class="icon-question-sign"></i></a>
+      <a class="ext btn" title="Report bug or wish" href="http://github.com/kepi/chromeEyeDropper/issues" data-toggle="tooltip"><i class="icon-bullhorn"></i></a>
+      <a class="ext btn" title="Options" href="options.html" data-toggle="tooltip"><i class="icon-wrench"></i></a>
+    </div>
   </div>
 
 </body>

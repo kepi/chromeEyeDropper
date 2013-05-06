@@ -129,6 +129,10 @@ var bg = {
 
   // method for setting color. It set bg color, update badge and save to history if possible
   setColor: function(req) {
+    // we are storing color with first # character
+    if ( ! req.color.rgbhex.match(/^#/) )
+        req.color.rgbhex = '#' + req.color.rgbhex;
+
     bg.color = req.color.rgbhex;
     chrome.browserAction.setBadgeText({text: ' '});
     chrome.browserAction.setBadgeBackgroundColor({color: [req.color.r, req.color.g, req.color.b, 255]});
@@ -138,7 +142,7 @@ var bg = {
       // save to clipboard through small hack
       if ( window.localStorage['autoClipboard'] === "true" ) {
         var edCb = $('edClipboard');
-        edCb.value = window.localStorage['autoClipboardNoGrid'] === "true" ? bg.color : '#' + bg.color; 
+        edCb.value = window.localStorage['autoClipboardNoGrid'] === "true" ? bg.color.substring(1) : bg.color;
         edCb.select();
         document.execCommand("copy", false, null);
       }
