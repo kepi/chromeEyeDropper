@@ -35,6 +35,10 @@
     margin-left: 10px;
 }
 
+/* font color */
+i {
+    color: #666;
+}
 
 br.clear {
   clear: both;
