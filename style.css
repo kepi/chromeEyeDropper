@@ -1,11 +1,40 @@
-.historySquare {
-  width: 15px;
-  height: 15px;
-  border: 1px solid #666;
-  float: left;
-  margin-right: 2px;
-  margin-bottom: 2px;
+/*.historySquare {*/
+  /*width: 15px;*/
+  /*height: 15px;*/
+  /*border: 1px solid #666;*/
+  /*float: left;*/
+  /*margin-right: 2px;*/
+  /*margin-bottom: 2px;*/
+/*}*/
+
+#history div.label {
+    width: 15px;
+    height: 15px;
+    padding: 0px;
+    font-size: 1px;
+    margin: 2px;
+    border: 1px solid #666;
 }
+
+#history div.label:hover {
+    border: 2px solid #666;
+    margin: 1px;
+}
+
+#history em {
+    font-size: 0.9em;
+}
+
+#history h5 {
+    color: #666;
+}
+
+#history h5 small {
+    position: relative;
+    top: -2px;
+    margin-left: 10px;
+}
+
 
 br.clear {
   clear: both;
@@ -22,7 +51,7 @@ br.clear {
 
 /* color preview on right side */
 #colorPreview {
-    margin-top: 60px;
+    margin-top: 58px;
     max-width: 140px;
 }
 

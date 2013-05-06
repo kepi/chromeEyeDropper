@@ -72,9 +72,9 @@ function drawHistory() {
         var history = JSON.parse(window.localStorage.history);
         output = ''
         for ( c in history ) {
-            output += '<div class="historySquare" style="background: ' + history[c] + '" title="' + history[c] + '">&nbsp;</div>';
+            output += '<div class="label historySquare" style="background: ' + history[c] + '" title="' + history[c] + '">&nbsp;</div>';
         }
-        $("#historyColors").html(output+'<br class="clearfix" /><div id="pickedColorDiv">Color: <span id="pickedColor">Move mouse over history squares to display hex</div>');
+        $("#historyColors").html(output+'<br class="clearfix" /><em class="muted">Hover your cursor over color boxes to preview color.<br>Click to set as selected and copy to clipboard.</em>');
 
         $('.historySquare').hover(function() {
             setColor('new', this.title);
