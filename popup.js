@@ -8,7 +8,7 @@ chrome.runtime.getBackgroundPage(function(backgroundPage) {
 
     // reload background if we need new version
     if ( bgPage.version == undefined || bgPage.version < NEED_BG_VERSION ) {
-        chrome.runtime.sendMessage({reqtype: "reload-background"});
+        chrome.runtime.sendMessage({type: "reload-background"});
     }
 });
 
@@ -33,6 +33,8 @@ function init() {
             pickupDisabled = true;
         }
 
+        setDefaultColors();
+
         // disable or enable pickup button
         if (pickupDisabled === true) {
             $("#pickupButton").addClass("disabled");
@@ -41,15 +43,15 @@ function init() {
             bgPage.bg.useTab(tab);
             $("#pickupButton").click(activatePick);
         }
-
-        showColorPicker();
-
-        if ( bgPage.bg.color !== null ) {
-            console.log(bgPage.bg.color);
-            setColor('cur', bgPage.bg.color, true);
-            setColor('new', bgPage.bg.color);
-        }
     });
+}
+
+function setDefaultColors() {
+    var activeColor = bgPage.bg.getColor();
+    showColorPicker(activeColor);
+    // set color boxes
+    setColor('cur', activeColor, true);
+    setColor('new', activeColor);
 }
 
 function activatePick() {
@@ -70,8 +72,8 @@ function drawHistory() {
     // History
     if ( window.localStorage.history != undefined && window.localStorage.history.length > 3 ) {
         var history = JSON.parse(window.localStorage.history);
-        output = ''
-        for ( c in history ) {
+        var output = '';
+        for ( var c in history ) {
             output += '<div class="label historySquare" style="background: ' + history[c] + '" title="' + history[c] + '">&nbsp;</div>';
         }
         $("#historyColors").html(output+'<br class="clearfix" /><em class="muted">Hover your cursor over color boxes to preview color.<br>Click to set as selected and copy to clipboard.</em>');
@@ -88,7 +90,7 @@ function drawHistory() {
     } else {
         $("#clearHistory").hide();
         check_support('history');
-        $("#historyColors").html("No history yet. Try to pick some colors from web or color picker.");
+        $("#historyColors").html('<em class="muted">No history yet. Try to pick some colors from web or color picker.</em>');
 
     }
 }
@@ -96,7 +98,6 @@ function drawHistory() {
 
 function setColor(what, color, dontsave, history) {
     color = pusher.color(color);
-    console.log(color.hex6());
     // TODO jak se bude chovat kdyz je undefined?
     if ( what == 'cur'&& color !== undefined ) {
         if ( dontsave !== true  ) {
@@ -125,25 +126,28 @@ function setColor(what, color, dontsave, history) {
 
 function clearHistory()
 {
-    window.localStorage.history = '[]';
-    drawHistory();
+    console.log('try to clear');
+    chrome.runtime.sendMessage({type: "clear-history"}, function() {
+        drawHistory();
+        setDefaultColors();
+    });
 }
 
 function check_support(what)
 {
-    chrome.runtime.sendMessage({reqtype: "supports", what: what}, function(response) {
+    chrome.runtime.sendMessage({type: "supports", what: what}, function(response) {
         if ( !response || response.state != 'ok' ) {
             ////console.log("Doesn't support " + what + ". Reloading background.");
-            chrome.runtime.sendMessage({reqtype: "reload-background"});
+            chrome.runtime.sendMessage({type: "reload-background"});
         }
     });
 }
 
 // show jPicker tab and set color
-function showColorPicker()
+function showColorPicker(color)
 {
-    var activeColor = (bgPage.bg.color !== null) ? bgPage.bg.color : '000';
-
+    var activeColor = color.substring(1);
+    console.log(activeColor);
     $("#colorpicker").spectrum({
         flat: true,
         showInput: false,

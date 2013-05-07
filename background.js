@@ -1,6 +1,7 @@
 var NEED_DROPPER_VERSION=6;
 var NEED_ED_HELPER_VERSION=5;
 var BG_VERSION=6;
+var DEFAULT_COLOR="#b48484";
 
 // jQuery like functions
 
@@ -66,6 +67,15 @@ var bg = {
           bg.activate2();
           sendResponse({});
           break;
+
+        // Define what background script supports
+        case 'supports': bg.supports(req.what, sendResponse); break;
+
+        // Reload background script
+        case 'reload-background': window.location.reload(); break;
+
+        // Clear colors history
+        case 'clear-history': bg.clearHistory(sendResponse); break;
       }
     });
 
@@ -85,14 +95,9 @@ var bg = {
             bg.createDebugTab();
             break;
 
-          // Define what background script supports
-          case 'supports': bg.supports(req.what); break;
-
           // Set color given in req
           case 'set-color': bg.setColor(req); break;
-                            
-          // Reload background script
-          case 'reload-background': window.location.reload(); break;
+
         }
       });
     });
@@ -119,9 +124,9 @@ var bg = {
     return {options: {hotkeyActivate: hotkeyActivate}};
   },
 
-  supports: function(what) {
+  supports: function(what, sendResponse) {
     var state = 'no';
-    if ( req.what == 'dummy' || req.what == 'history' )
+    if ( what == 'dummy' || what == 'history' )
       state = 'ok';
 
     sendResponse({state: state});
@@ -226,6 +231,10 @@ var bg = {
     }
   },
 
+  getColor: function() {
+      return bg.color;
+  },
+
   doCapture: function(data) {
       ////console.log('sending updated image');
       bg.sendMessage({type: 'update-image', data: data}, function() {});
@@ -261,6 +270,14 @@ var bg = {
       }
     });
   },
+
+  clearHistory: function(sendResponse) {
+      console.log('clearing history');
+      window.localStorage.history = "[]";
+      bg.color = DEFAULT_COLOR;
+
+      sendResponse({state: 'OK'});
+  },
   
   init: function() {
     // only if we have support for localStorage
@@ -275,8 +292,14 @@ var bg = {
     }
 
     // settings from local storage
-    if ( window.localStorage.history == undefined )
-      window.localStorage.history = "[]";
+    if ( window.localStorage.history == undefined ) {
+        bg.clearHistory();
+    } else if ( window.localStorage.history.length > 3 ) {
+      var history = JSON.parse(window.localStorage.history);
+      bg.color = history[history.length-1];
+    } else {
+      bg.color = DEFAULT_COLOR;
+    }
     // windows support jpeg only
     bg.screenshotFormat = bg.isThisPlatform('windows') ? 'jpeg' : 'png';
 
