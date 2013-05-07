@@ -93,33 +93,6 @@ function drawHistory() {
     }
 }
 
-$(document).ready(function() {
-    // initialize script
-    init();
-
-    $("a.ext").click(function() { goto(this.href); });
-    $("button.ext").click(function() { goto(this.data-href); });
-
-    // Color Picker
-    if ( disableColorpicker !== "true" ) {
-        $("head").append('<link "text/css" rel="stylesheet" href="inc/bgrins-spectrum-6b5b0e9/spectrum.css">');
-    }
-
-    drawHistory();
-
-    FlattrLoader.setup();
-    $("[data-toggle=tooltip]").tooltip();
-//    $("[data-toggle=tooltip-left]").tooltip({placement: 'left'});
-//    $("[data-toggle=tooltip-bottom]").tooltip({placement: 'bottom'});
-//    $("[data-toggle=tooltip-right]").tooltip({placement: 'right'});
-
-    $("#buttonAbout").click(function() {
-        $("#eyeDropperMain").toggle();
-        $("#eyeDropperAbout").toggle();
-    })
-});
-
-
 
 function setColor(what, color, dontsave, history) {
     color = pusher.color(color);
@@ -135,32 +108,6 @@ function setColor(what, color, dontsave, history) {
 
         $("#colorpicker").spectrum("set", color.hex6());
     }
-
-    var out;
-//    out = '<div class="preview pull-left" style="background-color: '+color.hex6()+'; color: '+color.contrastWhiteBlack().hex6()+'">&nbsp;</div>';
-//    out += '<div class="hex pull-left">'+color.hex6()+'<br>'+color.hex3()+'<br>'+color.html('keyword');
-//    out += '<br>'
-//    out += color.html('hsl');
-//    out += '<br>'
-//    out += color.html('rgb');
-//    out += '</div>'
-
-//    out = '<div style="background-color: '+color.hex6()+';">';
-//    out += '<div class="pull-left cprev">';
-//    out += color.hex6();
-//    out += '<br>';
-//    out += color.hex3();
-//    out += '<br>';
-//    out += color.html('keyword');
-//    out += '</div>';
-//
-//    out += '<div class="pull-left cpreview cpreviewRight">';
-//    out += color.html('hsl');
-//    out += '<br>';
-//    out += color.html('rgb');
-//    out += '</div>';
-//    out += '<br class="clear">';
-//    out += '</div>';
 
     formats = [color.hex6(), color.hex3(), color.html('keyword'), color.html('hsl'), color.html('rgb')];
 
@@ -213,4 +160,29 @@ function showColorPicker()
     });
 
 }
+
+$(document).ready(function() {
+    // initialize script
+    init();
+
+    $("a.ext").click(function() { goto(this.href); });
+    $("button.ext").click(function() { goto(this.data-href); });
+
+    // Color Picker
+    if ( disableColorpicker !== "true" ) {
+        $("head").append('<link "text/css" rel="stylesheet" href="inc/bgrins-spectrum-6b5b0e9/spectrum.css">');
+    }
+
+    drawHistory();
+
+    FlattrLoader.setup();
+
+    $("[data-toggle=tooltip]").tooltip();
+
+    $("#buttonAbout").click(function() {
+        $("#eyeDropperMain").toggle();
+        $("#eyeDropperAbout").toggle();
+    })
+});
+
 
