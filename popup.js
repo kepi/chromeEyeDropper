@@ -48,10 +48,11 @@ function init() {
 
 function setDefaultColors() {
     var activeColor = bgPage.bg.getColor();
-    showColorPicker(activeColor);
     // set color boxes
     setColor('cur', activeColor, true);
     setColor('new', activeColor);
+
+    showColorPicker(activeColor);
 }
 
 function activatePick() {
@@ -146,15 +147,13 @@ function check_support(what)
 // show jPicker tab and set color
 function showColorPicker(color)
 {
-    var activeColor = color.substring(1);
-    console.log(activeColor);
     $("#colorpicker").spectrum({
         flat: true,
         showInput: false,
         showInitial: false,
         preferredFormat: "hex",
         chooseText: "select",
-        color: activeColor,
+        color: color,
         move: function(tinycolor) {
             setColor('new', tinycolor.toHexString());
         },
