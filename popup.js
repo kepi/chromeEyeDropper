@@ -1,13 +1,13 @@
 var NEED_BG_VERSION=6;
-var bg = null;
+var bgPage = null;
 var pickupDisabled = false;
 var disableColorpicker = window.localStorage.disableColorpicker;
 
 chrome.runtime.getBackgroundPage(function(backgroundPage) {
-    bg = backgroundPage;
+    bgPage = backgroundPage;
 
     // reload background if we need new version
-    if ( bg.version == undefined || bg.version < NEED_BG_VERSION ) {
+    if ( bgPage.version == undefined || bgPage.version < NEED_BG_VERSION ) {
         chrome.runtime.sendMessage({reqtype: "reload-background"});
     }
 });
@@ -38,23 +38,23 @@ function init() {
             $("#pickupButton").addClass("disabled");
             $("#pickupMessage").html(message).show();
         } else {
-            bg.bg.useTab(tab);
+            bgPage.bg.useTab(tab);
             $("#pickupButton").click(activatePick);
         }
 
         if (disableColorpicker !== "true") { showColorPicker() }
 
-        if ( bg.bg.color !== null ) {
-            console.log(bg.bg.color);
-            setColor('cur', bg.bg.color, true);
-            setColor('new', bg.bg.color);
+        if ( bgPage.bg.color !== null ) {
+            console.log(bgPage.bg.color);
+            setColor('cur', bgPage.bg.color, true);
+            setColor('new', bgPage.bg.color);
         }
     });
 }
 
 function activatePick() {
     if ( pickupDisabled === false ) {
-        bg.bg.activate();
+        bgPage.bg.activate();
         window.close();
     }
 }
@@ -102,7 +102,7 @@ function setColor(what, color, dontsave, history) {
         if ( dontsave !== true  ) {
             console.log('saving to bg');
             color_arr = color.rgba8();
-            bg.bg.setColor({color: { r: color_arr[0], g: color_arr[1], b: color_arr[2], rgbhex: color.hex6() }, history: history});
+            bgPage.bg.setColor({color: { r: color_arr[0], g: color_arr[1], b: color_arr[2], rgbhex: color.hex6() }, history: history});
             if ( history === true ) { drawHistory(); }
         }
 
@@ -142,7 +142,7 @@ function check_support(what)
 // show jPicker tab and set color
 function showColorPicker()
 {
-    var activeColor = (bg.bg.color !== null) ? bg.bg.color : '000';
+    var activeColor = (bgPage.bg.color !== null) ? bgPage.bg.color : '000';
 
     $("#colorpicker").spectrum({
         flat: true,
