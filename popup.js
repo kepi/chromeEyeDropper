@@ -151,7 +151,7 @@ function showColorPicker(color)
     $("#colorpicker").spectrum({
         flat: true,
         showInput: false,
-        showInitial: true,
+        showInitial: false,
         preferredFormat: "hex",
         chooseText: "select",
         color: activeColor,
