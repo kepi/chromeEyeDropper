@@ -42,7 +42,7 @@ function init() {
             $("#pickupButton").click(activatePick);
         }
 
-        if (disableColorpicker !== "true") { showColorPicker() }
+        showColorPicker();
 
         if ( bgPage.bg.color !== null ) {
             console.log(bgPage.bg.color);
@@ -167,11 +167,6 @@ $(document).ready(function() {
 
     $("a.ext").click(function() { goto(this.href); });
     $("button.ext").click(function() { goto(this.data-href); });
-
-    // Color Picker
-    if ( disableColorpicker !== "true" ) {
-        $("head").append('<link "text/css" rel="stylesheet" href="inc/bgrins-spectrum-6b5b0e9/spectrum.css">');
-    }
 
     drawHistory();
 

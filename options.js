@@ -11,9 +11,6 @@
         window.localStorage.autoClipboardNoGrid =
             document.getElementById("autoClipboardNoGrid").checked ? true : false;
 
-        window.localStorage.disableColorpicker =
-            document.getElementById("disableColorpicker").checked ? true : false;
-
         window.localStorage.enableColorToolbox =
             document.getElementById("enableColorToolbox").checked ? true : false;
 
@@ -42,8 +39,6 @@ function restore_options() {
         (window.localStorage.autoClipboard === "true") ? true : false;
     document.getElementById("autoClipboardNoGrid").checked =
         (window.localStorage.autoClipboardNoGrid === "true") ? true : false;
-    document.getElementById("disableColorpicker").checked =
-        (window.localStorage.disableColorpicker === "true") ? true : false;
     document.getElementById("enableColorToolbox").checked =
         (window.localStorage.enableColorToolbox === "false") ? false : true;
     document.getElementById("enableColorTooltip").checked =
