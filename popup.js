@@ -1,4 +1,4 @@
-var NEED_BG_VERSION=6;
+var NEED_BG_VERSION=7;
 var bgPage = null;
 var pickupDisabled = false;
 var disableColorpicker = window.localStorage.disableColorpicker;
