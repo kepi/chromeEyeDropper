@@ -1,15 +1,43 @@
-/*.historySquare {*/
-  /*width: 15px;*/
-  /*height: 15px;*/
-  /*border: 1px solid #666;*/
-  /*float: left;*/
-  /*margin-right: 2px;*/
-  /*margin-bottom: 2px;*/
-/*}*/
+/******************
+ * Generic
+ ******************/
 
-#disableMessageHelp {
+/* Icon colors */
+i {
+    color: #666;
+}
+
+i#disableMessageHelp {
     color: #b94a48;
 }
+
+/* Misc */
+br.clear {
+    clear: both;
+}
+
+/* We have to set min-width so extension doesn't look like crap */
+html {
+    min-width: 538px;
+}
+
+/* Footer design */
+#footer {
+    height: 50px;
+    line-height: 50px;
+    background-color: #f5f5f5;
+    margin-top: 10px;
+}
+
+#footer div#flattrbutton {
+    margin-top: 15px;
+    margin-left: 19px;
+}
+
+
+/******************
+ * Color history
+ ******************/
 
 #history div.label {
     width: 15px;
@@ -39,25 +67,19 @@
     margin-left: 10px;
 }
 
-/* font color */
-i {
-    color: #666;
-}
-
-br.clear {
-  clear: both;
-}
-
-#pickedColorDiv {
-  margin-top: 20px;
-}
+/******************
+ * About page
+ ******************/
 
 #paypal-donation-about {
   text-align: center;
   margin-top: 20px;
 }
 
-/* color preview on right side */
+/******************
+ * Color previews
+ ******************/
+
 #colorPreview {
     margin-top: 58px;
     max-width: 140px;
@@ -73,7 +95,7 @@ br.clear {
     border-radius: 4px;
 }
 
-/* Echo out a label for the example */
+/* Label on left side of box */
 .colorPreviewBox:after {
     position: absolute;
     bottom: 24px;
@@ -111,27 +133,14 @@ br.clear {
     font-family: monospace;
 }
 
-/* We have to set min-width so extension doesn't look like crap */
-html {
-    min-width: 538px;
-}
-
-/* Footer design */
-#footer {
-    height: 50px;
-    line-height: 50px;
-    background-color: #f5f5f5;
-    margin-top: 10px;
-}
-
-#footer div#flattrbutton {
-    margin-top: 15px;
-    margin-left: 19px;
-}
+/******************
+ * Fixes
+ ******************/
 
 /* Fix for button shifting when using tooltip
  * see https://github.com/twitter/bootstrap/issues/5704
  */
+
 .btn-group > .tooltip + .btn,
 .btn-group > .popover + .btn{
     margin-left:-1px;
@@ -146,7 +155,7 @@ html {
     border-bottom-right-radius: 4px;
 }
 
-/* End of fix */
+/* Hack to remove yellow border on first tab */
 
 a#yellow-border-hack {
     position: absolute;
