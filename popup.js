@@ -19,17 +19,17 @@ function init() {
         var message = '';
         // special chrome pages
         if (tab.url.indexOf('chrome') == 0) {
-            message = "Sorry, but because of Google Chrome policy you can't pick color from special Chrome pages.";
+            message = "Chrome doesn't allow extensions to interact with special Chrome pages like this one.";
             pickupDisabled = true;
         }
         // chrome gallery
         else if (tab.url.indexOf('https://chrome.google.com/webstore') == 0) {
-            message = "Sorry, but because of Google Chrome policy you can't pick color from Google Chrome extension gallery.";
+            message = "Chrome doesn't allow extensions to interact with Chrome Web Store.";
             pickupDisabled = true;
         }
         // local pages
         else if (tab.url.indexOf('file') == 0) {
-            message = "Sorry, but because of Google Chrome policy you can't pick color from local pages.";
+            message = "Chrome doesn't allow extensions to interact with local pages.";
             pickupDisabled = true;
         }
 
@@ -38,7 +38,9 @@ function init() {
         // disable or enable pickup button
         if (pickupDisabled === true) {
             $("#pickupButton").addClass("disabled");
-            $("#pickupMessage").html(message).show();
+//            $("#disableMessageHelp").attr('title',message);
+            $("#disableMessageHelp").tooltip({title: message, placement: 'bottom'});
+            $("#pickupMessage").show();
         } else {
             bgPage.bg.useTab(tab);
             $("#pickupButton").click(activatePick);
