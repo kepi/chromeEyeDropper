@@ -1,7 +1,6 @@
 var NEED_BG_VERSION=7;
 var bgPage = null;
 var pickupDisabled = false;
-var disableColorpicker = window.localStorage.disableColorpicker;
 
 chrome.runtime.getBackgroundPage(function(backgroundPage) {
     bgPage = backgroundPage;
