@@ -296,6 +296,7 @@ var bg = {
         bg.clearHistory();
     } else if ( window.localStorage.history.length > 3 ) {
       var history = JSON.parse(window.localStorage.history);
+      history = bg.addHashesToColorsInHistory(history);
       bg.color = history[history.length-1];
     } else {
       bg.color = DEFAULT_COLOR;
@@ -354,6 +355,17 @@ var bg = {
       chrome.tabs.executeScript(tabId, {allFrames: false, file: "inc/shortcut.js"});
       chrome.tabs.executeScript(tabId, {allFrames: false, file: bg.helperFile});
     });
+  },
+
+  // in versions before 0.3.0 colors were stored without # hash in front
+  // this fixes it
+  addHashesToColorsInHistory: function(history) {
+      if ( history[0][0] != '#' ) {
+          for ( key in history ) {
+              history[key] = '#' + history[key];
+          }
+      }
+      window.localStorage.history = JSON.stringify(history);
   }
 };
 
