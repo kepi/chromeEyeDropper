@@ -366,6 +366,7 @@ var bg = {
           }
       }
       window.localStorage.history = JSON.stringify(history);
+      return history;
   }
 };
 
