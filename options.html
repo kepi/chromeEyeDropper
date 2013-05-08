@@ -1,91 +1,121 @@
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
     <title>Eye Dropper - Options</title>
-    <link type="text/css" rel="stylesheet" href="style.css?0.2.6" />
-    <link type="text/css" rel="stylesheet" href="inc/options/options.css?0.2.6" />
+    <link type="text/css" rel="stylesheet" href="inc/bootstrap/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="inc/font-awesome/css/font-awesome.min.css">
+    <!--<link type="text/css" rel="stylesheet" href="style.css?0.2.6">-->
+    <!--<link type="text/css" rel="stylesheet" href="inc/options/options.css?0.2.6">-->
 
     <script src="inc/jquery-1.7.1.min.js"></script>
-    <script src="inc/jquery-ui/js/jquery-ui-1.8.4.custom.min.js"></script>
     <script src="inc/keycode.js"></script>
+    <script type="text/javascript" src="inc/bootstrap/js/bootstrap.min.js"></script>
 
-    <link href="inc/jquery-ui/css/smoothness/jquery-ui-1.8.4.custom.css" rel="stylesheet" type="text/css"/>
-      <script src="options.js"></script>
-      <script src="inc/flattr/load.js"></script>
+    <script src="options.js"></script>
+    <script src="inc/flattr/load.js"></script>
 
 </head>
 
 <body id="options-body">
-  <h1>Eye Dropper &ndash; Options</h1>
-
-  <div id="options">
-  <div id="tabs">
-    <ul>
-      <li><a href="#tab-1"><span>Main</span></a></li>
-      <li><a href="#tab-2"><span>Appearance</span></a></li>
-      <li><a href="#tab-4"><span>Keyboard Shortcuts</span></a></li>
-    </ul>
-
-    <div id="tab-1">
-      <div class="opt">
-        <label for="autoClipboard">Automaticaly copy picked color to clipboard when picking from webpage</label> <input type="checkbox" name="autoClipboard" id="autoClipboard" />
-      </div>
-      <div class="opt">
-        <label for="autoClipboardNoGrid">Do not copy # character, only RGB color</label> <input type="checkbox" name="autoClipboardNoGrid" id="autoClipboardNoGrid" />
-      </div>
-      <div class="opt">
-        <label for="enableRightClickDeactivate">Disable webpage picking with mouse right click</label> <input type="checkbox" name="enableRightClickDeactivate" id="enableRightClickDeactivate" />
-      </div>
-    </div>
-    
-    <div id="tab-2">
-      <div class="opt">
-        <label for="dropperCursor">Dropper cursor:</label>
-          &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="dropperCursor" value="default" id="dropperCursordefault" /> <img src="img/cursor_default.png" alt="default" style="cursor: default" />
-          &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="dropperCursor" value="crosshair" id="dropperCursorcrosshair" /> <img src="img/cursor_crosshair.png" alt="crosshair" style="cursor: crosshair" />
-          &nbsp;&nbsp;&nbsp;&nbsp;<cite>move mouse over icon to see how it looks like</cite>
-      </div>
-      <div class="opt">
-        <label for="enableColorToolbox">Enable box with color information in right bottom corner</label> <input type="checkbox" name="enableColorToolbox" id="enableColorToolbox" />
-      </div>
-      <div class="opt">
-        <label for="enableColorTooltip">Enable color tooltip next to the mouse cursor</label> <input type="checkbox" name="enableColorTooltip" id="enableColorTooltip" />
-      </div>
+<div class="container-fluid">
+    <div class="hero-unit">
+        <h1>Eye Dropper</h1>
+        <p>Settings page</p>
     </div>
 
-    <div id="tab-4">
-      <div class="opt">
-        Pick color from webpage: <a href="#" id="addKeyActivate"><span id="keyActivate"></span></a>
-      </div>
+    <div id="options" class="row-fluid">
+
+        <div class="span6">
+
+            <div style="padding-left: 60px;">
+                <fieldset>
+                    <legend>Webpage Pick Behaviour</legend>
+                     <label class="checkbox"><input type="checkbox" name="autoClipboard" id="autoClipboard"> Automaticaly copy picked color to clipboard</label>
+                     <label class="checkbox"><input type="checkbox" name="autoClipboardNoGrid" id="autoClipboardNoGrid"> Do not copy # character, only RGB color</label>
+                    <label class="checkbox"><input type="checkbox" name="enableRightClickDeactivate" id="enableRightClickDeactivate"> Disable pick with right mouse click</label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Webpage Pick Look</legend>
+
+
+                    <div class="controls">
+                        <label class="checkbox"><input type="checkbox" name="enableColorToolbox" id="enableColorToolbox"> Enable box with color information in right bottom corner</label>
+                    </div>
+
+                    <div class="controls">
+                        <label class="checkbox"><input type="checkbox" name="enableColorTooltip" id="enableColorTooltip"> Enable color tooltip next to the mouse cursor</label>
+                    </div>
+
+                    <h5>Dropper cursor</h5>
+                    <p><em>move mouse over icon to see how it looks like</em></p>
+                    <div class="controls">
+                        <label class="radio">
+                            <input type="radio" name="dropperCursor" value="default" id="dropperCursordefault"> <img src="img/cursor_default.png" alt="default" style="cursor: default"> pointer
+                        </label>
+                        <label class="radio">
+                            <input type="radio" name="dropperCursor" value="crosshair" id="dropperCursorcrosshair"> <img src="img/cursor_crosshair.png" alt="crosshair" style="cursor: crosshair"> crosshair
+                        </label>
+                    </div>
+
+                </fieldset>
+
+
+                <fieldset>
+                    <legend>Keyboard Shortcuts</legend>
+                    <div class="controls">
+                        <label>Pick color from webpage: <a class="btn btn-small" data-toggle="modal" href="#keycode-dialog"><span id="keyActivate"></span></a></label>
+                    </div>
+                </fieldset>
+
+                <hr>
+                <div>
+                    <button id="saveButton" class="btn btn-success">Save settings</button>
+                    <span id="status"></span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="donation" class="span3 offset1">
+            <div>
+                <h3>Do you like Eye Dropper?</h3>
+                <p class="alert alert-success">First of all - if you like Eye Dropper <a href="https://chrome.google.com/webstore/detail/hmdcmlfkchdmnmnmheododdhjedfccka/reviews">rate it on Chrome Webstore</a> please.</p>
+                <div class="media">
+                    <span id="flattrButtonDonate" class="pull-left">
+                        <a class="FlattrButton" style="display:none;" title="Flattr Eye Dropper" data-flattr-url="http://eye-dropper.kepi.cz/"
+                           href="https://flattr.com/thing/173858/Eye-Dropper">Flattr Eye Dropper</a>
+
+                    </span>
+
+                    <div class="media-body">
+                        <p>If you find Eye Dropper useful, you can show your support Flattering it or you can choose to donate through Paypal. Any amount will encourage me to spend more time with Eye Dropper development. Thanks!</p>
+                    </div>
+
+                </div>
+                <!-- Begin PayPal Donations -->
+                <form id="paypal-donation-options" class="pull-right" action="https://www.paypal.com/cgi-bin/webscr" method="post"><div class="paypal-donations"><input type="hidden" name="cmd" value="_donations"><input type="hidden" name="business" value="kepi@orthank.net"><input type="hidden" name="return" value="http://eye-dropper.kepi.cz/thanks-for-your-donation/"><input type="hidden" name="item_name" value="Eye Dropper"><input type="hidden" name="currency_code" value="USD"><input type="image" src="inc/btn_donate_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online."></div></form>
+            </div>
+        </div>
+
     </div>
 
-    <div>
-      <button id="saveButton" class="save">Save</button>
-      <span id="status"></span>
+    <div id="keycode-dialog" class="modal hide fade in">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">x</a>
+            <h3>Choose shortcut</h3>
+        </div>
+        <div class="modal-body">
+            <p>Shortcut: <span id="shortKeyActivate">none</span></p>
+            <p id="info">Just press any keyboard shortcut you want to assign to this function and press Save when you are done.</p>
+        </div>
+        <div class="modal-footer">
+              <a href="#" id="shortcutSave" class="btn btn-success">Save shortcut</a>
+              <a href="#" id="shortcutDisable" class="btn">Disable shortcut</a>
+        </div>
     </div>
-  </div>
-  </div>
-
-  <div id="donation">
-    <div>
-      <h2>Do you like Eye Dropper?</h2>
-    <span id="flattrButtonDonate">
-        <a class="FlattrButton" style="display:none;" title="Flattr Eye Dropper" data-flattr-url="http://eye-dropper.kepi.cz/"
-    href="https://flattr.com/thing/173858/Eye-Dropper">Flattr Eye Dropper</a>
-    </span>
-    <p>First of all - if you like Eye Dropper <a href="https://chrome.google.com/webstore/detail/hmdcmlfkchdmnmnmheododdhjedfccka">rate it on Chrome Webstore</a> please.</p>
-    
-    <p>If you find Eye Dropper useful, you can make donation using Flattr or Paypal. Any amount will help me with its continuous development. Thanks!</p>
-
-    <!-- Begin PayPal Donations --> 
-    <form id="paypal-donation-options" action="https://www.paypal.com/cgi-bin/webscr" method="post"><div class="paypal-donations"><input type="hidden" name="cmd" value="_donations" /><input type="hidden" name="business" value="kepi@orthank.net" /><input type="hidden" name="return" value="http://eye-dropper.kepi.cz/thanks-for-your-donation/" /><input type="hidden" name="item_name" value="Eye Dropper" /><input type="hidden" name="currency_code" value="USD" /><input type="image" src="inc/btn_donate_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online." /></div></form> 
-    </div>
-  </div>
-
-  <div id="keycode-dialog">
-    <p>Shortcut: <span id="shortKeyActivate">none</span></p>
-    <p id="info">Just press any keyboard shortcut you want to assign to this function and press Save when you are done.</p>
-  </div>
+</div>
 </body>
 </html>

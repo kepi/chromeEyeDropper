@@ -57,22 +57,28 @@ function restore_options() {
 }
 
 function keysStartListening() {
-    console.log('starting listener');
+    ////console.log('starting listener');
     document.addEventListener("keydown", keyDown, false);
     document.addEventListener("keypress", function(e) { e.preventDefault(); return false; }, false);
 }
 
 function keysStopListening() {
-    console.log('stoping listener');
+    ////console.log('stoping listener');
     document.removeEventListener("keydown", keyDown, false);
 }
 
 function keyDown(e) {
-    console.log('key down');
+    ////console.log('key down');
     var k = KeyCode;
 
-    $("#shortKeyActivate").html(k.hot_key(k.translate_event(e)));
-    e.preventDefault();
+    var hotkey = k.hot_key(k.translate_event(e));
+    if ( hotkey == 'Escape' ) {
+        $("#keycode-dialog").modal('hide');
+
+    } else {
+        $("#shortKeyActivate").html(hotkey);
+        e.preventDefault();
+    }
 }
 
 function changeShortcut(shortcutName, key) {
@@ -91,37 +97,28 @@ function changeShortcut(shortcutName, key) {
 // On document load
 $(document).ready(function() {
     // show tabs
-    $("#tabs").tabs();
     restore_options();
 
-    $("#keycode-dialog").dialog({
-        autoOpen: false,
-        height: 220,
-        width: 270,
-        modal: true,
-        title: "Set shortcut",
-        buttons: {
-            "Disable shortcut": function() {
-                key = "none";
-                $("#keyActivate").html(key);
-                $(this).dialog("close");
-            },
-            "Save shortcut": function() {
-                key = $("#shortKeyActivate").html();
-                $("#keyActivate").html(key);
-                window.localStorage.keyActivate = key;
-                changeShortcut('activate', key);
-                $(this).dialog("close");
-            }
-        },
-        close: function() {
-            keysStopListening();
-        }
+    $("#keycode-dialog").on('show', function() {
+        keysStartListening();
+    }).on('hide', function() {
+        keysStopListening();
     });
 
-    $("#addKeyActivate").click(function(){
-        keysStartListening();
-        $("#keycode-dialog").dialog('open');
+    $("#shortcutSave").click(function() {
+        var key = $("#shortKeyActivate").html();
+        $("#keyActivate").html(key);
+        window.localStorage.keyActivate = key;
+        changeShortcut('activate', key);
+
+        $("#keycode-dialog").modal('hide');
+    });
+
+    $("#shortcutDisable").click(function() {
+        $("#keyActivate").html("none");
+        window.localStorage.keyActivate = "none";
+
+        $("#keycode-dialog").modal('hide');
     });
 
     $("#saveButton").click(function() { save_options() });
