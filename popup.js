@@ -7,7 +7,9 @@ chrome.runtime.getBackgroundPage(function(backgroundPage) {
     bgPage = backgroundPage;
 
     // reload background if we need new version
-    if ( bgPage.version == undefined || bgPage.version < NEED_BG_VERSION ) {
+    if ( bgPage.bg.version == undefined || bgPage.bg.version < NEED_BG_VERSION ) {
+        console.log('Background version not ok, reloading.');
+        console.log(bgPage.version);
         chrome.runtime.sendMessage({type: "reload-background"});
     }
 });
@@ -104,8 +106,7 @@ function setColor(what, color, dontsave, history) {
     // TODO jak se bude chovat kdyz je undefined?
     if ( what == 'cur'&& color !== undefined ) {
         if ( dontsave !== true  ) {
-            console.log('saving to bg');
-            color_arr = color.rgba8();
+            var color_arr = color.rgba8();
             bgPage.bg.setColor({color: { r: color_arr[0], g: color_arr[1], b: color_arr[2], rgbhex: color.hex6() }, history: history});
             if ( history === true ) { drawHistory(); }
         }
@@ -129,7 +130,6 @@ function setColor(what, color, dontsave, history) {
 
 function clearHistory()
 {
-    console.log('try to clear');
     chrome.runtime.sendMessage({type: "clear-history"}, function() {
         drawHistory();
         setDefaultColors();

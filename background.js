@@ -85,12 +85,12 @@ var bg = {
         switch(req.type) {
           // Taking screenshot for content script
           case 'screenshot': 
-            console.log('received screenshot request');
+            ////console.log('received screenshot request');
             bg.capture(); break;
           
           // Creating debug tab
           case 'debug-tab':
-            console.log('received debug tab');
+            ////console.log('received debug tab');
             bg.debugImage = req.image;
             bg.createDebugTab();
             break;
@@ -272,7 +272,7 @@ var bg = {
   },
 
   clearHistory: function(sendResponse) {
-      console.log('clearing history');
+      ////console.log('clearing history');
       window.localStorage.history = "[]";
       bg.color = DEFAULT_COLOR;
 
