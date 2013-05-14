@@ -150,7 +150,7 @@ function showColorPicker(color)
 {
     $("#colorpicker").spectrum({
         flat: true,
-        showInput: false,
+        showInput: true,
         showInitial: false,
         preferredFormat: "hex",
         chooseText: "select",
@@ -162,6 +162,8 @@ function showColorPicker(color)
             setColor('cur', tinycolor.toHexString(), false, true);
         }
     });
+
+    $(".sp-input").after('<em class="muted" id="inputTip" style="display: none;">You can enter color in hex, rgb, html name or hsl - all formats as you can see in boxes on right.</em>').focusin(function() { $("#inputTip").show()}).focusout(function() { $("#inputTip").hide()});
 
 }
 
