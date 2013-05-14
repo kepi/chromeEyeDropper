@@ -30,7 +30,6 @@
       "inc/jquery-1.7.1.min.js",
       "inc/jquery-special-scroll.js",
       "edropper2.js",
-      "inc/jquery.hotkeys.js",
       "inject/anchor-cursor-default.css",
       "inject/edropper2.css"
   ]

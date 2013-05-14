@@ -193,10 +193,6 @@ var bg = {
 
     // dropper is loaded but with old version
     } else if ( bg.dropperVersion == undefined || bg.dropperVersion < NEED_DROPPER_VERSION ) {
-      // we need to explicitly load jquery.hotkeys.js for dropper version lower than 5
-      if ( bg.dropperVersion <= 4 )
-        chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/jquery.hotkeys.js"});
-
       chrome.tabs.executeScript(bg.tab.id, {allFrames: true, file: "edropper2.js"}, function() {
         ////console.log('new version of edropper2 injected');
         bg.pickupActivate();
