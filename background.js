@@ -1,4 +1,4 @@
-var BG_VERSION=7;
+var BG_VERSION=8;
 var NEED_DROPPER_VERSION=8;
 var NEED_ED_HELPER_VERSION=6;
 var DEFAULT_COLOR="#b48484";
@@ -272,7 +272,9 @@ var bg = {
       window.localStorage.history = "[]";
       bg.color = DEFAULT_COLOR;
 
-      sendResponse({state: 'OK'});
+      if ( sendResponse != undefined ) {
+          sendResponse({state: 'OK'});
+      }
   },
   
   init: function() {
