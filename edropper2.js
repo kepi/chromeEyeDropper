@@ -144,8 +144,9 @@ var page = {
       return;
 
     e.preventDefault();
-
-    page.dropperDeactivate();
+	
+	if (e.shiftKey!=1)
+		page.dropperDeactivate();
     page.sendMessage({type: "set-color", color: page.pickColor(e)});
   },
 
