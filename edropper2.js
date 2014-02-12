@@ -1,4 +1,4 @@
-var EDROPPER_VERSION=8;
+var EDROPPER_VERSION=9;
 
 var page = {
   width: $(document).width(),
