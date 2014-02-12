@@ -350,6 +350,7 @@ var page = {
       page.canvas.width = page.width + page.canvasBorders;
       page.canvas.height = page.height + page.canvasBorders;
       page.canvasContext = page.canvas.getContext('2d');
+      page.canvasContext.scale(1/window.devicePixelRatio, 1/window.devicePixelRatio);
       page.rects = [];
     }
   },
