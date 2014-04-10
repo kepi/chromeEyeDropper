@@ -1,4 +1,4 @@
-var EDROPPER_VERSION=9;
+var EDROPPER_VERSION=10;
 
 var page = {
   width: $(document).width(),
@@ -25,7 +25,7 @@ var page = {
     ////console.log('page activated');
     chrome.runtime.onMessage.addListener(function(req, sender, sendResponse) {
       switch(req.type) {
-        case 'edropper-loaded': sendResponse({version: EDROPPER_VERSION}); break;
+        case 'edropper-version': sendResponse({version: EDROPPER_VERSION, tabid: req.tabid}); break;
         case 'pickup-activate': page.options = req.options; page.dropperActivate(); break;
         case 'pickup-deactivate': page.dropperDeactivate(); break;
         case 'update-image':
@@ -453,7 +453,12 @@ var page = {
 
       //page.sendMessage({type: 'debug-tab', image: page.canvas.toDataURL()}, function() {});
     }
-    image.src = page.imageData;
+
+    if ( page.imageData ) {
+      image.src = page.imageData;
+    } else {
+      console.error('ed: no imageData');
+    }
   },
 
   init: function() {

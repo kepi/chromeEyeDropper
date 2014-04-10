@@ -1,6 +1,6 @@
-var BG_VERSION=9;
-var NEED_DROPPER_VERSION=9;
-var NEED_ED_HELPER_VERSION=6;
+var BG_VERSION=10;
+var NEED_DROPPER_VERSION=10;
+var NEED_ED_HELPER_VERSION=7;
 var DEFAULT_COLOR="#b48484";
 
 // jQuery like functions
@@ -25,8 +25,6 @@ var bg = {
   tabs: [],
   helperFile: "js/ed_helper.js",
   version: BG_VERSION,
-  dropperLoaded: false,
-  dropperVersion: 0,
   screenshotData: '',
   screenshotFormat: 'png',
   canvas: document.createElement("canvas"),
@@ -39,16 +37,81 @@ var bg = {
   // need to null all tab-specific variables
   useTab: function(tab) {
     bg.tab = tab;
-    bg.dropperLoaded = false;
-    bg.dropperVersion = 0;
     bg.screenshotData = '';
     bg.canvas = document.createElement("canvas");
     bg.canvasContext = null;
 
-    bg.sendMessage({type: 'edropper-loaded'}, function(res) {
-      bg.dropperLoaded = true; 
-      bg.dropperVersion = res.version;
-      ////console.log('Picker is loaded with version ' + bg.dropperVersion);
+// we cannot have two listeners and rely on undefined res
+//    bg.checkHelperScripts();
+  },
+
+  checkHelperScripts: function() {
+    // check ed-helper-version
+    console.log('bg: checking helper version');
+    bg.sendMessage({type: 'helper-version'}, function(res) {
+      console.log('bg: checking helper version 2');
+      if ( res ) {
+        if ( res.version < NEED_ED_HELPER_VERSION ) {
+          bg.refreshHelper();
+        }
+      } else {
+        bg.injectHelper();
+      }
+    });
+  },
+
+  checkDropperScripts: function() {
+    console.log('bg: checking dropper version');
+    bg.sendMessage({type: 'edropper-version'}, function(res) {
+      console.log('bg: checking dropper version 2');
+      if ( res ) {
+        if ( res.version < NEED_DROPPER_VERSION ) {
+          bg.refreshDropper();
+        } else {
+          bg.pickupActivate();
+        }
+      } else {
+        bg.injectDropper();
+      }
+    });
+  },
+
+  injectHelper: function() {
+    console.log("bg: injecting helper scripts");
+    chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/shortcut.js"});
+    chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: bg.helperFile});
+  },
+
+  refreshHelper: function() {
+    console.log("bg: refreshing helper scripts");
+    chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: bg.helperFile});
+  },
+
+  injectDropper: function() {
+    console.log("bg: injecting dropper scripts");
+
+    // FIXME: this is temporary untill helper script will be removed/restored
+    chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/shortcut.js"}, function() {
+        console.log('bg: trying to inject jquery');
+        chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/jquery-1.7.1.min.js"}, function() {
+          console.log('bg: jquery injected');
+          chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/jquery-special-scroll.js"}, function() {
+            console.log('bg: jquery-special-scroll injected');
+            chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "edropper2.js"}, function() {
+              console.log('bg: edropper2 injected');
+              bg.pickupActivate();
+            });
+          });
+        });
+    });
+  },
+
+  refreshDropper: function() {
+    console.log("bg: refreshing dropper scripts");
+
+    chrome.tabs.executeScript(bg.tab.id, {allFrames: true, file: "edropper2.js"}, function() {
+      console.log('bg: edropper2 updated')
+      bg.pickupActivate();
     });
   },
 
@@ -134,6 +197,10 @@ var bg = {
 
   // method for setting color. It set bg color, update badge and save to history if possible
   setColor: function(req) {
+    if ( ! req.color ) {
+      console.log('bg: error receiving collor from dropper.');
+      return;
+    }
     // we are storing color with first # character
     if ( ! req.color.rgbhex.match(/^#/) )
         req.color.rgbhex = '#' + req.color.rgbhex;
@@ -175,32 +242,9 @@ var bg = {
 
   // activate Pick
   activate: function() {
-    // inject javascript if needed
-    if ( bg.dropperLoaded === false ) {
-      ////console.log('trying to inject jquery');
-      chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/jquery-1.7.1.min.js"}, function() {
-        ////console.log('jquery injected');
-        chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/jquery-special-scroll.js"}, function() {
-          ////console.log('jquery-special-scroll injected');
-          chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "edropper2.js"}, function() {
-            ////console.log('edropper2 injected');
-
-            bg.pickupActivate();
-
-          });
-        });
-      });
-
-    // dropper is loaded but with old version
-    } else if ( bg.dropperVersion == undefined || bg.dropperVersion < NEED_DROPPER_VERSION ) {
-      chrome.tabs.executeScript(bg.tab.id, {allFrames: true, file: "edropper2.js"}, function() {
-        ////console.log('new version of edropper2 injected');
-        bg.pickupActivate();
-      });
-
-    // dropper is loaded, activate
-    } else
-      bg.pickupActivate();
+    console.log('bg: received pickup activate');
+    // check scripts and activate pickup
+    bg.checkDropperScripts();
   },
 
   pickupActivate: function() {
@@ -213,7 +257,7 @@ var bg = {
     // activate picker
     bg.sendMessage({type: 'pickup-activate', options: { cursor: cursor, enableColorToolbox: enableColorToolbox, enableColorTooltip: enableColorTooltip, enableRightClickDeactivate: enableRightClickDeactivate}}, function() {});
 
-    ////console.log('activating pickup');
+    console.log('bg: activating pickup');
   },
 
   // capture actual Screenshot
@@ -232,8 +276,12 @@ var bg = {
   },
 
   doCapture: function(data) {
-      ////console.log('sending updated image');
-      bg.sendMessage({type: 'update-image', data: data}, function() {});
+      if ( data ) {
+        console.log('bg: sending updated image');
+        bg.sendMessage({type: 'update-image', data: data}, function() {});
+      } else {
+        console.error('bg: did not receive data from captureVisibleTab');
+      }
   },
 
   createDebugTab: function() {
@@ -311,48 +359,6 @@ var bg = {
 
     // TODO: call only when shortcuts enabled now?
     bg.tabOnUpdatedListener();
-
-    // refresh content scripts
-    bg.refreshContentScripts();
-  },
-
-  // handle finding all tabs and inject where needed
-  refreshContentScripts: function() {
-    bg.tabs = [];
-    bg.findContentScriptTabs();
-    window.setTimeout(function() { bg.refreshTabs(); }, 200);
-  },
-
-  // find all tabs in all windows and check injected version
-  findContentScriptTabs: function() {
-
-    chrome.windows.getAll({'populate':true}, function(windows){
-      windows.forEach(function(win) {
-        win.tabs.forEach(function(tab) {
-          if ( tab != undefined && tab.url.indexOf('http') == 0 && tab.url.indexOf('https://chrome.google.com/webstore') !== 0) {
-            bg.tabs.push(tab.id);
-
-            chrome.tabs.sendMessage(tab.id, {type: 'helper-version', tabid: tab.id}, function(response) {
-              if ( response.version >= NEED_ED_HELPER_VERSION ) {
-                ////console.log("tabid " + tab.id + " is ok. Not injecting.");
-                bg.tabs.splice(bg.tabs.indexOf(tab.id), 1);
-              }
-            });
-          }
-        });
-      });
-
-    });
-  },
-
-  // go trough tabs and inject script
-  refreshTabs: function() {
-    bg.tabs.forEach(function(tabId) {
-      ////console.log("tabid " + tabId + " bad. Injecting " + bg.helperFile);
-      // TODO insert shortcut only when missing, not when updating
-      chrome.tabs.executeScript(tabId, {allFrames: false, file: "inc/shortcut.js"});
-      chrome.tabs.executeScript(tabId, {allFrames: false, file: bg.helperFile});
-    });
   },
 
   // in versions before 0.3.0 colors were stored without # hash in front

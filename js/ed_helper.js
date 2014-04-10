@@ -1,4 +1,4 @@
-var ED_HELPER_VERSION=6;
+var ED_HELPER_VERSION=7;
 
 var edHelper = {
   version: ED_HELPER_VERSION,

@@ -1,4 +1,4 @@
-var NEED_BG_VERSION=9;
+var NEED_BG_VERSION=10;
 var bgPage = null;
 var pickupDisabled = false;
 
