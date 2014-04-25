@@ -229,7 +229,7 @@ var bg = {
   capture: function() {
     ////console.log('capturing');
     try {
-      chrome.tabs.captureVisibleTab(null, {format: bg.screenshotFormat, quality: 100}, bg.doCapture);
+      chrome.tabs.captureVisibleTab(null, {format: 'png'}, bg.doCapture);
     // fallback for chrome before 5.0.372.0
     } catch(e) {
       chrome.tabs.captureVisibleTab(null, bg.doCapture);
@@ -301,8 +301,6 @@ var bg = {
     } else {
       bg.color = DEFAULT_COLOR;
     }
-    // windows support jpeg only
-    bg.screenshotFormat = bg.isThisPlatform('windows') ? 'jpeg' : 'png';
 
     // we have to listen for messages
     bg.messageListener();
