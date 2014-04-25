@@ -39,13 +39,17 @@ html {
  * Color history
  ******************/
 
-#history div.label {
+#history div.historySquare {
     width: 15px;
     height: 15px;
     padding: 0px;
     font-size: 1px;
     margin: 2px;
     border: 1px solid #666;
+    float: left;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
 }
 
 #history div.label:hover {
@@ -82,7 +86,7 @@ html {
 
 #colorPreview {
     margin-top: 58px;
-    max-width: 140px;
+    max-width: 170px;
 }
 
 .colorPreviewBox {
@@ -99,7 +103,7 @@ html {
 .colorPreviewBox:after {
     position: absolute;
     bottom: 24px;
-    left: -44px;
+    left: -40px;
 
     width: 58px;
 
@@ -115,6 +119,12 @@ html {
     -ms-transform: rotate(-90deg);
     -o-transform: rotate(-90deg);
     transform: rotate(-90deg);
+}
+
+.colorPreviewBox code {
+    background-color: #999;
+    color: #fff;
+    text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
 }
 
 #curColor {
@@ -160,4 +170,8 @@ html {
 a#yellow-border-hack {
     position: absolute;
     top: -1000px;
+}
+
+#pickTabContent {
+    padding-top: 10px;
 }

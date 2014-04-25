@@ -78,7 +78,7 @@ function drawHistory() {
         var history = JSON.parse(window.localStorage.history);
         var output = '';
         for ( var c in history ) {
-            output += '<div class="label historySquare" style="background: ' + history[c] + '" title="' + history[c] + '">&nbsp;</div>';
+            output += '<div class="historySquare" style="background: ' + history[c] + '" title="' + history[c] + '">&nbsp;</div>';
         }
         $("#historyColors").html(output+'<br class="clearfix" /><em class="muted">Hover your cursor over color boxes to preview color.<br>Click to set as selected and copy to clipboard.</em>');
 
@@ -119,7 +119,7 @@ function setColor(what, color, dontsave, history) {
     out = '<div class="colorPreviewBox" style="background-color: '+color.hex6()+';">';
     for ( key in formats ) {
         format = formats[key];
-        out += '<span class="label">' + format + '</span>&nbsp;';
+        out += '<code>' + format + '</code>&nbsp;';
         out += key > 0 ? '<br>' : '&nbsp;'
     }
     out += '</div>';
