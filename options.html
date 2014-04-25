@@ -8,7 +8,6 @@
     <link type="text/css" rel="stylesheet" href="inc/bootstrap/3.1.1/css/bootstrap-theme.min.css">
 
     <script src="inc/jquery-2.1.0.min.js"></script>
-    <script src="inc/keycode.js"></script>
     <script type="text/javascript" src="inc/bootstrap/js/3.1.1/bootstrap.min.js"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -110,24 +109,7 @@
             <form id="paypal-donation-options" class="pull-right" action="https://www.paypal.com/cgi-bin/webscr" method="post"><div class="paypal-donations"><input type="hidden" name="cmd" value="_donations" class="form-control"><input type="hidden" name="business" value="kepi@orthank.net" class="form-control"><input type="hidden" name="return" value="http://eye-dropper.kepi.cz/thanks-for-your-donation/" class="form-control"><input type="hidden" name="item_name" value="Eye Dropper" class="form-control"><input type="hidden" name="currency_code" value="USD" class="form-control"><input type="image" src="inc/btn_donate_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online." class="form-control"></div></form>
           </div>
         </div>
-
-      </div>
-
-      <div id="keycode-dialog" class="modal hide fade in">
-        <div class="modal-header">
-          <a class="close" data-dismiss="modal">x</a>
-          <h3>Choose shortcut</h3>
-        </div>
-        <div class="modal-body">
-          <p>Shortcut: <span id="shortKeyActivate">none</span></p>
-          <p id="info">Just press any keyboard shortcut you want to assign to this function and press Save when you are done.</p>
-        </div>
-        <div class="modal-footer">
-          <a href="#" id="shortcutSave" class="btn btn-success">Save shortcut</a>
-          <a href="#" id="shortcutDisable" class="btn btn-default">Disable shortcut</a>
-        </div>
       </div>
     </div>
-
   </body>
 </html>
