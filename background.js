@@ -60,7 +60,7 @@ var bg = {
   injectDropper: function() {
     console.log("bg: injecting dropper scripts");
 
-    chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/jquery-1.7.1.min.js"}, function() {
+    chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/jquery-2.1.0.min.js"}, function() {
       console.log('bg: jquery injected');
       chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/jquery-special-scroll.js"}, function() {
         console.log('bg: jquery-special-scroll injected');

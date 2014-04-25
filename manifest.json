@@ -27,7 +27,7 @@
   "permissions": [ "tabs", "activeTab" ],
 
   "web_accessible_resources": [
-      "inc/jquery-1.7.1.min.js",
+      "inc/jquery-2.1.0.min.js",
       "inc/jquery-special-scroll.js",
       "edropper2.js",
       "inject/anchor-cursor-default.css",
