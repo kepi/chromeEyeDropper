@@ -1,6 +1,5 @@
 var BG_VERSION=10;
 var NEED_DROPPER_VERSION=10;
-var NEED_ED_HELPER_VERSION=7;
 var DEFAULT_COLOR="#b48484";
 
 // jQuery like functions
@@ -23,7 +22,6 @@ function inArray(value, array) {
 var bg = {
   tab: 0,
   tabs: [],
-  helperFile: "js/ed_helper.js",
   version: BG_VERSION,
   screenshotData: '',
   screenshotFormat: 'png',
@@ -40,24 +38,6 @@ var bg = {
     bg.screenshotData = '';
     bg.canvas = document.createElement("canvas");
     bg.canvasContext = null;
-
-// we cannot have two listeners and rely on undefined res
-//    bg.checkHelperScripts();
-  },
-
-  checkHelperScripts: function() {
-    // check ed-helper-version
-    console.log('bg: checking helper version');
-    bg.sendMessage({type: 'helper-version'}, function(res) {
-      console.log('bg: checking helper version 2');
-      if ( res ) {
-        if ( res.version < NEED_ED_HELPER_VERSION ) {
-          bg.refreshHelper();
-        }
-      } else {
-        bg.injectHelper();
-      }
-    });
   },
 
   checkDropperScripts: function() {
@@ -76,33 +56,22 @@ var bg = {
     });
   },
 
-  injectHelper: function() {
-    console.log("bg: injecting helper scripts");
-    chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/shortcut.js"});
-    chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: bg.helperFile});
-  },
-
-  refreshHelper: function() {
-    console.log("bg: refreshing helper scripts");
-    chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: bg.helperFile});
-  },
-
+  // FIXME: try to handle this better, maybe some consolidation
   injectDropper: function() {
     console.log("bg: injecting dropper scripts");
 
-    // FIXME: this is temporary untill helper script will be removed/restored
-    chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/shortcut.js"}, function() {
-        console.log('bg: trying to inject jquery');
-        chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/jquery-1.7.1.min.js"}, function() {
-          console.log('bg: jquery injected');
-          chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/jquery-special-scroll.js"}, function() {
-            console.log('bg: jquery-special-scroll injected');
-            chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "edropper2.js"}, function() {
-              console.log('bg: edropper2 injected');
-              bg.pickupActivate();
-            });
+    chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/jquery-1.7.1.min.js"}, function() {
+      console.log('bg: jquery injected');
+      chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/jquery-special-scroll.js"}, function() {
+        console.log('bg: jquery-special-scroll injected');
+        chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/shortcut.js"}, function() {
+          console.log('bg: shortcuts injected');
+          chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "edropper2.js"}, function() {
+            console.log('bg: edropper2 injected');
+            bg.pickupActivate();
           });
         });
+      });
     });
   },
 
@@ -119,13 +88,21 @@ var bg = {
     chrome.tabs.sendMessage(bg.tab.id, message, callback);
   },
 
+  shortcutListener: function() {
+    chrome.commands.onCommand.addListener(function(command) {
+      console.log('bg: command: ', command);
+      switch(command) {
+        case 'activate':
+          bg.activate2();
+          break;
+      }
+    });
+  },
+
   messageListener: function() {
     // simple messages
     chrome.runtime.onMessage.addListener(function(req, sender, sendResponse) {
       switch(req.type) {
-        case 'ed-helper-options':
-          sendResponse(bg.edHelperOptions(req));
-          break;
         case 'activate-from-hotkey':
           bg.activate2();
           sendResponse({});
@@ -166,25 +143,13 @@ var bg = {
     });
   },
 
-  // shortcut for injecting new content
+  // function for injecting new content
   inject: function(file, tab) {
     if ( tab == undefined )
       tab = bg.tab.id;
 
     ////console.log("Injecting " + file + " into tab " + tab);
     chrome.tabs.executeScript(tab, {allFrames: false, file: file}, function() {});
-  },
-
-  // load options for ed helper and send them
-  edHelperOptions: function(req) {
-    var hotkeyActivate = null;
-
-    if ( window.localStorage != null ) {
-      if ( window.localStorage.keyActivate != undefined && window.localStorage.keyActivate != "" )
-        hotkeyActivate = window.localStorage.keyActivate;
-    } 
-
-    return {options: {hotkeyActivate: hotkeyActivate}};
   },
 
   supports: function(what, sendResponse) {
@@ -305,16 +270,6 @@ var bg = {
 
   },
 
-  tabOnUpdatedListener: function() {
-    chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-      if ( tab.url.indexOf('http') == 0 && changeInfo.status == "complete" ) {
-        ////console.log("Injecting");
-        chrome.tabs.executeScript(tabId, {allFrames: false, file: "inc/shortcut.js"});
-        chrome.tabs.executeScript(tabId, {allFrames: false, file: bg.helperFile});
-      }
-    });
-  },
-
   clearHistory: function(sendResponse) {
       ////console.log('clearing history');
       window.localStorage.history = "[]";
@@ -331,7 +286,6 @@ var bg = {
 
       // show installed or updated page
       if ( window.localStorage.seenInstalledPage == undefined || window.localStorage.seenInstalledPage === "false" ) {
-        // TODO: for new installs inject ed helper to all tabs
         window.localStorage.seenInstalledPage = true;
         chrome.tabs.create({url: 'pages/installed.html', selected: true});
       }
@@ -357,8 +311,8 @@ var bg = {
     // TODO: call only when needed? this is now used also if picker isn't active
     bg.tabOnChangeListener();
 
-    // TODO: call only when shortcuts enabled now?
-    bg.tabOnUpdatedListener();
+    // listen for shortcut commands
+    bg.shortcutListener();
   },
 
   // in versions before 0.3.0 colors were stored without # hash in front

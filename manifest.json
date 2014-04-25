@@ -24,7 +24,7 @@
     "default_popup": "popup.html"
   },
 
-    "permissions": [ "tabs", "activeTab" ],
+  "permissions": [ "tabs", "activeTab" ],
 
   "web_accessible_resources": [
       "inc/jquery-1.7.1.min.js",
@@ -33,5 +33,14 @@
       "inject/anchor-cursor-default.css",
       "inject/anchor-cursor-crosshair.css",
       "inject/edropper2.css"
-  ]
+  ],
+
+  "commands": {
+    "activate": {
+      "suggested_key": {
+        "default": "Alt+P"
+      },
+      "description": "Activate pick color from web page"
+    }
+  }
 }
