@@ -24,7 +24,7 @@
     "default_popup": "popup.html"
   },
 
-  "permissions": [ "tabs", "activeTab" ],
+  "permissions": [ "activeTab" ],
 
   "web_accessible_resources": [
       "inc/jquery-2.1.0.min.js",
