@@ -22,14 +22,14 @@ var page = {
   // ---------------------------------
   messageListener: function() {
     // Listen for pickup activate
-    ////console.log('page activated');
+    console.log('dropper: page activated');
     chrome.runtime.onMessage.addListener(function(req, sender, sendResponse) {
       switch(req.type) {
         case 'edropper-version': sendResponse({version: EDROPPER_VERSION, tabid: req.tabid}); break;
         case 'pickup-activate': page.options = req.options; page.dropperActivate(); break;
         case 'pickup-deactivate': page.dropperDeactivate(); break;
         case 'update-image':
-          ////console.log('background send me updated screenshot');
+          console.log('dropper: background send me updated screenshot');
           page.imageData = req.data;
           page.capture();
           break;
@@ -80,7 +80,7 @@ var page = {
       page.elColorToolboxText = $('#color-toolbox-text');
     }
 
-    ////console.log('activating page dropper');
+    console.log('dropper: activating page dropper');
     page.defaults();
 
     page.dropperActivated = true;
@@ -111,7 +111,7 @@ var page = {
 
     page.dropperActivated = false;
 
-    ////console.log('deactivating page dropper');
+    console.log('dropper: deactivating page dropper');
     document.removeEventListener("mousemove", page.onMouseMove, false);
     document.removeEventListener("click", page.onMouseClick, false);
     if ( page.options.enableRightClickDeactivate === true ) {
@@ -153,7 +153,7 @@ var page = {
     if (!page.dropperActivated)
      return;
 
-    ////console.log("Scroll stop");
+    console.log("dropper: Scroll stop");
     page.screenChanged();
   },
 
@@ -194,7 +194,7 @@ var page = {
     if (!page.dropperActivated)
       return;
 
-    ////console.log('window resized');
+    console.log('dropper: window resized');
 
     // set defaults
     page.defaults();
@@ -345,7 +345,7 @@ var page = {
   checkCanvas: function() {
     // we have to create new canvas element 
     if ( page.canvas.width != (page.width+page.canvasBorders) || page.canvas.height != (page.height+page.canvasBorders) ) {
-      ////console.log('creating new canvas');
+      console.log('dropper: creating new canvas');
       page.canvas = document.createElement('canvas');
       page.canvas.width = page.width + page.canvasBorders;
       page.canvas.height = page.height + page.canvasBorders;
@@ -359,6 +359,7 @@ var page = {
     if (!page.dropperActivated)
       return;
 
+    console.log("dropper: screenChanged");
     page.YOffset = $(document).scrollTop();
     page.XOffset = $(document).scrollLeft();
 
@@ -368,7 +369,7 @@ var page = {
     if ( !force && page.rects.length > 0 ) {
       for ( index in page.rects ) {
         if ( page.rectInRect(rect, page.rects[index]) ) {
-          ////console.log('uz mame, nefotim');
+          console.log('dropper: already shoted, skipping');
           return;
         }
       }
@@ -378,7 +379,7 @@ var page = {
 
     $("#eye-dropper-overlay").css('cursor','progress')
 
-    ////console.log('I want new screenshot');
+    console.log('dropper: screenshoting');
     // TODO: this is terrible. It have to be done better way
     if ( page.options.enableColorTooltip === true && page.options.enableColorToolbox === true) {
       page.elColorTooltip.hide(1, function() {
@@ -425,7 +426,7 @@ var page = {
           var t = page.rectMerge(rect, page.rects[index]);
 
           if ( t != false ) {
-            ////console.log('merging');
+            console.log('dropper: merging');
             merged = true;
             page.rects[index] = t;
           }

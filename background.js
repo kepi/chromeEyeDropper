@@ -62,8 +62,8 @@ var bg = {
 
     chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/jquery-2.1.0.min.js"}, function() {
       console.log('bg: jquery injected');
-      chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/jquery-special-scroll.js"}, function() {
-        console.log('bg: jquery-special-scroll injected');
+      chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/jquery.scrollstop.js"}, function() {
+        console.log('bg: jquery.scrollstop injected');
         chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "inc/shortcut.js"}, function() {
           console.log('bg: shortcuts injected');
           chrome.tabs.executeScript(bg.tab.id, {allFrames: false, file: "edropper2.js"}, function() {
