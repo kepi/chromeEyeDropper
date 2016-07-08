@@ -54,6 +54,4 @@ $(document).ready(function() {
     restore_options();
 
     $("#saveButton").click(function() { save_options() });
-
-    FlattrLoader.setup();
 });

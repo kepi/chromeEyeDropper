@@ -29,12 +29,6 @@ html {
     margin-top: 10px;
 }
 
-#footer div#flattrbutton {
-    margin-top: 15px;
-    margin-left: 19px;
-}
-
-
 /******************
  * Color history
  ******************/
@@ -76,8 +70,8 @@ html {
  ******************/
 
 #paypal-donation-about {
-  text-align: center;
-  margin-top: 20px;
+    text-align: center;
+    margin-top: 20px;
 }
 
 /******************

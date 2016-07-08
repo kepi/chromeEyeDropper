@@ -173,7 +173,6 @@ function check_support(what) {
 // show jPicker tab and set color
 function showColorPicker(color) {
     $("#colorpicker").spectrum({
-        flat: true,
         showInput: true,
         showInitial: false,
         preferredFormat: "hex",
@@ -207,8 +206,6 @@ $(document).ready(function() {
     });
 
     drawHistory();
-
-    FlattrLoader.setup();
 
     $("[data-toggle=tooltip]").tooltip();
 
