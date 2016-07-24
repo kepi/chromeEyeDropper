@@ -1,46 +1,49 @@
 {
-  "name": "Eye Dropper",
-  "version": "0.3.7",
-  "manifest_version": 2,
-  "description": "Eye Dropper is open source extension which allows you to pick colors from web pages, color picker and your personal color history.",
+    "name": "Eye Dropper",
+    "version": "0.3.7",
+    "manifest_version": 2,
+    "description": "Eye Dropper is open source extension which allows you to pick colors from web pages, color picker and your personal color history.",
+    "homepage_url": "http://eye-dropper.kepi.cz/",
 
-  "background": {
-      "page": "background.html",
-      "persistent": true
-  },
-  "options_page": "options.html",
+    "minimum_chrome_version": 49,
 
-  "icons": {
-    "48": "img/icon_48.png",
-    "128": "img/icon_128.png"
-  },
-
-  "browser_action": {
-    "default_icon": {
-        "19":   "img/icon_19.png",
-        "38":   "img/icon_38.png"
+    "background": {
+        "page": "background.html",
+        "persistent": true
     },
-    "default_title": "Eye Dropper",
-    "default_popup": "popup.html"
-  },
+    "options_page": "options.html",
 
-  "permissions": [ "activeTab" ],
+    "icons": {
+        "48": "img/icon_48.png",
+        "128": "img/icon_128.png"
+    },
 
-  "web_accessible_resources": [
-      "inc/jquery-2.1.0.min.js",
-      "inc/jquery.scrollstop.js",
-      "edropper2.js",
-      "inject/anchor-cursor-default.css",
-      "inject/anchor-cursor-crosshair.css",
-      "inject/edropper2.css"
-  ],
+    "browser_action": {
+        "default_icon": {
+            "19": "img/icon_19.png",
+            "38": "img/icon_38.png"
+        },
+        "default_title": "Eye Dropper",
+        "default_popup": "html/popup.html"
+    },
 
-  "commands": {
-    "activate": {
-      "suggested_key": {
-        "default": "Alt+P"
-      },
-      "description": "Activate pick color from web page"
+    "permissions": ["activeTab", "storage"],
+
+    "web_accessible_resources": [
+        "inc/jquery-2.1.0.min.js",
+        "inc/jquery.scrollstop.js",
+        "edropper2.js",
+        "inject/anchor-cursor-default.css",
+        "inject/anchor-cursor-crosshair.css",
+        "inject/edropper2.css"
+    ],
+
+    "commands": {
+        "activate": {
+            "suggested_key": {
+                "default": "Alt+P"
+            },
+            "description": "Activate pick color from web page"
+        }
     }
-  }
 }

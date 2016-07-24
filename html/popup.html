@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://npmcdn.com/tachyons@4.0.4/css/tachyons.min.css">
+    <link rel="stylesheet" href="/css/popup.css">
+    <script src="/inc/pusher.color.min.js"></script>
+    <script src="/src/popup.js" async></script>
+</head>
+
+<body class="bg-black-10">
+    <article class="w-100 center bg-white pa2" style="width: 34rem">
+
+        <section class="cf">
+
+            <section class="fl w-75">
+                <header class="w-100">
+                    <nav class="mb3 pb1">
+                        <a class="ed-tab link dim blue b f6 f5-ns dib mr2 ttu" id="eye-dropper" href="#" title="Pick color from web">Eye Dropper</a>
+                        <span class="f6 f5-ns mr2 silver">|</span>
+                        <a class="ed-tab link dim blue f6 f5-ns dib mr2 ttu" id="color-picker" href="#" title="Pick color from Color picker">Color picker</a>
+                    </nav>
+                </header>
+
+                <section>
+                    <a class="ba b--black-20 bg-white black-70 link br2 dim b dib mr3 pv2 ph3" id="pick" href="#">
+                        <svg class="w1 h1 dib v-mid" viewBox="0 0 1792 1792" style="fill:currentcolor">
+                            <use xlink:href="/img/icons.svg#fa-tint">
+                        </svg>
+                        <div class="h1 dib">Pick color from web page</div>
+                    </a>
+                </section>
+            </section>
+
+            <section class="fl w-25">
+                <div id="box-current-label" class="black-40 helvetica b ed-color-box-label">Selected</div>
+                <div id="box-current" class="ed-color-box w-100 br2 cf pa2 mb2">
+                </div>
+                <div id="box-new-label" class="black-40 helvetica b ed-color-box-label">New</div>
+                <div id="box-new" class="ed-color-box w-100 br2 cf pa2">
+                </div>
+            </section>
+        </section>
+
+        <section class="cf mt2">
+            <section class="fl w-75">
+                <div class="mt3 mb2 cf">
+                    <span class="f5 fl">Color history</span>
+                    <div id="colors-history-toolbar" class="fl ml2">
+                        <a class="link dib dim w1" href="#" id="colors-history-clear">
+                            <svg class="mt1" viewBox="0 0 1792 1792" style="fill:gray;width:14px;">
+                                <use xlink:href="/img/icons.svg#fa-ban">
+                            </svg>
+                        </a>
+                        <a class="link dib dim w1" href="#" id="colors-history-export">
+                            <svg class="mt1" viewBox="0 0 1792 1792" style="fill:gray;width:14px;">
+                                <use xlink:href="/img/icons.svg#fa-floppy-o">
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <section id="colors-history" class="cf"></section>
+
+                <p class="i" id="colors-history-instructions">
+                    History is empty, try to pick some color first.
+                </p>
+            </section>
+        </section>
+    </article>
+    <section class="mw5 mw7-ns center bg-light-gray cf pa2">
+        <section class="fl w-60">
+            <!-- Begin PayPal Donations -->
+            <form id="paypal-donation-footer" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank"><div class="paypal-donations"><input type="hidden" name="cmd" value="_donations" class="form-control"><input type="hidden" name="business" value="kepi@orthank.net" class="form-control"><input type="hidden" name="return" value="http://eye-dropper.kepi.cz/thanks-for-your-donation/" class="form-control"><input type="hidden" name="item_name" value="Eye Dropper" class="form-control"><input type="hidden" name="currency_code" value="USD" class="form-control"><input type="image" class="btn grow" src="/inc/btn_donate_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online."></div></form>
+        </section>
+        <section class="fr">
+            <a href="#" data-url="http://eye-dropper.kepi.cz/" class="ed-external link gray dib h1 w1 bg-near-white ba b--black-10 br-100 pa1 mr1 dim">
+                <svg viewBox="0 0 1792 1792" style="fill:currentcolor">
+                    <use xlink:href="/img/icons.svg#fa-home">
+                </svg>
+            </a>
+
+            <a href="#" id="button-about" class="link gray dib h1 w1 bg-near-white ba b--black-10 br-100 pa1 mr1 dim">
+                <svg viewBox="0 0 1792 1792" style="fill:currentcolor">
+                    <use xlink:href="/img/icons.svg#fa-question-circle">
+                </svg>
+            </a>
+
+            <a href="#" data-url="https://github.com/kepi/chromeEyeDropper/issues" id="button-bug" class="ed-external link gray dib h1 w1 bg-near-white ba b--black-10 br-100 pa1 mr1 dim">
+                <svg viewBox="0 0 1792 1792" style="fill:currentcolor">
+                    <use xlink:href="/img/icons.svg#fa-bug">
+                </svg>
+            </a>
+
+            <a href="#" data-url="/options.html" class="ed-external link gray dib h1 w1 bg-near-white ba b--black-10 br-100 pa1 mr1 dim">
+                <svg viewBox="0 0 1792 1792" style="fill:currentcolor">
+                    <use xlink:href="/img/icons.svg#fa-cog">
+                </svg>
+            </a>
+        </section>
+    </section>
+</body>
+
+</html>

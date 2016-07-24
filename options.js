@@ -1,57 +1,95 @@
-// Saves options to localStorage.
-    function save_options() {
-        if (!window.localStorage) {
-            alert("Error local storage is unavailable.");
-            window.close();
-        }
+const NEED_BG_VERSION = 11 // minimum version of bg script we need
 
-        window.localStorage.autoClipboard =
-            document.getElementById("autoClipboard").checked ? true : false;
+let bgPage = null
 
-        window.localStorage.autoClipboardNoGrid =
-            document.getElementById("autoClipboardNoGrid").checked ? true : false;
+ready(init) // call init when ready
 
-        window.localStorage.enableColorToolbox =
-            document.getElementById("enableColorToolbox").checked ? true : false;
-
-        window.localStorage.enableColorTooltip =
-            document.getElementById("enableColorTooltip").checked ? true : false;
-
-        window.localStorage.enableRightClickDeactivate =
-            document.getElementById("enableRightClickDeactivate").checked ? true : false;
-
-        cursor = document.getElementById('dropperCursorcrosshair').checked ? 'crosshair' : 'default';
-        window.localStorage.dropperCursor =  cursor;
-
-        // Update status to let user know options were saved.
-        var status = document.getElementById("status");
-        status.innerHTML = "Options Saved.";
-        setTimeout(function() {
-            status.innerHTML = "";
-        }, 750);
+/**
+ * Call function when document is ready
+ *
+ * @param {function} fn function to call when document is ready
+ */
+function ready(fn) {
+    if (document.readyState != 'loading') {
+        fn()
+    } else {
+        document.addEventListener('DOMContentLoaded', fn)
     }
+}
+
+function isChecked(elementId) {
+    return document.getElementById(elementId).checked
+}
+
+// Saves options to localStorage.
+function save_options() {
+    console.group("Saving options to storage")
+
+    for (setting in bgPage.bg.settings) {
+        let element = document.getElementById(setting)
+        if (element) {
+            bgPage.bg.settings[setting] = element.checked
+            console.info(`Setting ${setting}: ${bgPage.bg.settings[setting]}`)
+        }
+    }
+
+    // cursor has multiple values (radio) - special handling needed
+    bgPage.bg.settings.dropperCursor = document.getElementById('dropperCursorcrosshair').checked ? 'crosshair' : 'default'
+    console.info(`Setting dropperCursor: ${bgPage.bg.settings.dropperCursor}`)
+
+    bgPage.bg.saveSettings()
+
+    // Update status to let user know options were saved.
+    let status = document.getElementById("status")
+    status.innerHTML = "Options Saved."
+    setTimeout(function() {
+        status.innerHTML = ""
+    }, 750)
+
+    console.groupEnd("Saving options to storage")
+}
 
 // Restores select box state to saved value from localStorage.
 function restore_options() {
-    document.getElementById("autoClipboard").checked =
-        (window.localStorage.autoClipboard === "true") ? true : false;
-    document.getElementById("autoClipboardNoGrid").checked =
-        (window.localStorage.autoClipboardNoGrid === "true") ? true : false;
-    document.getElementById("enableColorToolbox").checked =
-        (window.localStorage.enableColorToolbox === "false") ? false : true;
-    document.getElementById("enableColorTooltip").checked =
-        (window.localStorage.enableColorTooltip === "false") ? false : true;
-    document.getElementById("enableRightClickDeactivate").checked =
-        (window.localStorage.enableRightClickDeactivate === "false") ? false : true;
+    console.group("Restoring options from storage")
+    for (setting in bgPage.bg.settings) {
+        let element = document.getElementById(setting)
+        if (element) {
+            element.checked = bgPage.bg.settings[setting]
+            console.info(`Setting ${setting}: ${bgPage.bg.settings[setting]}`)
+        }
+    }
 
-    cursor = (window.localStorage.dropperCursor === 'crosshair') ? 'crosshair' : 'default';
-    document.getElementById('dropperCursor'+cursor).checked = true;
+    // cursor has multiple values (radio) - special handling needed
+    document.getElementById(`dropperCursor${bgPage.bg.settings.dropperCursor}`).checked = true
+    console.info(`Setting dropperCursor: ${bgPage.bg.settings.dropperCursor}`)
+
+    console.groupEnd("Restoring options from storage")
 }
 
-// On document load
-$(document).ready(function() {
-    // show tabs
-    restore_options();
+function init() {
+    chrome.runtime.getBackgroundPage((backgroundPage) => {
+        gotBgPage(backgroundPage)
+    })
+}
 
-    $("#saveButton").click(function() { save_options() });
-});
+function bgPageReady() {
+    restore_options()
+
+    document.getElementById('saveButton').onclick = () => {
+        save_options()
+    }
+}
+
+function gotBgPage(backgroundPage) {
+    bgPage = backgroundPage
+    if (bgPage.bg.version === undefined || bgPage.bg.version < NEED_BG_VERSION) {
+        console.warn(`Background page reload. Current version: ${bgPage.bg.version}, need version: ${NEED_BG_VERSION}`)
+        chrome.runtime.sendMessage({
+            type: "reload-background"
+        })
+        setTimeout('bgPageReady', 1000)
+    } else {
+        bgPageReady()
+    }
+}
