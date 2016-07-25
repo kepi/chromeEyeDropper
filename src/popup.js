@@ -221,7 +221,37 @@ function initColorHistory() {
 }
 
 function exportHistory() {
-    console.warn("TODO: export history not implemented")
+    let history = bgPage.bg.getPalette()
+    let csv = 'data:text/csv;charset=utf-8,'
+
+
+    csv += '"Name","Date","RGB Hex","RGB Hex3","HTML Keyword","HSL","RGB"'
+    csv += "\n"
+
+    for (let color of history) {
+        let d = new Date(color.timestamp)
+        let datestring = `${d.getFullYear()}-${("0"+(d.getMonth()+1)).slice(-2)}-${("0" + d.getDate()).slice(-2)} ${("0" + d.getHours()).slice(-2)}:${("0" + d.getMinutes()).slice(-2)}:${("0" + d.getSeconds()).slice(-2)}`;
+
+        csv += `"${color.name}","${datestring}"`
+
+        color = pusher.color(color.hex)
+        let formats = [color.hex6(), color.hex3(), color.html('keyword'), color.html('hsl'), color.html('rgb')];
+        for (let format of formats) {
+            csv += `,"${format}"`
+        }
+        csv += "\n"
+    }
+
+    let data = encodeURI(csv)
+
+    console.group("csvExport")
+    console.log(csv)
+    console.groupEnd("csvExport")
+
+    let link = document.createElement('a')
+    link.setAttribute('href',data)
+    link.setAttribute('download', 'export.csv')
+    link.click()
 }
 
 /**
