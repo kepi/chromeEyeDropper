@@ -11,14 +11,18 @@
 
 .ed-color-box-label {
     position: absolute;
-    right: 7rem;
-    top: 3.5rem;
+    right: 6.6rem;
+    top: 2.5rem;
     width: 5rem;
     transform: rotate(-90deg);
+}
+
+.ed-color-box {
+    width: 8rem;
 }
 
 /* Label on left side of color box - new color */
 
 #box-new-label {
-    top: 10.5rem;
+    top: 8.5rem;
 }

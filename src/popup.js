@@ -275,8 +275,8 @@ function colorBox(type, color) {
         let formats = [color.hex6(), color.hex3(), color.html('keyword'), color.html('hsl'), color.html('rgb')];
 
         let html = ''
-        for (let key in formats) {
-            html += `<span class="fl mr3 bg-white br1 ph1 mb1"><code>${formats[key]}</code></span>`
+        for (let value of formats) {
+            html += `<span class="mr1 bg-white br1 ph1 mb1 dib"><code>${value}</code></span>`
         }
         boxes[type].innerHTML = html
 
