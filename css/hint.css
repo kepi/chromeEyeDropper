@@ -49,6 +49,9 @@
     -moz-transition-delay: 0ms;
     transition-delay: 0ms; }
   [class*="hint--"]:hover:before, [class*="hint--"]:hover:after {
+    text-transform: none;
+    text-align: center;
+    font-weight: normal;
     visibility: visible;
     opacity: 1; }
   [class*="hint--"]:hover:before, [class*="hint--"]:hover:after {
