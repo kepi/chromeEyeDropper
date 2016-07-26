@@ -21,8 +21,18 @@
     width: 8rem;
 }
 
+
 /* Label on left side of color box - new color */
 
 #box-new-label {
     top: 8.5rem;
+}
+
+#tab-ed-link,
+span.ed-tab-in {
+    display: none;
+}
+
+#tab-ed-active {
+    display: inline-block;
 }

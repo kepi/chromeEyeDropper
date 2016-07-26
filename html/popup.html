@@ -20,19 +20,35 @@
             <section class="fl w-75">
                 <header class="w-100">
                     <nav class="mb3 pb1">
-                        <a class="ed-tab link blue b f6 f5-ns dib mr2 ttu hint--bottom hint--no-animate hint--rounded hint--small" id="eye-dropper" href="#" aria-label="Pick Color from Any Web"><span class="dim">Eye Dropper</span></a>
+                        <span class="ed-tab b f6 f5-ns dib mr2 ttu" id="tab-ed">
+                            <span id="tab-ed-active" class="ed-tab-in">Eye Dropper</span>
+                            <a id="tab-ed-link" class="ed-tab-in link blue hint--bottom hint--no-animate hint--rounded hint--small" aria-label="Pick Color from Any Web" href="#">
+                                <span class="dim">Eye Dropper</span>
+                            </a>
+                        </span>
+
                         <span class="f6 f5-ns mr2 silver">|</span>
-                        <a class="ed-tab link blue f6 f5-ns dib mr2 ttu hint--bottom hint--no-animate hint--rounded hint--small" id="color-picker" href="#" aria-label="Want to Mix Your Own?"><span class="dim">Color picker</span></a>
+
+                        <span class="ed-tab b f6 f5-ns dib mr2 ttu" id="tab-cp">
+                            <span id="tab-cp-active" class="ed-tab-in">Color Picker</span>
+                            <a id="tab-cp-link" class="ed-tab-in link blue hint--bottom hint--no-animate hint--rounded hint--small" aria-label="Want to Mix Your Own?" href="#">
+                                <span class="dim">Color Picker</span>
+                            </a>
+                        </span>
                     </nav>
                 </header>
 
-                <section>
-                    <a class="ba b--black-20 bg-white black-70 link br2 dim b dib mr3 pv2 ph3" id="pick" href="#">
-                        <svg class="w1 h1 dib v-mid" viewBox="0 0 1792 1792" style="fill:currentcolor">
-                            <use xlink:href="/img/icons.svg#fa-tint">
-                        </svg>
-                        <div class="h1 dib">Pick color from web page</div>
-                    </a>
+                <section id="content">
+
+                    <div id="tab-ed-content" class="content-page">
+                        <a class="ba b--black-20 bg-white black-70 link br2 dim b dib mr3 pv2 ph3" id="pick" href="#">
+                            <svg class="w1 h1 dib v-mid" viewBox="0 0 1792 1792" style="fill:currentcolor">
+                                <use xlink:href="/img/icons.svg#fa-tint">
+                            </svg>
+                            <div class="h1 dib">Pick color from web page</div>
+                        </a>
+                    </div>
+
                 </section>
             </section>
 
@@ -84,7 +100,7 @@
                 </svg>
             </a>
 
-            <a href="#" id="button-about" aria-label="Thats My Bio..." class="link gray dib h1 w1 bg-near-white ba b--black-10 br-100 pa1 mr1 hint--top hint--no-animate hint--rounded">
+            <a href="#" id="button-about" aria-label="Thats My Bio..." class="ed-tab link gray dib h1 w1 bg-near-white ba b--black-10 br-100 pa1 mr1 hint--top hint--no-animate hint--rounded">
                 <svg class="dim" viewBox="0 0 1792 1792" style="fill:currentcolor">
                     <use xlink:href="/img/icons.svg#fa-question-circle">
                 </svg>

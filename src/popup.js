@@ -2,6 +2,7 @@ const NEED_BG_VERSION = 12 // minimum version of bg script we need
 
 let bgPage = null
 let boxes = {}
+let tab_ins = {}
 
 ready(init) // call init when ready
 
@@ -42,8 +43,12 @@ function init() {
 function initTabs() {
     for (let n of document.getElementsByClassName('ed-tab')) {
         n.onclick = () => {
-            switchTab(`tab-${n.id}`)
+            switchTab(n.id)
         }
+    }
+
+    for (let n of document.getElementsByClassName('ed-tab-in')) {
+        tab_ins[n.id] = n
     }
 
     console.info('tabs initialized')
@@ -58,7 +63,7 @@ function initTabs() {
  * Because we are using this from popup, we can't use simple
  * href attribute, we will create new tab with help of chrome api.
  */
-function initExternalLinks() {    
+function initExternalLinks() {
     for (let n of document.getElementsByClassName('ed-external')) {
         if (n.dataset.url) {
             n.onclick = () => {
@@ -249,22 +254,69 @@ function exportHistory() {
     console.groupEnd("csvExport")
 
     let link = document.createElement('a')
-    link.setAttribute('href',data)
+    link.setAttribute('href', data)
     link.setAttribute('download', 'export.csv')
     link.click()
 }
 
 /**
- * TODO: Handle tab switching
+ * Handle tab switching
  *
  * TODO: handle ajax loading
  * TODO: handle pamatovani si jestli uz je nacteny nebo ne
+ *
+ * FIXME: change to something sane and not so ugly
  *
  * @param {string} tabId id of tab to switch to
  *
  */
 function switchTab(tabId) {
-    console.warn(`TODO: Switch to ${tabId}`)
+    for (let tab_id in tab_ins) {
+
+        if ( (tab_id.match(/-active$/) && tab_id !== `${tabId}-active`) || (tab_id.match(/-link$/) && tab_id === `${tabId}-link`)) {
+            tab_ins[tab_id].style.display = 'none'
+        } else {
+            tab_ins[tab_id].style.display = 'inline-block'
+        }
+    }
+
+    // tab_ins[`${tabId}-active`].style.display = 'inline-block'
+    // tab_ins[`${tabId}-link`].style.display = 'none'
+
+    loadTab(tabId)
+}
+
+function loadTab(tabId) {
+    console.group("tabSwitch")
+    let content_found = false
+    for (let n of document.getElementsByClassName('content-page')) {
+        console.info(`found tab content ${n.id}`)
+        if (n.id === `${tabId}-content`) {
+            n.style.display = 'block'
+            content_found = true
+            console.info(`Found content for ${n.id}, switching.`)
+        } else {
+            n.style.display = 'none'
+            console.info(`Hiding content for tab ${n.id}`)
+        }
+    }
+
+    if (!content_found) {
+        console.info("XMLHttp: No content found, loading through AJAX")
+        let request = new XMLHttpRequest()
+        request.open('GET', `/html/${tabId}.html`)
+
+        request.onload = () => {
+            if (request.status >= 200 && request.status < 400) {
+                document.getElementById('content').insertAdjacentHTML('afterend', request.responseText);
+            } else {
+                console.error(`Error loading ${tab.id} content through AJAX: ${request.status}`)
+            }
+        }
+
+        request.send()
+    }
+    console.groupEnd('tabSwitch')
 }
 
 function colorBox(type, color) {
