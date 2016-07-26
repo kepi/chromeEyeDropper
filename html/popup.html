@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="https://npmcdn.com/tachyons@4.0.4/css/tachyons.min.css">
+    <link rel="stylesheet" href="/css/hint.css">
     <link rel="stylesheet" href="/css/popup.css">
     <script src="/inc/pusher.color.min.js"></script>
     <script src="/src/popup.js" async></script>
@@ -19,9 +20,9 @@
             <section class="fl w-75">
                 <header class="w-100">
                     <nav class="mb3 pb1">
-                        <a class="ed-tab link dim blue b f6 f5-ns dib mr2 ttu" id="eye-dropper" href="#" title="Pick color from web">Eye Dropper</a>
+                        <a class="ed-tab link blue b f6 f5-ns dib mr2 ttu hint--bottom hint--no-animate hint--rounded hint--small" id="eye-dropper" href="#" aria-label="Pick Color from Any Web"><span class="dim">Eye Dropper</span></a>
                         <span class="f6 f5-ns mr2 silver">|</span>
-                        <a class="ed-tab link dim blue f6 f5-ns dib mr2 ttu" id="color-picker" href="#" title="Pick color from Color picker">Color picker</a>
+                        <a class="ed-tab link blue f6 f5-ns dib mr2 ttu hint--bottom hint--no-animate hint--rounded hint--small" id="color-picker" href="#" aria-label="Want to Mix Your Own?"><span class="dim">Color picker</span></a>
                     </nav>
                 </header>
 
@@ -50,13 +51,13 @@
                 <div class="mt3 mb2 cf">
                     <span class="f5 fl">Color history</span>
                     <div id="colors-history-toolbar" class="fl ml2">
-                        <a class="link dib dim w1" href="#" id="colors-history-clear">
-                            <svg class="mt1" viewBox="0 0 1792 1792" style="fill:gray;width:14px;">
+                        <a class="link dib w1 hint--top hint--no-animate hint--rounded" aria-label="Wipe It!" href="#" id="colors-history-clear">
+                            <svg class="mt1 dim" viewBox="0 0 1792 1792" style="fill:gray;width:14px;">
                                 <use xlink:href="/img/icons.svg#fa-ban">
                             </svg>
                         </a>
-                        <a class="link dib dim w1" href="#" id="colors-history-export">
-                            <svg class="mt1" viewBox="0 0 1792 1792" style="fill:gray;width:14px;">
+                        <a class="link dib w1 hint--top hint--no-animate hint--rounded" aria-label="Give me CSV" href="#" id="colors-history-export">
+                            <svg class="mt1 dim" viewBox="0 0 1792 1792" style="fill:gray;width:14px;">
                                 <use xlink:href="/img/icons.svg#fa-floppy-o">
                             </svg>
                         </a>
@@ -74,29 +75,29 @@
     <section class="mw5 mw7-ns center bg-light-gray cf pa2">
         <section class="fl w-60">
             <!-- Begin PayPal Donations -->
-            <form id="paypal-donation-footer" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank"><div class="paypal-donations"><input type="hidden" name="cmd" value="_donations" class="form-control"><input type="hidden" name="business" value="kepi@orthank.net" class="form-control"><input type="hidden" name="return" value="http://eye-dropper.kepi.cz/thanks-for-your-donation/" class="form-control"><input type="hidden" name="item_name" value="Eye Dropper" class="form-control"><input type="hidden" name="currency_code" value="USD" class="form-control"><input type="image" class="btn grow" src="/inc/btn_donate_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online."></div></form>
+            <form id="paypal-donation-footer" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank"><div class="paypal-donations hint--top hint--no-animate hint--rounded hint--small" aria-label="Want to support my Steam addiction?"><input type="hidden" name="cmd" value="_donations" class="form-control"><input type="hidden" name="business" value="kepi@orthank.net" class="form-control"><input type="hidden" name="return" value="http://eye-dropper.kepi.cz/thanks-for-your-donation/" class="form-control"><input type="hidden" name="item_name" value="Eye Dropper" class="form-control"><input type="hidden" name="currency_code" value="USD" class="form-control"><input type="image" class="btn grow" src="/inc/btn_donate_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online."></div></form>
         </section>
         <section class="fr">
-            <a href="#" data-url="http://eye-dropper.kepi.cz/" class="ed-external link gray dib h1 w1 bg-near-white ba b--black-10 br-100 pa1 mr1 dim">
-                <svg viewBox="0 0 1792 1792" style="fill:currentcolor">
+            <a href="#" data-url="http://eye-dropper.kepi.cz/" class="ed-external link gray dib h1 w1 bg-near-white ba b--black-10 br-100 pa1 mr1 hint--top hint--no-animate hint--rounded" aria-label="It's Bigger On the Inside">
+                <svg class="dim" viewBox="0 0 1792 1792" style="fill:currentcolor">
                     <use xlink:href="/img/icons.svg#fa-home">
                 </svg>
             </a>
 
-            <a href="#" id="button-about" class="link gray dib h1 w1 bg-near-white ba b--black-10 br-100 pa1 mr1 dim">
-                <svg viewBox="0 0 1792 1792" style="fill:currentcolor">
+            <a href="#" id="button-about" aria-label="Thats My Bio..." class="link gray dib h1 w1 bg-near-white ba b--black-10 br-100 pa1 mr1 hint--top hint--no-animate hint--rounded">
+                <svg class="dim" viewBox="0 0 1792 1792" style="fill:currentcolor">
                     <use xlink:href="/img/icons.svg#fa-question-circle">
                 </svg>
             </a>
 
-            <a href="#" data-url="https://github.com/kepi/chromeEyeDropper/issues" id="button-bug" class="ed-external link gray dib h1 w1 bg-near-white ba b--black-10 br-100 pa1 mr1 dim">
-                <svg viewBox="0 0 1792 1792" style="fill:currentcolor">
+            <a href="#" data-url="https://github.com/kepi/chromeEyeDropper/issues" aria-label="Found a Bug? Have an Idea?" id="button-bug" class="ed-external link gray dib h1 w1 bg-near-white ba b--black-10 br-100 pa1 mr1 hint--top hint--no-animate hint--rounded hint--small">
+                <svg class="dim" viewBox="0 0 1792 1792" style="fill:currentcolor">
                     <use xlink:href="/img/icons.svg#fa-bug">
                 </svg>
             </a>
 
-            <a href="#" data-url="/options.html" class="ed-external link gray dib h1 w1 bg-near-white ba b--black-10 br-100 pa1 mr1 dim">
-                <svg viewBox="0 0 1792 1792" style="fill:currentcolor">
+            <a href="#" data-url="/options.html" aria-label="Too Many Options" class="ed-external link gray dib h1 w1 bg-near-white ba b--black-10 br-100 pa1 mr1 hint--left hint--no-animate hint--rounded hint--small">
+                <svg class="dim" viewBox="0 0 1792 1792" style="fill:currentcolor">
                     <use xlink:href="/img/icons.svg#fa-cog">
                 </svg>
             </a>
