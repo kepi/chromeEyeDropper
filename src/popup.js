@@ -4,6 +4,11 @@ let bgPage = null
 let boxes = {}
 let tab_ins = {}
 
+// section elements
+let sec_color_boxes = null
+let sec_color_history = null
+let sec_content = null
+
 ready(init) // call init when ready
 
 /**
@@ -35,6 +40,10 @@ function init() {
     })
 
     console.groupEnd('popup init');
+
+    sec_content = document.getElementById('content')
+    sec_color_boxes = document.getElementById('color-boxes')
+    sec_color_history = document.getElementById('color-history')
 }
 
 /**
@@ -285,9 +294,20 @@ function exportHistory() {
  *
  */
 function switchTab(tabId) {
+    // on button-about hide history and color boxes
+    if (tabId === 'button-about') {
+        sec_color_boxes.style.display = 'none'
+        sec_color_history.style.display = 'none'
+
+        // display them on others
+    } else {
+        sec_color_boxes.style.display = 'block'
+        sec_color_history.style.display = 'block'
+    }
+
     for (let tab_id in tab_ins) {
 
-        if ( (tab_id.match(/-active$/) && tab_id !== `${tabId}-active`) || (tab_id.match(/-link$/) && tab_id === `${tabId}-link`)) {
+        if ((tab_id.match(/-active$/) && tab_id !== `${tabId}-active`) || (tab_id.match(/-link$/) && tab_id === `${tabId}-link`)) {
             tab_ins[tab_id].style.display = 'none'
         } else {
             tab_ins[tab_id].style.display = 'inline-block'
@@ -322,7 +342,8 @@ function loadTab(tabId) {
 
         request.onload = () => {
             if (request.status >= 200 && request.status < 400) {
-                document.getElementById('content').insertAdjacentHTML('afterend', request.responseText);
+                sec_content.insertAdjacentHTML('afterend', request.responseText)
+                initExternalLinks()
             } else {
                 console.error(`Error loading ${tab.id} content through AJAX: ${request.status}`)
             }
