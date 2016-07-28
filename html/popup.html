@@ -22,18 +22,18 @@
                     <nav class="mb3 pb1">
                         <span class="ed-tab b f6 f5-ns dib mr2 ttu" id="tab-ed">
                             <span id="tab-ed-active" class="ed-tab-in">Eye Dropper</span>
-                            <a id="tab-ed-link" class="ed-tab-in link blue hint--bottom hint--no-animate hint--rounded hint--small" aria-label="Pick Color from Any Web" href="#">
-                                <span class="dim">Eye Dropper</span>
-                            </a>
+                        <a id="tab-ed-link" class="ed-tab-in link blue hint--bottom hint--no-animate hint--rounded hint--small" aria-label="Pick Color from Any Web" href="#">
+                            <span class="dim">Eye Dropper</span>
+                        </a>
                         </span>
 
                         <span class="f6 f5-ns mr2 silver">|</span>
 
                         <span class="ed-tab b f6 f5-ns dib mr2 ttu" id="tab-cp">
                             <span id="tab-cp-active" class="ed-tab-in">Color Picker</span>
-                            <a id="tab-cp-link" class="ed-tab-in link blue hint--bottom hint--no-animate hint--rounded hint--small" aria-label="Want to Mix Your Own?" href="#">
-                                <span class="dim">Color Picker</span>
-                            </a>
+                        <a id="tab-cp-link" class="ed-tab-in link blue hint--bottom hint--no-animate hint--rounded hint--small" aria-label="Want to Mix Your Own?" href="#">
+                            <span class="dim">Color Picker</span>
+                        </a>
                         </span>
                     </nav>
                 </header>
@@ -41,6 +41,7 @@
                 <section id="content">
 
                     <div id="tab-ed-content" class="content-page">
+                        <div class="bg-yellow w-75 ph3 mt2 ba br1 b--gold" id="pick-message" style="display: none"></div>
                         <a class="ba b--black-20 bg-white black-70 link br2 dim b dib mr3 pv2 ph3" id="pick" href="#">
                             <svg class="w1 h1 dib v-mid" viewBox="0 0 1792 1792" style="fill:currentcolor">
                                 <use xlink:href="/img/icons.svg#fa-tint">
@@ -60,38 +61,40 @@
                 <div id="box-new" class="ed-color-box w-100 br2 cf pa2">
                 </div>
             </section>
-        </section>
-
-        <section class="cf mt2">
-            <section class="fl w-75">
-                <div class="mt3 mb2 cf">
-                    <span class="f5 fl">Color history</span>
-                    <div id="colors-history-toolbar" class="fl ml2">
-                        <a class="link dib w1 hint--top hint--no-animate hint--rounded" aria-label="Wipe It!" href="#" id="colors-history-clear">
-                            <svg class="mt1 dim" viewBox="0 0 1792 1792" style="fill:gray;width:14px;">
+            <section class="cf mt2">
+                <section class="fl w-75">
+                    <div class="mt3 mb2 cf">
+                        <span class="f5 fl">Color history</span>
+                        <div id="colors-history-toolbar" class="fl ml2">
+                            <a class="link dib w1 hint--top hint--no-animate hint--rounded" aria-label="Wipe It!" href="#" id="colors-history-clear">
+                                <svg class="mt1 dim" viewBox="0 0 1792 1792" style="fill:gray;width:14px;">
                                 <use xlink:href="/img/icons.svg#fa-ban">
                             </svg>
-                        </a>
-                        <a class="link dib w1 hint--top hint--no-animate hint--rounded" aria-label="Give me CSV" href="#" id="colors-history-export">
-                            <svg class="mt1 dim" viewBox="0 0 1792 1792" style="fill:gray;width:14px;">
+                            </a>
+                            <a class="link dib w1 hint--top hint--no-animate hint--rounded" aria-label="Give me CSV" href="#" id="colors-history-export">
+                                <svg class="mt1 dim" viewBox="0 0 1792 1792" style="fill:gray;width:14px;">
                                 <use xlink:href="/img/icons.svg#fa-floppy-o">
                             </svg>
-                        </a>
+                            </a>
+                        </div>
                     </div>
-                </div>
 
-                <section id="colors-history" class="cf"></section>
+                    <section id="colors-history" class="cf"></section>
 
-                <p class="i" id="colors-history-instructions">
-                    History is empty, try to pick some color first.
-                </p>
+                    <p class="i black-80" id="colors-history-instructions">
+                        History is empty, try to pick some color first.
+                    </p>
+                </section>
             </section>
         </section>
+
     </article>
     <section class="mw5 mw7-ns center bg-light-gray cf pa2">
         <section class="fl w-60">
             <!-- Begin PayPal Donations -->
-            <form id="paypal-donation-footer" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank"><div class="paypal-donations hint--top hint--no-animate hint--rounded hint--small" aria-label="Want to support my Steam addiction?"><input type="hidden" name="cmd" value="_donations" class="form-control"><input type="hidden" name="business" value="kepi@orthank.net" class="form-control"><input type="hidden" name="return" value="http://eye-dropper.kepi.cz/thanks-for-your-donation/" class="form-control"><input type="hidden" name="item_name" value="Eye Dropper" class="form-control"><input type="hidden" name="currency_code" value="USD" class="form-control"><input type="image" class="btn grow" src="/inc/btn_donate_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online."></div></form>
+            <form id="paypal-donation-footer" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+                <div class="paypal-donations hint--top hint--no-animate hint--rounded hint--small" aria-label="Want to support my Steam addiction?"><input type="hidden" name="cmd" value="_donations" class="form-control"><input type="hidden" name="business" value="kepi@orthank.net" class="form-control"><input type="hidden" name="return" value="http://eye-dropper.kepi.cz/thanks-for-your-donation/" class="form-control"><input type="hidden" name="item_name" value="Eye Dropper" class="form-control"><input type="hidden" name="currency_code" value="USD" class="form-control"><input type="image" class="btn grow" src="/inc/btn_donate_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online."></div>
+            </form>
         </section>
         <section class="fr">
             <a href="#" data-url="http://eye-dropper.kepi.cz/" class="ed-external link gray dib h1 w1 bg-near-white ba b--black-10 br-100 pa1 mr1 hint--top hint--no-animate hint--rounded" aria-label="It's Bigger On the Inside">

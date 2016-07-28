@@ -123,29 +123,36 @@ function bgPageReady() {
  */
 function initPickButton(tab) {
     let pickEnabled = true;
+    let message = ''
 
     // special chrome pages
     if (tab.url.indexOf('chrome') == 0) {
-        message = "Chrome doesn't allow extensions to interact with special Chrome pages like this one.";
+        message = "Chrome doesn't allow <i>extensions</i> to play with special Chrome pages like this one. <pre>chrome://...</pre>";
         pickEnabled = false;
     }
     // chrome gallery
     else if (tab.url.indexOf('https://chrome.google.com/webstore') == 0) {
-        message = "Chrome doesn't allow extensions to interact with Chrome Web Store.";
+        message = "Chrome doesn't allow its <i>extensions</i> to play on Web Store.";
         pickEnabled = false;
     }
     // local pages
     else if (tab.url.indexOf('file') == 0) {
-        message = "Chrome doesn't allow extensions to interact with local pages.";
+        message = "Chrome doesn't allow its <i>extensions</i> to play with your local pages.";
         pickEnabled = false;
     }
 
+    let pick_el = document.getElementById('pick')
     if (pickEnabled) {
-        document.getElementById('pick').onclick = () => {
+        pick_el.onclick = () => {
             bgPage.bg.useTab(tab)
             bgPage.bg.activate()
             window.close()
         }
+    } else {
+        let message_el = document.getElementById('pick-message')
+        message_el.innerHTML = `<h3 class="normal">&#128542; Whoops. Can't pick from this page</h3><p>${message}</p>`
+        message_el.style.display = 'block'
+        pick_el.style.display = 'none'
     }
 }
 
