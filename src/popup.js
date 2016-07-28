@@ -203,11 +203,18 @@ function drawColorHistory() {
     }
 
     if (history.length > 0) {
-        instructions_el.innerHTML = 'Hover over squares to preview, click to select and copy to clipboard.'
+        instructions_el.innerHTML = 'Hover over squares to preview.'
         toolbar_el.style.display = ''
     } else {
         instructions_el.innerHTML = 'History is empty, try to pick some colors first.'
         toolbar_el.style.display = 'none'
+    }
+
+    history_el.onmouseenter = () => {
+        instructions_el.innerHTML = 'Click on square to select and copy to clipboard.'
+    }
+    history_el.onmouseleave = () => {
+        instructions_el.innerHTML = 'Hover over squares to preview..'
     }
 }
 
