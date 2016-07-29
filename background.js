@@ -142,11 +142,6 @@ var bg = {
                     sendResponse({})
                     break
 
-                    // Define what background script supports
-                case 'supports':
-                    bg.supports(req.what, sendResponse)
-                    break
-
                     // Reload background script
                 case 'reload-background':
                     window.location.reload()
@@ -197,16 +192,6 @@ var bg = {
             allFrames: false,
             file: file
         }, function() {})
-    },
-
-    supports(what, sendResponse) {
-        var state = 'no'
-        if (what == 'dummy' || what == 'history')
-            state = 'ok'
-
-        sendResponse({
-            state: state
-        })
     },
 
     setBadgeColor(color) {
