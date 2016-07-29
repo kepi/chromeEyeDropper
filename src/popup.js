@@ -9,6 +9,10 @@ let sec_color_boxes = null
 let sec_color_history = null
 let sec_content = null
 
+// cpicker elements
+let cpicker = null
+let cpicker_input = null
+
 ready(init) // call init when ready
 
 /**
@@ -215,6 +219,7 @@ function drawColorHistory() {
         n.onclick = () => {
             colorBox('current', n.dataset.color)
             bgPage.bg.setColor(n.dataset.color, false)
+            changeColorPicker(n.dataset.color)
         }
     }
 
@@ -305,6 +310,11 @@ function switchTab(tabId) {
         sec_color_history.style.display = 'block'
     }
 
+    // color picker tab
+    if ( tabId !== 'tab-cp' ) {
+        cpicker.destroy()
+    }
+
     for (let tab_id in tab_ins) {
 
         if ((tab_id.match(/-active$/) && tab_id !== `${tabId}-active`) || (tab_id.match(/-link$/) && tab_id === `${tabId}-link`)) {
@@ -313,9 +323,6 @@ function switchTab(tabId) {
             tab_ins[tab_id].style.display = 'inline-block'
         }
     }
-
-    // tab_ins[`${tabId}-active`].style.display = 'inline-block'
-    // tab_ins[`${tabId}-link`].style.display = 'none'
 
     loadTab(tabId)
 }
@@ -343,13 +350,23 @@ function loadTab(tabId) {
         request.onload = () => {
             if (request.status >= 200 && request.status < 400) {
                 sec_content.insertAdjacentHTML('afterend', request.responseText)
+
                 initExternalLinks()
+                if (tabId === 'tab-cp') {
+                    loadColorPicker()
+                }
+
             } else {
                 console.error(`Error loading ${tab.id} content through AJAX: ${request.status}`)
             }
         }
 
         request.send()
+    } else {
+        // color picker tab
+        if ( tabId === 'tab-cp' ) {
+            showColorPicker()
+        }
     }
     console.groupEnd('tabSwitch')
 }
@@ -357,7 +374,6 @@ function loadTab(tabId) {
 function colorBox(type, color) {
     if (boxes[type]) {
         color = pusher.color(color)
-        console.info(`Setting ${type} box color to ${color.hex6()}`)
 
         let formats = [color.hex6(), color.hex3(), color.html('keyword'), color.html('hsl'), color.html('rgb')];
 
@@ -375,5 +391,40 @@ function colorSquare(color) {
     return `<div class="fl dib dim mr1 br1 ba b--gray colors-history-square" data-color="${color}" style="background-color: ${color}">&nbsp;</div>`
 }
 
-// open options page
-// chrome.runtime.openOptionsPage()
+function loadColorPicker() {
+    let cpicker_script = document.createElement('script')
+    cpicker_script.onload = () => {
+        console.info('Showing cpicker')
+        cpicker_input = document.getElementById('colorpicker')
+        cpicker_input.value = bgPage.bg.getColor()
+
+        showColorPicker()
+    }
+    cpicker_script.src = '/inc/color-picker/color-picker.js'
+    document.head.appendChild(cpicker_script)
+
+    document.getElementById('colorpicker-select').onclick = () => {
+        colorBox('current', cpicker.target.value)
+        bgPage.bg.setColor(cpicker.target.value)
+        drawColorHistory()
+    }
+}
+
+function showColorPicker() {
+    cpicker = new CP(cpicker_input)
+
+    cpicker.on('drag', (cpicker_color) => {
+        colorBox('new', `#${cpicker_color}`)
+        cpicker.target.value = `#${cpicker_color}`
+    })
+
+    cpicker.enter()
+}
+
+function changeColorPicker(color) {
+    if ( cpicker ) {
+        cpicker.target.value = color 
+        cpicker.destroy()
+        showColorPicker()
+    }
+}

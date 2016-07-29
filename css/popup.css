@@ -36,3 +36,8 @@ span.ed-tab-in {
 #tab-ed-active {
     display: inline-block;
 }
+
+.color-picker,
+.color-picker * {
+  box-sizing: content-box;
+}
