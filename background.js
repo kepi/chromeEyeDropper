@@ -212,6 +212,7 @@ var bg = {
         } // we are storing color with first # character
 
         bg.setBadgeColor(color)
+        bg.history.last_color = color
 
         if (bg.settings.autoClipboard) {
             console.info("Copying color to clipboard")
@@ -229,7 +230,6 @@ var bg = {
     saveToHistory(color, palette = 'default') {
         if (!bg.history.palettes[palette].find(x => x.hex == color)) {
             bg.history.palettes[palette].push(bg.historyColorItem(color))
-            bg.history.last_color = color
             console.info(`Color ${color} saved to palette ${palette}`)
 
             // FIXME: would be better to sync once in five secs or so instead of every time color change
