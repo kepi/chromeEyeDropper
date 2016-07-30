@@ -66,23 +66,30 @@
 
             <section class="cf mt2" id="color-history">
                 <section class="fl w-60">
-                    <div class="mt3 mb2 cf">
-                        <span class="f5 fl">Color history</span>
+                    <div class="mt3 cf">
+                        <span class="f5 fl">Palette: <span id="palette-name" data-palette="default">default</span></span>
                         <div id="colors-history-toolbar" class="fl ml2">
-                            <a class="link dib w1 hint--top hint--no-animate hint--rounded" aria-label="Wipe It!" href="#" id="colors-history-clear">
-                                <svg class="mt1 dim" viewBox="0 0 1792 1792" style="fill:gray;width:14px;">
-                                <use xlink:href="/img/icons.svg#fa-ban">
+                            <a class="link dib w1 hint--top hint--no-animate hint--rounded" aria-label="Different Palette?" href="#" id="colors-palette-change">
+                                <svg class="dim" viewBox="0 0 1792 1792" style="fill:gray;width:14px;">
+                                <use xlink:href="/img/icons.svg#fa-th">
                             </svg>
                             </a>
-                            <a class="link dib w1 hint--top hint--no-animate hint--rounded" aria-label="Give me CSV" href="#" id="colors-history-export">
-                                <svg class="mt1 dim" viewBox="0 0 1792 1792" style="fill:gray;width:14px;">
+                            <a class="link dib w1 hint--top hint--no-animate hint--rounded eb-history-tool-noempty" aria-label="Trash Colors in this Palette!" href="#" id="colors-history-clear">
+                                <svg class="dim" viewBox="0 0 1792 1792" style="fill:gray;width:16px;">
+                                <use xlink:href="/img/icons.svg#fa-trash-o">
+                            </svg>
+                            </a>
+                            <a class="link dib w1 hint--top hint--no-animate hint--rounded eb-history-tool-noempty" aria-label="Give me CSV" href="#" id="colors-history-export">
+                                <svg class="dim" viewBox="0 0 1792 1792" style="fill:gray;width:14px;">
                                 <use xlink:href="/img/icons.svg#fa-floppy-o">
                             </svg>
                             </a>
                         </div>
                     </div>
 
-                    <section id="colors-history" class="cf"></section>
+                    <section id="colors-palette" class="mt1" style="display:none"></section>
+
+                    <section id="colors-history" class="cf mt2"></section>
 
                     <p class="i black-80" id="colors-history-instructions">
                         History is empty, try to pick some color first.

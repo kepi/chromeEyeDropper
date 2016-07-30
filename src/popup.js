@@ -9,6 +9,11 @@ let sec_color_boxes = null
 let sec_color_history = null
 let sec_content = null
 
+// palettes
+let sec_color_palette = null
+let span_palette_name = null
+
+
 // cpicker elements
 let cpicker = null
 let cpicker_input = null
@@ -183,16 +188,28 @@ function drawColorBoxes() {
     colorBox('new', bgPage.bg.getColor())
 }
 
-function clearHistory() {
-    console.info("Clearing color history")
-    chrome.runtime.sendMessage({
-        type: "clear-history"
-    }, () => {
-        console.info("History cleared")
-        console.log(bgPage.bg.getPalette())
-        drawColorHistory()
-        drawColorBoxes()
-    })
+function clearPalette() {
+    if (confirm("Really clear palette ${bgPage.bg.getName()}?")) {
+        console.info("Clearing color history")
+        chrome.runtime.sendMessage({
+            type: "clear-history"
+        }, () => {
+            console.info("History cleared")
+            drawColorHistory()
+            drawColorBoxes()
+        })
+    }
+}
+
+function destroyPalette(palette_name) {
+    if (confirm(`Really destroy palette ${palette_name}?`) === true) {
+        let destroying_current = (palette_name === bgPage.bg.getPaletteName())
+        bgPage.bg.destroyPalette(palette_name)
+        if (destroying_current) {
+            switchColorPalette('default')
+        }
+        drawColorPalettes()
+    }
 }
 
 function drawColorHistory() {
@@ -201,6 +218,8 @@ function drawColorHistory() {
     let history_el = document.getElementById('colors-history')
     let instructions_el = document.getElementById('colors-history-instructions')
     let toolbar_el = document.getElementById('colors-history-toolbar')
+
+    let history_tool_noempty_els = document.getElementsByClassName('eb-history-tool-noempty')
 
     // first load history from palette and assemble html
     let html = ''
@@ -225,10 +244,14 @@ function drawColorHistory() {
 
     if (history.length > 0) {
         instructions_el.innerHTML = 'Hover over squares to preview.'
-        toolbar_el.style.display = ''
+        for (n of history_tool_noempty_els) {
+            n.style.display = ''
+        }
     } else {
         instructions_el.innerHTML = 'History is empty, try to pick some colors first.'
-        toolbar_el.style.display = 'none'
+        for (n of history_tool_noempty_els) {
+            n.style.display = 'none'
+        }
     }
 
     history_el.onmouseenter = () => {
@@ -244,13 +267,97 @@ function initColorHistory() {
 
     // attach events to history buttons
     document.getElementById('colors-history-clear').onclick = () => {
-        clearHistory()
+        clearPalette()
     }
 
     // export colors history
     document.getElementById('colors-history-export').onclick = () => {
         exportHistory()
     }
+
+    // color palette switching
+    drawColorPaletteSwitching()
+}
+
+function drawColorPaletteSwitching() {
+    let colors_palette_change = document.getElementById('colors-palette-change')
+    sec_color_palette = document.getElementById('colors-palette')
+    span_palette_name = document.getElementById('palette-name')
+
+    colors_palette_change.onclick = () => {
+        sec_color_palette.style.display = sec_color_palette.style.display === 'none' ? 'inline-block' : 'none'
+    }
+
+    drawColorPalettes()
+}
+
+function drawColorPalettes() {
+    let palettes = '<a href="#" class="dib link dim ph2 ml1 white bg-dark-green br1 b--dark-green mb1" id="new-palette">new</a>'
+
+    let palette_name = bgPage.bg.getPaletteName()
+
+    // change palette name in popup display and set data-palette attribute
+    span_palette_name.innerHTML = palette_name
+    span_palette_name.dataset.palette = palette_name
+
+    for (let palette of bgPage.bg.getPaletteNames()) {
+        // palettes += `<a href="#" class="ed-palette dib link dim ph2 ml1 black-80 bg-light-blue br1 b--light-blue mb1" data-palette="${palette}">${palette}</a>`
+        palettes += `<a href="#" class="ed-palette dib link dim pl2 pr1 ml1 white bg-light-purple br1 b--light-purple mb1" data-palette="${palette}">${palette}`
+
+        let colors = bgPage.bg.getPalette(palette).length
+        if (colors > 0) {
+            palettes += `<span class="dib pink pl1">${colors}</span>`
+        }
+
+        if ( palette !== 'default') {
+            palettes += `
+                <a class="ed-palette-destroy link dib w1 hint--top hint--no-animate hint--rounded" aria-label="Destroy Palette ${palette}!" data-palette="${palette}" href="#">
+                <svg class="dim v-mid" viewBox="0 0 1792 1792" style="fill:gray;width:14px;">
+                <use xlink:href="/img/icons.svg#fa-ban">
+                </svg>
+                </a>`
+        }
+    }
+
+    sec_color_palette.innerHTML = palettes
+
+    // Support for palette click
+    for (let n of document.getElementsByClassName('ed-palette')) {
+        n.onclick = () => {
+            let palette = n.dataset.palette
+            console.info(`Asked to switch to palette ${palette}`)
+            if (palette !== palette_name) {
+                switchColorPalette(palette)
+            }
+        }
+    }
+
+    // Support for palete destroy click
+    for (let n of document.getElementsByClassName('ed-palette-destroy')) {
+        n.onclick = () => {
+            let palette = n.dataset.palette
+            console.info(`Asked to destroy palette ${palette}`)
+            destroyPalette(palette)
+        }
+    }
+    document.getElementById('new-palette').onclick = () => {
+        createColorPalette(prompt("Name New Palette"))
+    }
+}
+
+function createColorPalette(name) {
+    if (name !== null) {
+        switchColorPalette(bgPage.bg.createPalette(name))
+    }
+}
+
+function switchColorPalette(palette) {
+    console.info(`Switching to palette ${palette}`)
+    bgPage.bg.changePalette(palette)
+    console.info('Redrawing history and boxes')
+    drawColorPalettes()
+    drawColorHistory()
+    drawColorBoxes()
 }
 
 function exportHistory() {
@@ -311,7 +418,7 @@ function switchTab(tabId) {
     }
 
     // color picker tab
-    if ( tabId !== 'tab-cp' ) {
+    if (tabId !== 'tab-cp') {
         cpicker.destroy()
     }
 
@@ -364,7 +471,7 @@ function loadTab(tabId) {
         request.send()
     } else {
         // color picker tab
-        if ( tabId === 'tab-cp' ) {
+        if (tabId === 'tab-cp') {
             showColorPicker()
         }
     }
@@ -422,8 +529,8 @@ function showColorPicker() {
 }
 
 function changeColorPicker(color) {
-    if ( cpicker ) {
-        cpicker.target.value = color 
+    if (cpicker) {
+        cpicker.target.value = color
         cpicker.destroy()
         showColorPicker()
     }

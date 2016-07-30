@@ -227,15 +227,15 @@ var bg = {
         console.groupEnd('setColor')
     },
 
-    saveToHistory(color, palette = 'default') {
-        if (!bg.history.palettes[palette].find(x => x.hex == color)) {
-            bg.history.palettes[palette].push(bg.historyColorItem(color))
-            console.info(`Color ${color} saved to palette ${palette}`)
+    saveToHistory(color) {
+        let palette = bg.getPalette()
+        if (!palette.find(x => x.hex == color)) {
+            palette.push(bg.historyColorItem(color))
+            console.info(`Color ${color} saved to palette ${bg.getPaletteName()}`)
 
-            // FIXME: would be better to sync once in five secs or so instead of every time color change
             bg.saveHistory()
         } else {
-            console.info(`Color ${color} already in palette ${palette}`)
+            console.info(`Color ${color} already in palette ${bg.getPaletteName()}`)
         }
     },
 
@@ -330,13 +330,82 @@ var bg = {
 
     },
 
-    getPalette() {
-        return bg.history.palettes[bg.history.current_palette]
+    getPaletteName() {
+        let name = bg.history.current_palette === undefined ? 'default' : bg.history.current_palette
+        return name
+    },
+
+    getPalette(name) {
+        return bg.history.palettes[name === undefined ? bg.getPaletteName() : name]
+    },
+
+    changePalette(palette_name) {
+        if (bg.getPaletteNames().find(x => x == palette_name)) {
+            bg.history.current_palette = palette_name
+            console.info(`Switched current palette to ${palette_name}`)
+        } else {
+            console.error(`Cannot switch to palette ${palette_name}. Palette not found.`)
+        }
+        bg.saveHistory()
+    },
+
+    getPaletteNames() {
+        return Object.keys(bg.history.palettes)
+    },
+
+    uniquePaletteName(name) {
+        // default name is palette if we receive empty or undefined name
+        if (name === undefined || !name || name.length < 1) {
+            console.info(`uniquePaletteName: ${name} empty, trying 'palette'`)
+            return bg.uniquePaletteName("palette")
+                // if there is already palette with same name
+        } else if (bg.getPaletteNames().find(x => x == name)) {
+            let matches = name.match(/^(.*[^\d]+)(\d+)?$/)
+
+            // doesn't end with number, we will add 1
+            if (matches[2] === undefined) {
+                console.info(`uniquePaletteName: ${name} occupied, trying '${name}1'`)
+                return bg.uniquePaletteName(`${name}1`)
+                    // ends with number
+            } else {
+                let new_name = `${matches[1]}${parseInt(matches[2])+1}`
+                console.info(`uniquePaletteName: ${name} occupied, trying '${new_name}'`)
+                return bg.uniquePaletteName(new_name)
+            }
+        } else {
+            console.info(`uniquePaletteName: ${name} is free'`)
+            return name
+        }
+    },
+
+    createPalette(name) {
+        let palette_name = bg.uniquePaletteName(name)
+        console.info(`Creating new palette ${name}. Unique name: ${palette_name}`)
+
+        bg.history.palettes[palette_name] = []
+        bg.saveHistory()
+        return palette_name
+    },
+
+    destroyPalette(name) {
+        if (name === 'default') {
+            console.info("Can't destroy default palette. Clearing only.")
+            bg.history.palettes.default = []
+        } else {
+            console.info(`Destroying palette ${name}`)
+            let destroying_current = (name === bg.getPaletteName())
+            delete bg.history.palettes[name]
+            // if we are destroying current palette, switch to default one
+            if (destroying_current) {
+                bg.changePalette('default')
+            }
+        }
+        bg.saveHistory()
     },
 
     clearHistory(sendResponse) {
-        console.info(`Clearing history for palette ${bg.history.current_palette}`)
-        bg.history.palettes[bg.history.current_palette] = []
+        console.info(`Clearing history for palette ${bg.getPaletteName()}`)
+        bg.history.palettes[bg.getPaletteName()] = []
         bg.history.last_color = DEFAULT_COLOR
         bg.setBadgeColor(DEFAULT_COLOR)
         bg.saveHistory()
@@ -416,6 +485,7 @@ var bg = {
     tryConvertOldHistory() {
         if (window.localStorage.history) {
             let oldHistory = JSON.parse(window.localStorage.history)
+            let converted_palette = bg.createPalette('converted')
 
             // add every color from old history to new schema with current timestamp
             let timestamp = Date.now()
@@ -427,8 +497,8 @@ var bg = {
                     color = '#' + color
                 }
 
-                // push color to default palette
-                bg.history.palettes.default.push(bg.historyColorItem(color, timestamp))
+                // push color to our converted palette
+                bg.history.palettes[converted_palette].push(bg.historyColorItem(color, timestamp))
 
                 // set this color as last
                 bg.history.last_color = color
