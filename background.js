@@ -261,20 +261,14 @@ var bg = {
     },
 
     pickupActivate() {
-        // load options
-        cursor = (window.localStorage.dropperCursor === 'crosshair') ? 'crosshair' : 'default'
-        enableColorToolbox = (window.localStorage.enableColorToolbox === "false") ? false : true
-        enableColorTooltip = (window.localStorage.enableColorTooltip === "false") ? false : true
-        enableRightClickDeactivate = (window.localStorage.enableRightClickDeactivate === "false") ? false : true
-
         // activate picker
         bg.sendMessage({
             type: 'pickup-activate',
             options: {
-                cursor: cursor,
-                enableColorToolbox: enableColorToolbox,
-                enableColorTooltip: enableColorTooltip,
-                enableRightClickDeactivate: enableRightClickDeactivate
+                cursor: bg.settings.dropperCursor,
+                enableColorToolbox: bg.settings.enableColorToolbox,
+                enableColorTooltip: bg.settings.enableColorTooltip,
+                enableRightClickDeactivate: bg.settings.enableRightClickDeactivate
             }
         }, function() {})
 
