@@ -449,8 +449,10 @@ var bg = {
                 bg.history = items.history
             } else {
                 console.warn("No history in storage")
-                bg.tryConvertOldHistory()
             }
+
+            // in any case we will try to convert local history
+            bg.tryConvertOldHistory()
         })
     },
 
@@ -480,7 +482,10 @@ var bg = {
     },
 
     /**
-     * FIXME: dořešit tady jsem skončil
+     * Convert pre 0.4 Eye Dropper local history to synced storage
+     *
+     * Backup of old history is stored in local storage in _history_backup
+     * in case something goes south.
      */
     tryConvertOldHistory() {
         if (window.localStorage.history) {
@@ -498,20 +503,35 @@ var bg = {
                 }
 
                 // push color to our converted palette
-                bg.history.palettes[converted_palette].push(bg.historyColorItem(color, timestamp))
+                bg.getPalette(converted_palette).push(bg.historyColorItem(color, timestamp))
 
                 // set this color as last
                 bg.history.last_color = color
             }
+
+            // make backup of old history
+            window.localStorage._history_backup = window.localStorage.history
+
+            // remove old history from local storage
+            window.localStorage.removeItem('history')
+
+            // sync history
+            bg.saveHistory()
+
+            // change to converted history if current palette is empty
+            if ( bg.getPalette().length < 1) {
+                bg.changePalette(converted_palette)
+            }
         }
-
-        // sync history
-        bg.saveHistory()
-
-        // remove old history from local storage
-        localStorage.removeItem('history')
     },
 
+    /**
+     * Convert pre 0.4 Eye Dropper local settings to synced storage
+     *
+     * Synced storage is much better because it finally allows as to store objects and not
+     * strings only.
+     *
+     */
     tryConvertOldSettings() {
         // load default settings first
         bg.settings = bg.defaultSettings
