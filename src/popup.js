@@ -388,7 +388,7 @@ function colorBox(type, color) {
 }
 
 function colorSquare(color) {
-    return `<div class="fl dib dim mr1 br1 ba b--gray colors-history-square" data-color="${color}" style="background-color: ${color}">&nbsp;</div>`
+    return `<div class="fl dib dim mr1 br1 mb1 ba b--gray colors-history-square" data-color="${color}" style="background-color: ${color}">&nbsp;</div>`
 }
 
 function loadColorPicker() {
