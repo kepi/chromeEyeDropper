@@ -440,7 +440,7 @@ function switchTab(tabId) {
     }
 
     // color picker tab
-    if (tabId !== 'tab-cp') {
+    if (tabId !== 'tab-cp' && cpicker) {
         cpicker.destroy()
     }
 
