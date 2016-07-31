@@ -189,27 +189,39 @@ function drawColorBoxes() {
 }
 
 function clearPalette() {
-    if (confirm("Really clear palette ${bgPage.bg.getName()}?")) {
-        console.info("Clearing color history")
-        chrome.runtime.sendMessage({
-            type: "clear-history"
-        }, () => {
-            console.info("History cleared")
-            drawColorHistory()
-            drawColorBoxes()
-        })
-    }
+    mscConfirm({
+        title: "Wipe It?",
+        subtitle: `Really clear palette ${bgPage.bg.getPaletteName()}?`,
+        okText: "Yes, Wipe It!",
+        cancelText: "No",
+        onOk: () => {
+            console.info("Clearing color history")
+            chrome.runtime.sendMessage({
+                type: "clear-history"
+            }, () => {
+                console.info("History cleared")
+                drawColorHistory()
+                drawColorBoxes()
+            })
+        }
+    })
 }
 
 function destroyPalette(palette_name) {
-    if (confirm(`Really destroy palette ${palette_name}?`) === true) {
-        let destroying_current = (palette_name === bgPage.bg.getPaletteName())
-        bgPage.bg.destroyPalette(palette_name)
-        if (destroying_current) {
-            switchColorPalette('default')
+    mscConfirm({
+        title: "Destroy Palette?",
+        subtitle: `Really destroy palette ${bgPage.bg.getPaletteName()}?`,
+        okText: "Yes, Destroy It!",
+        cancelText: "No",
+        onOk: () => {
+            let destroying_current = (palette_name === bgPage.bg.getPaletteName())
+            bgPage.bg.destroyPalette(palette_name)
+            if (destroying_current) {
+                switchColorPalette('default')
+            }
+            drawColorPalettes()
         }
-        drawColorPalettes()
-    }
+    })
 }
 
 function drawColorHistory() {
@@ -309,7 +321,7 @@ function drawColorPalettes() {
             palettes += `<span class="dib pink pl1">${colors}</span>`
         }
 
-        if ( palette !== 'default') {
+        if (palette !== 'default') {
             palettes += `
                 <a class="ed-palette-destroy link dib w1 hint--top hint--no-animate hint--rounded" aria-label="Destroy Palette ${palette}!" data-palette="${palette}" href="#">
                 <svg class="dim v-mid" viewBox="0 0 1792 1792" style="fill:gray;width:14px;">
@@ -340,8 +352,18 @@ function drawColorPalettes() {
             destroyPalette(palette)
         }
     }
+
     document.getElementById('new-palette').onclick = () => {
-        createColorPalette(prompt("Name New Palette"))
+        mscPrompt({
+            title: "Name the Color Palette",
+            subtitle: "No worries, you can rename it any time.",
+            okText: "Create Palette",
+            cancelText: "Cancel",
+            placeholder: 'palette',
+            onOk: (name) => {
+                createColorPalette(name)
+            }
+        })
     }
 }
 

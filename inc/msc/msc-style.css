@@ -1,0 +1,143 @@
+@-webkit-keyframes scale-fade{
+    0%{opacity:0;-webkit-transform:scale(.8) rotateX(-40deg);transform:scale(.8) rotateX(-40deg)}
+    50%{opacity:1}70%{-webkit-transform:scale(1.05) rotateX(0);transform:scale(1.05) rotateX(0)}
+    100%{-webkit-transform:scale(1) rotateX(0);transform:scale(1) rotateX(0)}
+}
+@keyframes scale-fade{
+    0%{opacity:0;-webkit-transform:scale(.8) rotateX(-40deg);transform:scale(.8) rotateX(-40deg)}
+    50%{opacity:1}70%{-webkit-transform:scale(1.05) rotateX(0);transform:scale(1.05) rotateX(0)}
+    100%{-webkit-transform:scale(1) rotateX(0);transform:scale(1) rotateX(0)}
+}
+
+.msc-confirm--animate {
+    -webkit-transform-origin: bottom center;
+    -ms-transform-origin: bottom center;
+    transform-origin: bottom center;
+    -webkit-animation: scale-fade 300ms forwards cubic-bezier(.8, .02, .45, -1.09);
+    animation: scale-fade 300ms forwards cubic-bezier(.8, .02, .45, .91);
+}
+
+.msc-confirm {
+    display: none;
+    color: #252525;
+    -webkit-font-smoothing: antialiased;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.msc-overlay {
+    position: fixed;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0.9;
+    left: 0;
+    background-color: #fff;
+    z-index: 20;
+}
+
+.msc-confirm button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in;
+}
+
+.msc-confirm button:focus {
+    outline: none;
+}
+
+.msc-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    font-size: 1.2em;
+    text-align: center;
+    vertical-align: middle;
+}
+.msc-close:hover {
+    background: #eee;
+}
+
+.msc-content {
+    position: relative;
+    z-index: 21;
+    background: #fff;
+    opacity: 1.0;
+    max-width: 480px;
+    margin: 10% auto 10% auto;
+    padding: 40px;
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+  .msc-content {
+    padding: 10px 0;
+  }
+}
+
+.msc-title {
+    font-size: 2em;
+    margin: 0 0 0.1em 0;
+}
+.msc-body {
+    font-size: 1.2em;
+    margin-bottom: 1em;
+    color: #666;
+}
+.msc-body p {
+    margin: 0 0 10px 0;
+}
+
+.msc-input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 38px;
+    font-size: 14px;
+    text-align: center;
+    letter-spacing: 0.02em;
+    font-weight: 400;
+    font-style: normal;
+    font-family: "Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif;
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0,0.15);
+    padding: 0 15px;
+}
+
+.msc-input:focus {
+    outline: none;
+    border-color: #0F985A;
+}
+
+
+.msc-action button {
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    border-radius: 25px;
+    min-width: 80px;
+    background: #fff;
+}
+.msc-action button:focus {
+    outline: none;
+}
+.msc-ok {
+    margin-right: 10px;
+}
+button.msc-ok:hover, button.msc-ok:focus {
+    border: 1px solid #0F985A;
+    color: #0F985A;
+}
+button.msc-cancel:hover, button.msc-cancel:focus {
+    border: 1px solid #111;
+    color: #111;
+}
+
+.msc-sub{
+    white-space: pre-line;
+}
+
