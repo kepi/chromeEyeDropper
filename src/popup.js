@@ -209,8 +209,8 @@ function clearPalette() {
 
 function destroyPalette(palette_name) {
     mscConfirm({
-        title: "Destroy Palette?",
-        subtitle: `Really destroy palette ${bgPage.bg.getPaletteName()}?`,
+        title: `Destroy Palette '${palette_name}'?`,
+        subtitle: `Really destroy palette ${palette_name}?`,
         okText: "Yes, Destroy It!",
         cancelText: "No",
         onOk: () => {
@@ -218,8 +218,9 @@ function destroyPalette(palette_name) {
             bgPage.bg.destroyPalette(palette_name)
             if (destroying_current) {
                 switchColorPalette('default')
+            } else {
+                drawColorPalettes()
             }
-            drawColorPalettes()
         }
     })
 }
@@ -235,9 +236,9 @@ function drawColorHistory() {
 
     // first load history from palette and assemble html
     let html = ''
-    let history = bgPage.bg.getPalette()
-    for (let color of history) {
-        html += colorSquare(color.hex)
+    let palette = bgPage.bg.getPalette()
+    for (let color of palette.colors) {
+        html += colorSquare(color.h)
     }
     history_el.innerHTML = html
 
@@ -254,7 +255,7 @@ function drawColorHistory() {
         }
     }
 
-    if (history.length > 0) {
+    if (palette.colors.length > 0) {
         instructions_el.innerHTML = 'Hover over squares to preview.'
         for (n of history_tool_noempty_els) {
             n.style.display = ''
@@ -313,10 +314,9 @@ function drawColorPalettes() {
     span_palette_name.dataset.palette = palette_name
 
     for (let palette of bgPage.bg.getPaletteNames()) {
-        // palettes += `<a href="#" class="ed-palette dib link dim ph2 ml1 black-80 bg-light-blue br1 b--light-blue mb1" data-palette="${palette}">${palette}</a>`
-        palettes += `<a href="#" class="ed-palette dib link dim pl2 pr1 ml1 white bg-light-purple br1 b--light-purple mb1" data-palette="${palette}">${palette}`
+        palettes += `<span class="nowrap dib"><a href="#" class="ed-palette dib link dim pl2 pr1 ml1 white bg-light-purple br1 b--light-purple mb1" data-palette="${palette}">${palette}`
 
-        let colors = bgPage.bg.getPalette(palette).length
+        let colors = bgPage.bg.getPalette(palette).colors.length
         if (colors > 0) {
             palettes += `<span class="dib pink pl1">${colors}</span>`
         }
@@ -329,6 +329,7 @@ function drawColorPalettes() {
                 </svg>
                 </a>`
         }
+        palettes += '</a></span>'
     }
 
     sec_color_palette.innerHTML = palettes
@@ -356,7 +357,7 @@ function drawColorPalettes() {
     document.getElementById('new-palette').onclick = () => {
         mscPrompt({
             title: "Name the Color Palette",
-            subtitle: "No worries, you can rename it any time.",
+            // subtitle: "No worries, you can rename it any time.",
             okText: "Create Palette",
             cancelText: "Cancel",
             placeholder: 'palette',
@@ -369,7 +370,7 @@ function drawColorPalettes() {
 
 function createColorPalette(name) {
     if (name !== null) {
-        switchColorPalette(bgPage.bg.createPalette(name))
+        switchColorPalette(bgPage.bg.createPalette(name).name)
     }
 }
 
@@ -379,25 +380,24 @@ function switchColorPalette(palette) {
     console.info('Redrawing history and boxes')
     drawColorPalettes()
     drawColorHistory()
-    drawColorBoxes()
 }
 
 function exportHistory() {
-    let history = bgPage.bg.getPalette()
+    let history = bgPage.bg.getPalette().colors
     let csv = 'data:text/csv;charset=utf-8,'
 
 
-    csv += '"Name","Date","RGB Hex","RGB Hex3","HTML Keyword","HSL","RGB"'
+    csv += '"RGB Hex","Name","Date","Source","RGB Hex3","HSL","RGB","HTML Keyword"'
     csv += "\n"
 
     for (let color of history) {
-        let d = new Date(color.timestamp)
+        let d = new Date(color.t)
         let datestring = `${d.getFullYear()}-${("0"+(d.getMonth()+1)).slice(-2)}-${("0" + d.getDate()).slice(-2)} ${("0" + d.getHours()).slice(-2)}:${("0" + d.getMinutes()).slice(-2)}:${("0" + d.getSeconds()).slice(-2)}`;
 
-        csv += `"${color.name}","${datestring}"`
+        csv += `"${color.h}","${color.n}","${datestring}","${bgPage.bg.color_sources[color.s]}"`
 
-        color = pusher.color(color.hex)
-        let formats = [color.hex6(), color.hex3(), color.html('keyword'), color.html('hsl'), color.html('rgb')];
+        color = pusher.color(color.h)
+        let formats = [color.hex3(), color.html('hsl'), color.html('rgb'), color.html('keyword')];
         for (let format of formats) {
             csv += `,"${format}"`
         }
@@ -534,7 +534,7 @@ function loadColorPicker() {
 
     document.getElementById('colorpicker-select').onclick = () => {
         colorBox('current', cpicker.target.value)
-        bgPage.bg.setColor(cpicker.target.value)
+        bgPage.bg.setColor(cpicker.target.value, true, 2)
         drawColorHistory()
     }
 }

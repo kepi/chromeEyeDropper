@@ -33,9 +33,8 @@ var bg = {
         version: BG_VERSION,
         last_color: DEFAULT_COLOR,
         current_palette: 'default',
-        palettes: {
-            default: []
-        }
+        palettes: [],
+        backups: []
     },
     defaultSettings: {
         autoClipboard: false,
@@ -47,6 +46,11 @@ var bg = {
     },
     settings: {},
     edCb: null,
+    color_sources: {
+        1: 'Web Page',
+        2: 'Color Picker',
+        3: 'Old History'
+    },
 
     // use selected tab
     // need to null all tab-specific variables
@@ -156,7 +160,7 @@ var bg = {
 
         // longer connections
         chrome.extension.onConnect.addListener(function(port) {
-            port.onMessage.addListener(function(req) {
+            port.onMessage.addListener(function(req, sender) {
                 switch (req.type) {
                     // Taking screenshot for content script
                     case 'screenshot':
@@ -174,7 +178,8 @@ var bg = {
                         // Set color given in req
                         // FIXME: asi lepší z inject scriptu posílat jen rgbhex, už to tak máme stejně skoro všude
                     case 'set-color':
-                        bg.setColor(`#${req.color.rgbhex}`)
+                        console.log(sender.sender)
+                        bg.setColor(`#${req.color.rgbhex}`, true, 1, sender.sender.url)
                         break
 
                 }
@@ -202,7 +207,8 @@ var bg = {
     },
 
     // method for setting color. It set bg color, update badge and save to history if possible
-    setColor(color, history = true) {
+    // source - see historyColorItem for description
+    setColor(color, history = true, source = 1, url = null) {
         console.group('setColor')
         console.info(`Received color ${color}, history: ${history}`)
         if (!color || !color.match(/^#[0-9a-f]{6}$/)) {
@@ -221,16 +227,16 @@ var bg = {
 
         if (history) {
             console.info("Saving color to history")
-            bg.saveToHistory(color)
+            bg.saveToHistory(color, source, url)
         }
 
         console.groupEnd('setColor')
     },
 
-    saveToHistory(color) {
+    saveToHistory(color, source = 1, url = null) {
         let palette = bg.getPalette()
-        if (!palette.find(x => x.hex == color)) {
-            palette.push(bg.historyColorItem(color))
+        if (!palette.colors.find(x => x.hex == color)) {
+            palette.colors.push(bg.historyColorItem(color, Date.now, source, url))
             console.info(`Color ${color} saved to palette ${bg.getPaletteName()}`)
 
             bg.saveHistory()
@@ -331,16 +337,23 @@ var bg = {
     },
 
     getPaletteName() {
-        let name = bg.history.current_palette === undefined ? 'default' : bg.history.current_palette
-        return name
+        return bg.getPalette().name
+    },
+
+    isPalette(name) {
+        return bg.history.palettes.find(x => x.name == name) ? true : false
     },
 
     getPalette(name) {
-        return bg.history.palettes[name === undefined ? bg.getPaletteName() : name]
+        if (name === undefined) {
+            name = (bg.history.current_palette === undefined || !bg.isPalette(bg.history.current_palette)) ? 'default' : bg.history.current_palette
+        }
+
+        return bg.history.palettes.find(x => x.name == name)
     },
 
     changePalette(palette_name) {
-        if (bg.getPaletteNames().find(x => x == palette_name)) {
+        if (bg.isPalette(palette_name)) {
             bg.history.current_palette = palette_name
             console.info(`Switched current palette to ${palette_name}`)
         } else {
@@ -350,7 +363,7 @@ var bg = {
     },
 
     getPaletteNames() {
-        return Object.keys(bg.history.palettes)
+        return bg.history.palettes.map(x => x.name)
     },
 
     uniquePaletteName(name) {
@@ -382,32 +395,43 @@ var bg = {
         let palette_name = bg.uniquePaletteName(name)
         console.info(`Creating new palette ${name}. Unique name: ${palette_name}`)
 
-        bg.history.palettes[palette_name] = []
+        bg.history.palettes.push({
+            name: palette_name,
+            created: Date.now(),
+            colors: []
+        })
+
         bg.saveHistory()
-        return palette_name
+        return bg.getPalette(palette_name)
     },
 
     destroyPalette(name) {
+        if (!bg.isPalette(name)) {
+            return
+        }
+
         if (name === 'default') {
             console.info("Can't destroy default palette. Clearing only.")
-            bg.history.palettes.default = []
+            bg.getPalette(name).colors = []
         } else {
             console.info(`Destroying palette ${name}`)
-            let destroying_current = (name === bg.getPaletteName())
-            delete bg.history.palettes[name]
+            let destroying_current = (name === bg.getPalette().name)
+            bg.history.palettes = bg.history.palettes.filter((obj) => {
+                    return obj.name !== name
+            })
             // if we are destroying current palette, switch to default one
             if (destroying_current) {
                 bg.changePalette('default')
             }
         }
-        bg.saveHistory()
+        bg.saveHistory(false)
+        chrome.storage.sync.remove(`palette.${name}`)
     },
 
     clearHistory(sendResponse) {
-        console.info(`Clearing history for palette ${bg.getPaletteName()}`)
-        bg.history.palettes[bg.getPaletteName()] = []
-        bg.history.last_color = DEFAULT_COLOR
-        bg.setBadgeColor(DEFAULT_COLOR)
+        let palette = bg.getPalette()
+        console.info(`Clearing history for palette ${palette.name}`)
+        palette.colors = []
         bg.saveHistory()
 
         if (sendResponse != undefined) {
@@ -443,12 +467,27 @@ var bg = {
      */
     loadHistory() {
         console.info("Loading history from storage")
-        chrome.storage.sync.get('history', (items) => {
+        chrome.storage.sync.get((items) => {
             if (items.history) {
-                console.info("History loaded")
-                bg.history = items.history
+                bg.history.current_palette = items.history.cp
+                bg.history.last_color = items.history.lc
+
+                console.info("History info loaded. Loading palettes.")
+
+                Object.keys(items).forEach((key, index) => {
+                    let matches = key.match(/^palette\.(.*)$/)
+                    if (matches) {
+                        let palette = items[key]
+                        bg.history.palettes.push({
+                            name: matches[1],
+                            colors: palette.c,
+                            created: palette.t
+                        })
+                    }
+                })
             } else {
                 console.warn("No history in storage")
+                bg.createPalette('default')
             }
 
             // in any case we will try to convert local history
@@ -472,12 +511,30 @@ var bg = {
         })
     },
 
-    historyColorItem(color, timestamp = Date.now(), favorite = false) {
+    /**
+     * sources:
+     *    1: eye dropper
+     *    2: color picker 
+     *    3: converted from old history
+     *
+     * FIXME:
+     * url is not saved now because of quotas
+     * favorite not implemented yet
+     *
+     * h = hex
+     * n = name
+     * s = source
+     * t = timestamp when taken
+     * f = favorite
+     */
+    historyColorItem(color, timestamp = Date.now(), source = 1, source_url = null, favorite = false) {
+        f = favorite ? 1 : 0
         return {
-            hex: color,
-            timestamp: timestamp,
-            name: color,
-            favorite: false
+            h: color,
+            n: '',
+            s: source,
+            t: timestamp,
+            f: f
         }
     },
 
@@ -491,6 +548,7 @@ var bg = {
         if (window.localStorage.history) {
             let oldHistory = JSON.parse(window.localStorage.history)
             let converted_palette = bg.createPalette('converted')
+            console.warn(converted_palette)
 
             // add every color from old history to new schema with current timestamp
             let timestamp = Date.now()
@@ -503,7 +561,7 @@ var bg = {
                 }
 
                 // push color to our converted palette
-                bg.getPalette(converted_palette).push(bg.historyColorItem(color, timestamp))
+                converted_palette.colors.push(bg.historyColorItem(color, timestamp, 3))
 
                 // set this color as last
                 bg.history.last_color = color
@@ -519,8 +577,8 @@ var bg = {
             bg.saveHistory()
 
             // change to converted history if current palette is empty
-            if ( bg.getPalette().length < 1) {
-                bg.changePalette(converted_palette)
+            if (bg.getPalette().colors.length < 1) {
+                bg.changePalette(converted_palette.name)
             }
         }
     },
@@ -555,10 +613,25 @@ var bg = {
         console.info("Removed old settings from locale storage.")
     },
 
-    saveHistory() {
-        chrome.storage.sync.set({
-            'history': bg.history
-        }, () => {
+    saveHistory(all_palettes = true) {
+        let saved_object = {
+            'history': {
+                v: bg.history.version,
+                cp: bg.history.current_palette,
+                lc: bg.history.last_color
+            }
+        }
+
+        if (all_palettes) {
+            for (palette of bg.history.palettes) {
+                saved_object[`palette.${palette.name}`] = {
+                    c: palette.colors,
+                    t: palette.created
+                }
+            }
+        }
+
+        chrome.storage.sync.set(saved_object, () => {
             console.info("History synced to storage")
         })
     },
