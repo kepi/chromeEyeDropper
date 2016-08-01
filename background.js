@@ -1,4 +1,4 @@
-const BG_VERSION = 13
+const BG_VERSION = 14
 const NEED_DROPPER_VERSION = 11
 const DEFAULT_COLOR = "#b48484"
 
@@ -42,7 +42,9 @@ var bg = {
         enableColorToolbox: true,
         enableColorTooltip: true,
         enableRightClickDeactivate: true,
-        dropperCursor: 'default'
+        dropperCursor: 'default',
+        plus: false,
+        plus_type: null
     },
     settings: {},
     edCb: null,
@@ -673,6 +675,36 @@ var bg = {
         }, () => {
             console.info("Settings synced to storage")
         })
+    },
+
+    unlockPlus(type) {
+        bg.settings.plus = true
+        bg.settings.plus_type = type
+        bg.saveSettings()
+    },
+
+    lockPlus() {
+        bg.settings.plus = false
+        bg.settings.plus_type = null
+        bg.saveSettings()
+    },
+
+    plus() {
+        return bg.settings.plus ? bg.settings.plus_type : false
+    },
+
+    plusColor(color = bg.settings.plus_type) {
+        switch(color) {
+        case 'free':
+            return 'gray'
+            break;
+        case 'alpha':
+            return 'silver'
+            break;
+        default:
+            return color
+        }
+
     },
 
     init() {

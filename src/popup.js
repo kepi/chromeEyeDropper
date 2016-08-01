@@ -1,4 +1,4 @@
-const NEED_BG_VERSION = 13 // minimum version of bg script we need
+const NEED_BG_VERSION = 14 // minimum version of bg script we need
 
 let bgPage = null
 let boxes = {}
@@ -13,6 +13,8 @@ let sec_content = null
 let sec_color_palette = null
 let span_palette_name = null
 
+// plus
+let badge = null
 
 // cpicker elements
 let cpicker = null
@@ -53,6 +55,31 @@ function init() {
     sec_content = document.getElementById('content')
     sec_color_boxes = document.getElementById('color-boxes')
     sec_color_history = document.getElementById('color-history')
+    badge = document.getElementById('plus-badge')
+    badge.style.display = 'none'
+}
+
+function initPlus() {
+    let colors_palette_change = document.getElementById('colors-palette-change')
+
+    if ( bgPage.bg.plus() ) {
+        colors_palette_change.style.display = 'inline'
+
+        badge.innerHTML = '<span class="small-caps b">Plus</span>'
+        badge.className = 'ed-external link hint--right hint--no-animate block pv1 ph2 mt1 db silver no-underline'
+
+        let badge_hint = 'You unlocked Plus. Thanks!'
+        if ( bgPage.bg.plus() === 'free' ) {
+            badge_hint = 'Unlocked for free. Want to donate for future development?'
+        }
+        badge.setAttribute('aria-label', badge_hint)
+
+    } else {
+        switchColorPalette('default')
+        colors_palette_change.style.display = 'none'
+    }
+
+    badge.style.display = 'block'
 }
 
 /**
@@ -128,6 +155,7 @@ function bgPageReady() {
 
     initColorBoxes()
     initColorHistory()
+    initPlus()
 }
 
 /**
@@ -294,17 +322,15 @@ function initColorHistory() {
 
 function drawColorPaletteSwitching() {
     let colors_palette_change = document.getElementById('colors-palette-change')
-    // temp disable unfinished palette switching
-    colors_palette_change.style.display = 'none'
 
-    // sec_color_palette = document.getElementById('colors-palette')
-    // span_palette_name = document.getElementById('palette-name')
+    sec_color_palette = document.getElementById('colors-palette')
+    span_palette_name = document.getElementById('palette-name')
 
-    // colors_palette_change.onclick = () => {
-    //     sec_color_palette.style.display = sec_color_palette.style.display === 'none' ? 'inline-block' : 'none'
-    // }
+    colors_palette_change.onclick = () => {
+        sec_color_palette.style.display = sec_color_palette.style.display === 'none' ? 'inline-block' : 'none'
+    }
 
-    // drawColorPalettes()
+    drawColorPalettes()
 }
 
 function drawColorPalettes() {

@@ -71,6 +71,8 @@ function init() {
     chrome.runtime.getBackgroundPage((backgroundPage) => {
         gotBgPage(backgroundPage)
     })
+
+    donateBitcoinButton()
 }
 
 function bgPageReady() {
@@ -92,4 +94,14 @@ function gotBgPage(backgroundPage) {
     } else {
         bgPageReady()
     }
+}
+
+function donateBitcoinButton() {
+    $('#donate-bitcoin').coinTipper({
+	      type: 'donate',
+	      currency: 'bitcoin',
+	      iso: 'BTC',
+	      address: '19HekXcETbG8VWdywbEkKxzxp4fFm5YCUc',
+	      label: 'Eye Dropper'
+    });
 }
