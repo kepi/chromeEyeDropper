@@ -8,9 +8,8 @@
     <title>Eye Dropper - Options</title>
 
     <link type="text/css" rel="stylesheet" href="/inc/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link type="text/css" rel="stylesheet" href="/inc/bootstrap/3.3.6/css/bootstrap-theme.min.css">
 
-    <script src="/options.js"></script>
+    <script src="/src/options.js"></script>
 
 </head>
 
@@ -51,10 +50,10 @@
                         <p><em>move mouse over icon to see how it looks like</em></p>
                         <div class="controls">
                             <div class="checkbox"><label class="">
-                  <input type="radio" name="dropperCursor" value="default" id="dropperCursordefault"> <img src="img/cursor_default.png" alt="default" style="cursor: default"> pointer
+                  <input type="radio" name="dropperCursor" value="default" id="dropperCursordefault"> <img src="/img/cursor_default.png" alt="default" style="cursor: default"> pointer
                 </label></div>
                             <div class="checkbox"><label class="">
-                  <input type="radio" name="dropperCursor" value="crosshair" id="dropperCursorcrosshair"> <img src="img/cursor_crosshair.png" alt="crosshair" style="cursor: crosshair"> crosshair
+                  <input type="radio" name="dropperCursor" value="crosshair" id="dropperCursorcrosshair"> <img src="/img/cursor_crosshair.png" alt="crosshair" style="cursor: crosshair"> crosshair
                 </label></div>
                         </div>
 
@@ -101,7 +100,7 @@
                     </div>
                     <!-- Begin PayPal Donations -->
                     <form id="paypal-donation-options" class="text-center" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-                        <div class="paypal-donations"><input type="hidden" name="cmd" value="_donations" class="form-control"><input type="hidden" name="business" value="kepi@orthank.net" class="form-control"><input type="hidden" name="return" value="http://eye-dropper.kepi.cz/thanks-for-your-donation/" class="form-control"><input type="hidden" name="item_name" value="Eye Dropper" class="form-control"><input type="hidden" name="currency_code" value="USD" class="form-control"><input type="image" class="btn" src="inc/btn_donate_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online." class="form-control"></div>
+                        <div class="paypal-donations"><input type="hidden" name="cmd" value="_donations" class="form-control"><input type="hidden" name="business" value="kepi@orthank.net" class="form-control"><input type="hidden" name="return" value="http://eye-dropper.kepi.cz/thanks-for-your-donation/" class="form-control"><input type="hidden" name="item_name" value="Eye Dropper" class="form-control"><input type="hidden" name="currency_code" value="USD" class="form-control"><input type="image" class="btn" src="/inc/btn_donate_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online." class="form-control"></div>
                     </form>
                 </div>
             </div>

@@ -11,7 +11,7 @@
         "page": "background.html",
         "persistent": true
     },
-    "options_page": "options.html",
+    "options_page": "html/options.html",
 
     "icons": {
         "48": "img/icon_48.png",
