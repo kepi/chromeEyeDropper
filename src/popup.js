@@ -294,12 +294,15 @@ function initColorHistory() {
 
 function drawColorPaletteSwitching() {
     let colors_palette_change = document.getElementById('colors-palette-change')
-    sec_color_palette = document.getElementById('colors-palette')
-    span_palette_name = document.getElementById('palette-name')
+    // temp disable unfinished palette switching
+    colors_palette_change.style.display = 'none'
 
-    colors_palette_change.onclick = () => {
-        sec_color_palette.style.display = sec_color_palette.style.display === 'none' ? 'inline-block' : 'none'
-    }
+    // sec_color_palette = document.getElementById('colors-palette')
+    // span_palette_name = document.getElementById('palette-name')
+
+    // colors_palette_change.onclick = () => {
+    //     sec_color_palette.style.display = sec_color_palette.style.display === 'none' ? 'inline-block' : 'none'
+    // }
 
     drawColorPalettes()
 }
