@@ -11,7 +11,8 @@
 
 .ed-color-box-label {
     position: absolute;
-    right: 6.6rem;
+    left: 50%;
+    margin-left: 5.5rem;
     top: 2.5rem;
     width: 5rem;
     transform: rotate(-90deg);
