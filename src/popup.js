@@ -1,4 +1,4 @@
-const NEED_BG_VERSION = 12 // minimum version of bg script we need
+const NEED_BG_VERSION = 13 // minimum version of bg script we need
 
 let bgPage = null
 let boxes = {}

@@ -1,5 +1,5 @@
-const BG_VERSION = 12
-const NEED_DROPPER_VERSION = 10
+const BG_VERSION = 13
+const NEED_DROPPER_VERSION = 11
 const DEFAULT_COLOR = "#b48484"
 
 // jQuery like functions
