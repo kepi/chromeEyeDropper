@@ -1,4 +1,5 @@
 var EDROPPER_VERSION = 11;
+const CANVAS_MAX_SIZE = 32767 - 20
 const DEBUG = false
 
 var page = {
@@ -516,6 +517,14 @@ var page = {
 
     init: function() {
         page.messageListener();
+
+        if ( page.width > CANVAS_MAX_SIZE ) {
+            page.width = CANVAS_MAX_SIZE
+        }
+        if ( page.height > CANVAS_MAX_SIZE ) {
+            page.height = CANVAS_MAX_SIZE
+        }
+
     }
 }
 
