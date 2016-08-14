@@ -1,4 +1,5 @@
 var EDROPPER_VERSION = 11;
+const DEBUG = false
 
 var page = {
     width: $(document).width(),
@@ -500,7 +501,10 @@ var page = {
                 page.elColorToolbox.show(1);
             }
 
-            //page.sendMessage({type: 'debug-tab', image: page.canvas.toDataURL()}, function() {});
+            if ( DEBUG ) {
+                page.sendMessage({type: 'debug-tab', image: page.canvas.toDataURL()}, function() {});
+                debugger
+            }
         }
 
         if (page.imageData) {

@@ -170,7 +170,7 @@ var bg = {
 
                         // Creating debug tab
                     case 'debug-tab':
-                        ////console.log('received debug tab')
+                        console.info('Received debug tab request')
                         bg.debugImage = req.image
                         bg.createDebugTab()
                         break
@@ -318,7 +318,7 @@ var bg = {
             })
         } else
             chrome.tabs.create({
-                url: 'debugimage.html',
+                url: '/html/debug-tab.html',
                 selected: false
             }, function(tab) {
                 bg.debugTab = tab.id
@@ -418,8 +418,8 @@ var bg = {
             let destroying_current = (name === bg.getPalette().name)
             bg.history.palettes = bg.history.palettes.filter((obj) => {
                     return obj.name !== name
-            })
-            // if we are destroying current palette, switch to default one
+                })
+                // if we are destroying current palette, switch to default one
             if (destroying_current) {
                 bg.changePalette('default')
             }
