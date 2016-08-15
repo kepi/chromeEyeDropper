@@ -304,7 +304,7 @@ function drawColorPaletteSwitching() {
     //     sec_color_palette.style.display = sec_color_palette.style.display === 'none' ? 'inline-block' : 'none'
     // }
 
-    drawColorPalettes()
+    // drawColorPalettes()
 }
 
 function drawColorPalettes() {
