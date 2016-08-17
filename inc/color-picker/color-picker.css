@@ -1,11 +1,22 @@
+.color-picker,
+.color-picker *,
+.color-picker *:before,
+.color-picker *:after {
+  -webkit-box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  box-sizing:border-box;
+}
 .color-picker {
   position:absolute;
   top:0;
   left:0;
+  z-index:9999;
 }
 .color-picker-control {
-  width:175px;
-  height:150px;
+  border:1px solid #000;
+  -webkit-box-shadow:1px 5px 10px rgba(0,0,0,.5);
+  -moz-box-shadow:1px 5px 10px rgba(0,0,0,.5);
+  box-shadow:1px 5px 10px rgba(0,0,0,.5);
 }
 .color-picker-control:after {
   content:" ";
@@ -15,12 +26,18 @@
 .color-picker i {font:inherit}
 .color-picker-h {
   position:relative;
-  width:19px;
+  width:20px;
   height:150px;
   float:right;
+  border-left:1px solid;
   border-color:inherit;
   cursor:ns-resize;
+  background:transparent url('color-picker-h.png') no-repeat 50% 50%;
+  background-image:-webkit-linear-gradient(to top,#f00 0%,#ff0 17%,#0f0 33%,#0ff 50%,#00f 67%,#f0f 83%,#f00 100%);
+  background-image:-moz-linear-gradient(to top,#f00 0%,#ff0 17%,#0f0 33%,#0ff 50%,#00f 67%,#f0f 83%,#f00 100%);
   background-image:linear-gradient(to top,#f00 0%,#ff0 17%,#0f0 33%,#0ff 50%,#00f 67%,#f0f 83%,#f00 100%);
+  -webkit-background-size:100% 100%;
+  -moz-background-size:100% 100%;
   background-size:100% 100%;
   overflow:hidden;
 }
@@ -58,7 +75,12 @@
   width:150px;
   height:150px;
   float:left;
+  background:transparent url('color-picker-sv.png') no-repeat 50% 50%;
+  background-image:-webkit-linear-gradient(to top,#000,rgba(0,0,0,0)),linear-gradient(to right,#fff,rgba(255,255,255,0));
+  background-image:-moz-linear-gradient(to top,#000,rgba(0,0,0,0)),linear-gradient(to right,#fff,rgba(255,255,255,0));
   background-image:linear-gradient(to top,#000,rgba(0,0,0,0)),linear-gradient(to right,#fff,rgba(255,255,255,0));
+  -webkit-background-size:100% 100%;
+  -moz-background-size:100% 100%;
   background-size:100% 100%;
   cursor:crosshair;
 }
@@ -81,6 +103,8 @@
   left:-1px;
   display:block;
   border:1px solid #fff;
+  -webkit-border-radius:100%;
+  -moz-border-radius:100%;
   border-radius:100%;
 }
 .color-picker-sv i:after {

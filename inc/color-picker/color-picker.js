@@ -1,6 +1,6 @@
 /*!
  * ==========================================================
- *  COLOR PICKER PLUGIN 1.0.0
+ *  COLOR PICKER PLUGIN 1.0.4
  * ==========================================================
  * Author: Taufik Nurrohman <http://latitudu.com>
  * License: MIT
@@ -238,13 +238,37 @@ var CP = function(target) {
         SV = c[1],
         H_point = H.firstChild,
         SV_point = SV.firstChild,
+        start_H = false,
+        start_SV = false,
         drag_H = false,
         drag_SV = false,
         left = 0,
         top = 0,
         P_W = 0,
         P_H = 0,
+        v = HSV2HEX(HSV),
         set, exit;
+
+    // on update ...
+    function trigger_(k, x) {
+        if (!k || k === "h") {
+            trigger("change:h", x);
+        }
+        if (!k || k === "sv") {
+            trigger("change:sv", x);
+        }
+        trigger("change", x);
+    }
+
+    // delay
+    function delay(fn, t) {
+        return w.setTimeout(fn, t);
+    }
+
+    // is visible?
+    function visible() {
+        return picker.parentNode;
+    }
 
     // fit to window
     function fit() {
@@ -277,20 +301,28 @@ var CP = function(target) {
             SV_H = size(SV).h,
             H_point_H = size(H_point).h,
             SV_point_W = size(SV_point).w,
-            SV_point_H = size(SV_point).h, v;
+            SV_point_H = size(SV_point).h;
         if (first) {
             picker.style.left = '-9999px';
             picker.style.top = '-9999px';
             on("resize", w, fit);
             function click(e) {
-                create(), trigger("click", [r]);
-                e.stopPropagation();
+                trigger("before.click", [r]);
+                delay(function() {
+                    create(), trigger("click", [r]);
+                }, .1);
                 e.preventDefault();
-            } on("click", target, click);
+            }
+            on("touchdown", target, click);
+            on("click", target, click);
             r.create = function() {
-                return create(1), trigger("create", [r]), r;
+                trigger("before.create", [r]);
+                return delay(function() {
+                    create(1), trigger("create", [r]);
+                }, .1), r;
             };
             r.destroy = function() {
+                off("touchdown", target, click);
                 off("click", target, click);
                 set_data(false), exit();
                 return trigger("destroy", [r]), r;
@@ -304,15 +336,20 @@ var CP = function(target) {
             SV_point.style.right = (SV_W - (SV_point_W / 2) - (SV_W * +HSV[1])) + 'px';
             SV_point.style.top = (SV_H - (SV_point_H / 2) - (SV_H * +HSV[2])) + 'px';
         };
-        exit = function() {
-            if (picker.parentNode) b.removeChild(picker);
+        exit = function(e) {
+            if (visible()) {
+                visible().removeChild(picker);
+            }
             off("touchmove", d, move);
             off("mousemove", d, move);
             off("touchend", d, stop);
             off("mouseup", d, stop);
             off("touchdown", d, exit);
             off("click", d, exit);
-            return trigger("exit", [r]), r;
+            trigger("before.exit", [r]);
+            return delay(function() {
+                if (!visible()) trigger("exit", [r]);
+            }, .11), r;
         };
         function color(e) {
             var a = HSV2RGB(HSV),
@@ -340,33 +377,49 @@ var CP = function(target) {
         function move(e) {
             if (drag_H) {
                 do_H(e), v = HSV2HEX(HSV);
-                trigger("drag:h", [v, r]);
-                trigger("drag", [v, r]);
+                if (!start_H) {
+                    trigger("drag:h", [v, r]);
+                    trigger("drag", [v, r]);
+                }
+                trigger_("h", [v, r]);
             }
             if (drag_SV) {
                 do_SV(e), v = HSV2HEX(HSV);
-                trigger("drag:sv", [v, r]);
-                trigger("drag", [v, r]);
+                if (!start_SV) {
+                    trigger("drag:sv", [v, r]);
+                    trigger("drag", [v, r]);
+                }
+                trigger_("sv", [v, r]);
             }
+            start_H = false,
+            start_SV = false;
         }
         function stop(e) {
             if (!first) {
-                v = HSV2HEX(HSV);
-                trigger("stop:" + (drag_H ? "h" : "sv"), [v, r]);
-                trigger("stop", [v, r]);
+                var k = drag_H ? "h" : "sv",
+                    a = [HSV2HEX(HSV), r];
+                trigger("stop:" + k, a);
+                trigger("stop", a);
+                trigger_(k, a);
             }
-            drag_H = false;
+            drag_H = false,
             drag_SV = false;
         }
         function down_H(e) {
-            drag_H = true, do_H(e);
-            trigger("start:h", [r]);
-            trigger("start", [r]);
+            start_H = true,
+            drag_H = true,
+            move(e);
+            trigger("start:h", [v, r]);
+            trigger("start", [v, r]);
+            trigger_("h", [v, r]);
         }
         function down_SV(e) {
-            drag_SV = true, do_SV(e);
-            trigger("start:sv", [r]);
-            trigger("start", [r]);
+            start_SV = true,
+            drag_SV = true,
+            move(e);
+            trigger("start:sv", [v, r]);
+            trigger("start", [v, r]);
+            trigger_("sv", [v, r]);
         }
         on("touchstart", H, down_H);
         on("mousedown", H, down_H);
@@ -376,11 +429,15 @@ var CP = function(target) {
         on("mousemove", d, move);
         on("touchend", d, stop);
         on("mouseup", d, stop);
-        on("touchdown", d, exit);
+        // on("touchdown", d, exit);
+        // on("click", d, exit);
     } create(1);
 
-    w.setTimeout(function() {
-        trigger("create", [HSV2HEX(HSV), r]);
+    trigger("before.create", [r]);
+    delay(function() {
+        v = HSV2HEX(HSV);
+        trigger("create", [v, r]);
+        trigger_(0, [v, r]);
     }, .1);
 
     // register to global ...
