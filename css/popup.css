@@ -38,7 +38,23 @@ span.ed-tab-in {
     display: inline-block;
 }
 
-.color-picker,
-.color-picker * {
-  box-sizing: content-box;
+.color-picker {
+    position: static;
+}
+
+.color-picker-control {
+    width: 175px;
+    height: 150px;
+    border: 0px;
+    box-shadow: none;
+}
+
+.color-picker-h {
+    width: 19px;
+    border: 0px;
+    box-shadow: none;
+}
+
+#colorpicker-input {
+    width: 6em;
 }
