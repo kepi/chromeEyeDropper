@@ -527,7 +527,7 @@ function loadColorPicker() {
     let cpicker_script = document.createElement('script')
     cpicker_script.onload = () => {
         console.info('Showing cpicker')
-        cpicker_input = document.getElementById('colorpicker')
+        cpicker_input = document.getElementById('colorpicker-input')
         cpicker_input.value = bgPage.bg.getColor()
 
         showColorPicker()
@@ -543,13 +543,40 @@ function loadColorPicker() {
 }
 
 function showColorPicker() {
+    // create new cpicker instance
     cpicker = new CP(cpicker_input)
 
-    cpicker.on('drag', (cpicker_color) => {
+    // function to update color in picker and color box on cp change
+    function update(cpicker_color) {
         colorBox('new', `#${cpicker_color}`)
         cpicker.target.value = `#${cpicker_color}`
+    }
+
+    // attach to update function
+    cpicker.on('start', update)
+    cpicker.on('drag', update)
+
+    // move color picker panel from 'body' to 'colorpicker' element
+    cpicker.on('enter', () => {
+        document.getElementById('colorpicker').appendChild(cpicker.picker)
     })
 
+    // we need to update picker also when playing with input field
+    // we need try/catch because when hand editing input field, color can be
+    // invalid and pusher library can't handle wrong syntax
+    function update_from_input() {
+        try {
+            colorBox('new', cpicker.target.value)
+            cpicker.set(cpicker.target.value)
+        } catch(err) {}
+    }
+
+    cpicker.target.onkeyup = update_from_input
+    cpicker.target.oncut = update_from_input
+    cpicker.target.onpaste = update_from_input
+    cpicker.target.oninput = update_from_input
+
+    // display cpicker
     cpicker.enter()
 }
 
