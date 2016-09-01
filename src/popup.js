@@ -583,7 +583,6 @@ function showColorPicker() {
 function changeColorPicker(color) {
     if (cpicker) {
         cpicker.target.value = color
-        cpicker.destroy()
-        showColorPicker()
+        cpicker.set(color)
     }
 }
