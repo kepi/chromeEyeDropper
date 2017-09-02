@@ -144,7 +144,7 @@ function initPickButton(tab) {
     let message = ''
 
     // special chrome pages
-    if (tab.url.indexOf('chrome') == 0) {
+    if (tab.url === undefined || tab.url.indexOf('chrome') == 0) {
         message = "Chrome doesn't allow <i>extensions</i> to play with special Chrome pages like this one. <pre>chrome://...</pre>";
         pickEnabled = false;
     }
