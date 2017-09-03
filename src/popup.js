@@ -415,23 +415,43 @@ function exportHistory() {
     let history = bgPage.bg.getPalette().colors
     let csv = 'data:text/csv;charset=utf-8,'
 
-
-    csv += '"RGB Hex","Name","Date","Source","RGB Hex3","HSL","RGB","HTML Keyword"'
-    csv += "\n"
-
-    for (let color of history) {
-        let d = (typeof color.t === 'function') ? new Date(color.t()) : new Date(color.t)
-        let datestring = `${d.getFullYear()}-${("0"+(d.getMonth()+1)).slice(-2)}-${("0" + d.getDate()).slice(-2)} ${("0" + d.getHours()).slice(-2)}:${("0" + d.getMinutes()).slice(-2)}:${("0" + d.getSeconds()).slice(-2)}`;
-
-        csv += `"${color.h}","${color.n}","${datestring}","${bgPage.bg.color_sources[color.s]}"`
-
-        color = pusher.color(color.h)
-        let formats = [color.hex3(), color.html('hsl'), color.html('rgb'), color.html('keyword')];
-        for (let format of formats) {
-            csv += `,"${format}"`
-        }
+    if ( bgPage.bg.plus() ) {
+        csv += '"RGB Hex","Date","Source","RGB Hex3","HSL","RGB","HTML Keyword"'
         csv += "\n"
+
+        for (let color of history) {
+            let d = (typeof color.t === 'function') ? new Date(color.t()) : new Date(color.t)
+            let datestring = `${d.getFullYear()}-${("0"+(d.getMonth()+1)).slice(-2)}-${("0" + d.getDate()).slice(-2)} ${("0" + d.getHours()).slice(-2)}:${("0" + d.getMinutes()).slice(-2)}:${("0" + d.getSeconds()).slice(-2)}`;
+
+            csv += `"${color.h}","${datestring}","${bgPage.bg.color_sources[color.s]}"`
+            // FIXME: add name ,"${color.n}"
+
+            color = pusher.color(color.h)
+            let formats = [color.hex3(), color.html('hsl'), color.html('rgb'), color.html('keyword')];
+            for (let format of formats) {
+                csv += `,"${format}"`
+            }
+            csv += "\n"
+        }
+    } else {
+        csv += '"RGB Hex","RGB Hex3","HSL","RGB","HTML Keyword"'
+        csv += "\n"
+
+        for (let color of history) {
+            let d = (typeof color.t === 'function') ? new Date(color.t()) : new Date(color.t)
+            let datestring = `${d.getFullYear()}-${("0"+(d.getMonth()+1)).slice(-2)}-${("0" + d.getDate()).slice(-2)} ${("0" + d.getHours()).slice(-2)}:${("0" + d.getMinutes()).slice(-2)}:${("0" + d.getSeconds()).slice(-2)}`;
+
+            csv += `"${color.h}"`
+
+            color = pusher.color(color.h)
+            let formats = [color.hex3(), color.html('hsl'), color.html('rgb'), color.html('keyword')];
+            for (let format of formats) {
+                csv += `,"${format}"`
+            }
+            csv += "\n"
+        }
     }
+
 
     let data = encodeURI(csv)
 
