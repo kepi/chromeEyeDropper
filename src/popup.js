@@ -394,7 +394,7 @@ function exportHistory() {
     csv += "\n"
 
     for (let color of history) {
-        let d = new Date(color.t)
+        let d = (typeof color.t === 'function') ? new Date(color.t()) : new Date(color.t)
         let datestring = `${d.getFullYear()}-${("0"+(d.getMonth()+1)).slice(-2)}-${("0" + d.getDate()).slice(-2)} ${("0" + d.getHours()).slice(-2)}:${("0" + d.getMinutes()).slice(-2)}:${("0" + d.getSeconds()).slice(-2)}`;
 
         csv += `"${color.h}","${color.n}","${datestring}","${bgPage.bg.color_sources[color.s]}"`

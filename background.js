@@ -236,7 +236,7 @@ var bg = {
     saveToHistory(color, source = 1, url = null) {
         let palette = bg.getPalette()
         if (!palette.colors.find(x => x.hex == color)) {
-            palette.colors.push(bg.historyColorItem(color, Date.now, source, url))
+            palette.colors.push(bg.historyColorItem(color, Date.now(), source, url))
             console.info(`Color ${color} saved to palette ${bg.getPaletteName()}`)
 
             bg.saveHistory()
@@ -485,6 +485,10 @@ var bg = {
                         })
                     }
                 })
+
+                if (items.history.v < bg.history.version) {
+                    bg.checkHistoryUpgrades(items.history.v)
+                }
             } else {
                 console.warn("No history in storage")
                 bg.createPalette('default')
@@ -493,6 +497,30 @@ var bg = {
             // in any case we will try to convert local history
             bg.tryConvertOldHistory()
         })
+    },
+
+    /**
+     * Check if there are needed upgrades to history and exec if needed
+     **/
+    checkHistoryUpgrades(version) {
+        // Wrong timestamp saved before version 14
+        //
+        // There was error in bg versions before 14 that caused saving
+        // history color timestamp as link tu datenow function instead of
+        // current date in some cases.
+        //
+        // We will check for such times and set them to start of epoch
+        if ( version < 14 ) {
+            console.warn("History version is pre 14: Fixing color times")
+            for (let palette of bg.history.palettes) {
+                for ( let color of palette.colors ) {
+                    if ( typeof color.t !== 'number' ) {
+                        color.t = 0
+                    }
+                }
+            }
+            bg.saveHistory()
+        }
     },
 
     /**
