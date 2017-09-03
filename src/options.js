@@ -88,7 +88,7 @@ function gotBgPage(backgroundPage) {
         chrome.runtime.sendMessage({
             type: "reload-background"
         })
-        setTimeout('bgPageReady', 1000)
+        setTimeout(bgPageReady, 1000)
     } else {
         bgPageReady()
     }
