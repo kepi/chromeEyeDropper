@@ -460,7 +460,7 @@ var bg = {
                 console.info("Just installed: opening installed page in new tab.")
                 window.localStorage.seenInstalledPage = true
                 chrome.tabs.create({
-                    url: 'pages/installed.html',
+                    url: 'html/installed.html',
                     selected: true
                 })
             }
