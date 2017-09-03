@@ -353,13 +353,16 @@ var bg = {
     },
 
     changePalette(palette_name) {
-        if (bg.isPalette(palette_name)) {
+        if ( bg.history.current_palette === palette_name) {
+            console.info(`Not switching, already on palette ${palette_name}`) 
+        }
+        else if (bg.isPalette(palette_name)) {
             bg.history.current_palette = palette_name
             console.info(`Switched current palette to ${palette_name}`)
+            bg.saveHistory()
         } else {
             console.error(`Cannot switch to palette ${palette_name}. Palette not found.`)
         }
-        bg.saveHistory()
     },
 
     getPaletteNames() {
