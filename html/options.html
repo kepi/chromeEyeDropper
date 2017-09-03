@@ -8,10 +8,14 @@
     <title>Eye Dropper - Options</title>
 
     <link type="text/css" rel="stylesheet" href="/inc/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link type="text/css" rel="stylesheet" href="/inc/bootstrap/3.3.6/css/bootstrap-theme.min.css">
 
-    <script src="/options.js"></script>
+    <!-- cointipper -->
+    <script type="text/javascript" src="/inc/jquery-2.1.0.min.js"></script>
+    <script type="text/javascript" src="/inc/cointipper/jquery.cointipper-pack.min.js"></script>
+    <link rel="stylesheet" href="/inc/cointipper/jquery.cointipper.min.css">
+    <!-- cointipper end -->
 
+    <script src="/src/options.js"></script>
 </head>
 
 <body id="options-body">
@@ -51,10 +55,10 @@
                         <p><em>move mouse over icon to see how it looks like</em></p>
                         <div class="controls">
                             <div class="checkbox"><label class="">
-                  <input type="radio" name="dropperCursor" value="default" id="dropperCursordefault"> <img src="img/cursor_default.png" alt="default" style="cursor: default"> pointer
+                  <input type="radio" name="dropperCursor" value="default" id="dropperCursordefault"> <img src="/img/cursor_default.png" alt="default" style="cursor: default"> pointer
                 </label></div>
                             <div class="checkbox"><label class="">
-                  <input type="radio" name="dropperCursor" value="crosshair" id="dropperCursorcrosshair"> <img src="img/cursor_crosshair.png" alt="crosshair" style="cursor: crosshair"> crosshair
+                  <input type="radio" name="dropperCursor" value="crosshair" id="dropperCursorcrosshair"> <img src="/img/cursor_crosshair.png" alt="crosshair" style="cursor: crosshair"> crosshair
                 </label></div>
                         </div>
 
@@ -89,22 +93,50 @@
 
             </div>
 
-            <div id="donation" class="col-lg-offset-1 col-sm-3 col-md-3">
-                <div>
-                    <h3>Do you like Eye Dropper?</h3>
-                    <p class="alert alert-success">First of all - if you like Eye Dropper <a href="https://chrome.google.com/webstore/detail/hmdcmlfkchdmnmnmheododdhjedfccka/reviews">rate it on Chrome Webstore</a> please.</p>
-                    <div class="media">
-                        <div class="media-body">
-                            <p>If you find Eye Dropper useful, you can show your support by donation through Paypal. Any amount will encourage me to spend more time with Eye Dropper development. Thanks!</p>
-                        </div>
+            <section id="donation" class="col-lg-offset-1 col-sm-3 col-md-3">
+                <section>
+                    <h3>Like Eye Dropper?</h3>
+                    <p class="alert alert-success">Give us 5 stars on <a href="https://chrome.google.com/webstore/detail/hmdcmlfkchdmnmnmheododdhjedfccka/reviews">Chrome Webstore</a>. Thanks!</p>
 
-                    </div>
-                    <!-- Begin PayPal Donations -->
-                    <form id="paypal-donation-options" class="text-center" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-                        <div class="paypal-donations"><input type="hidden" name="cmd" value="_donations" class="form-control"><input type="hidden" name="business" value="kepi@orthank.net" class="form-control"><input type="hidden" name="return" value="http://eye-dropper.kepi.cz/thanks-for-your-donation/" class="form-control"><input type="hidden" name="item_name" value="Eye Dropper" class="form-control"><input type="hidden" name="currency_code" value="USD" class="form-control"><input type="image" class="btn" src="inc/btn_donate_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online." class="form-control"></div>
-                    </form>
-                </div>
-            </div>
+                </section>
+
+                <br>
+                <section>
+                    <h3>Found a bug? Have a wish?</h3>
+                    <p>Create new issue at <a href="https://github.com/kepi/chromeEyeDropper/issues">Github page</a> please. Include as much details as you can.</p>
+                </section>
+
+                <br>
+                <h3>Want to support future development?</h3>
+                <br>
+
+                <section>
+                    <section class="col-sm-3 col-md-3">
+                        <a href="/html/plus.html" class="donate-btn" style="background-color: red">Unlock <span style="font-variant: small-caps; font-weight: bold;">Plus</span></a>
+                    </section>
+
+                    <section class="col-sm-3 col-md-3" style="text-align: left">
+                        <!-- Begin PayPal Donations -->
+                        <form id="paypal-donation-options" action="https://www.paypal.com/cgi-bin/webscr"
+                            method="post">
+                            <div class="paypal-donations"><input type="hidden" name="cmd" value="_donations" class="form-control">
+                            <input type="hidden" name="business" value="kepi@orthank.net" class="form-control">
+                            <input type="hidden" name="return" value="http://eye-dropper.kepi.cz/thanks-for-your-donation/"
+                                class="form-control"><input type="hidden" name="item_name"
+                                value="Eye Dropper" class="form-control">
+                            <input type="hidden" name="currency_code" value="USD" class="form-control">
+                            <input
+                                type="image" class="btn" src="/inc/btn_donate_LG.gif" name="submit"
+                                alt="PayPal - The safer, easier way to pay online." class="form-control"></div>
+                        </form>
+                    </section>
+
+                    <section class="col-sm-3 col-md-3">
+                        <div id="donate-bitcoin" class="center"></div>
+                    </section>
+
+                </section>
+            </section>
         </div>
     </div>
 </body>
