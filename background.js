@@ -1,4 +1,4 @@
-const BG_VERSION = 14
+const BG_VERSION = 15
 const NEED_DROPPER_VERSION = 11
 const DEFAULT_COLOR = "#b48484"
 
@@ -46,6 +46,7 @@ var bg = {
         plus: false,
         plus_type: null
     },
+    defaultPalette: 'default',
     settings: {},
     edCb: null,
     color_sources: {
@@ -478,6 +479,10 @@ var bg = {
                 bg.history.last_color = items.history.lc
 
                 console.info("History info loaded. Loading palettes.")
+                console.info(`Default palette before loading: ${bg.defaultPalette}`)
+
+                let count_default = 0
+                let count_converted = 0
 
                 Object.keys(items).forEach((key, index) => {
                     let matches = key.match(/^palette\.(.*)$/)
@@ -488,8 +493,17 @@ var bg = {
                             colors: palette.c,
                             created: palette.t
                         })
+
+                        if ( matches[1] === 'default' ) { count_default = palette.c.length }
+                        if ( matches[1] === 'converted' ) { count_converted = palette.c.length }
                     }
                 })
+
+
+                if ( count_default === 0 && count_converted > 0 ) {
+                    bg.defaultPalette = 'converted'
+                    console.info(`Default palette after loading: ${bg.defaultPalette}`)
+                }
 
                 if (items.history.v < bg.history.version) {
                     bg.checkHistoryUpgrades(items.history.v)

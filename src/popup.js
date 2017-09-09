@@ -1,4 +1,4 @@
-const NEED_BG_VERSION = 14 // minimum version of bg script we need
+const NEED_BG_VERSION = 15 // minimum version of bg script we need
 
 let bgPage = null
 let boxes = {}
@@ -75,7 +75,7 @@ function initPlus() {
         badge.setAttribute('aria-label', badge_hint)
 
     } else {
-        switchColorPalette('default')
+        switchToDefaultPalette()
         colors_palette_change.style.display = 'none'
     }
 
@@ -401,6 +401,10 @@ function createColorPalette(name) {
     if (name !== null) {
         switchColorPalette(bgPage.bg.createPalette(name).name)
     }
+}
+
+function switchToDefaultPalette() {
+    switchColorPalette(bgPage.bg.defaultPalette)
 }
 
 function switchColorPalette(palette) {
