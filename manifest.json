@@ -1,6 +1,6 @@
 {
     "name": "Eye Dropper",
-    "version": "0.5.1",
+    "version": "0.5.2",
     "manifest_version": 2,
     "description": "Eye Dropper is open source extension which allows you to pick colors from web pages, color picker and your personal color history.",
     "homepage_url": "http://eye-dropper.kepi.cz/",
