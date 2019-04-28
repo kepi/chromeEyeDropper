@@ -417,7 +417,7 @@ function switchColorPalette(palette) {
 
 function exportHistory() {
     let history = bgPage.bg.getPalette().colors
-    let csv = 'data:text/csv;charset=utf-8,'
+    let csv = ''
 
     if ( bgPage.bg.plus() ) {
         csv += '"RGB Hex","Date","Source","RGB Hex3","HSL","RGB","HTML Keyword"'
@@ -457,7 +457,7 @@ function exportHistory() {
     }
 
 
-    let data = encodeURI(csv)
+    let data = 'data:text/csv;base64,'+btoa(csv)
 
     console.group("csvExport")
     console.log(csv)
