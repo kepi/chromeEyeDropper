@@ -1,3 +1,5 @@
 *.swp
 inc/jPicker/images/Thumbs.db
 .idea/*
+dist
+node_modules

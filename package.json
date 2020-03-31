@@ -1,0 +1,28 @@
+{
+  "name": "eye-dropper",
+  "version": "0.5.4",
+  "description": "Eye Dropper for Google Chrome™",
+  "main": "index.js",
+  "scripts": {
+    "watch": "webpack --config webpack/webpack.dev.js --watch",
+    "build": "webpack --config webpack/webpack.prod.js",
+    "clean": "rimraf dist"
+  },
+  "author": "Ondra Kudlík (Kepi)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kepi/chromeEyeDropper.git"
+  },
+  "devDependencies": {
+    "@types/chrome": "0.0.104",
+    "copy-webpack-plugin": "^5.1.1",
+    "replace-in-file-webpack-plugin": "^1.0.6",
+    "rimraf": "^3.0.2",
+    "ts-loader": "^7.0.0",
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-merge": "^4.2.2"
+  }
+}
