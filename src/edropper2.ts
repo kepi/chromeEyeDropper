@@ -1,6 +1,8 @@
-import { shortcut } from "../vendor/js/shortcut"
+import { shortcut } from '../vendor/js/shortcut'
+import { createNode } from './helpers'
+import scrollStop from './scrollStop'
 
-interface color {
+interface Color {
     r: number
     g: number
     b: number
@@ -13,14 +15,15 @@ var EDROPPER_VERSION = 11
 var CANVAS_MAX_SIZE = 32767 - 20
 var DEBUG = false
 var page = {
-    width: document.documentElement.clientWidth,
-    height: document.documentElement.clientHeight,
+    width: 0,
+    height: 0,
     imageData: null,
     canvasBorders: 20,
     canvasData: null,
     dropperActivated: false,
     screenWidth: 0,
     screenHeight: 0,
+
     options: {
         cursor: 'default',
         enableColorToolbox: true,
@@ -29,17 +32,19 @@ var page = {
     },
 
     // Variables for later use
-    elColorTooltip: null,
-    elColorToolbox: null,
-    elColorToolboxColor: null,
-    elColorToolboxText: null,
+    elColorTooltip: null as HTMLElement,
+    elColorToolbox: null as HTMLElement,
+    elColorToolboxColor: null as HTMLElement,
+    elColorToolboxText: null as HTMLElement,
+
+    elOverlay: null as HTMLElement,
 
     XOffset: document.documentElement.scrollTop,
     YOffset: document.documentElement.scrollLeft,
 
     canvas: null,
     rects: null,
-    screenshoting: null,
+    screenshoting: false,
     canvasContext: null,
 
     // function to set defaults - used during init and later for reset
@@ -47,6 +52,8 @@ var page = {
         page.canvas = document.createElement('canvas')
         page.rects = []
         page.screenshoting = false
+        page.width = document.documentElement.clientWidth
+        page.height = document.documentElement.clientHeight
     },
 
     // ---------------------------------
@@ -86,51 +93,96 @@ var page = {
     // ---------------------------------
     dropperActivate: function() {
         if (page.dropperActivated) return
-        // load external css for cursor changes
-        var injectedCss =
-            '<link id="eye-dropper-css-cursor" rel="stylesheet" type="text/css" href="' +
-            chrome.extension.getURL('inject/anchor-cursor-' + page.options.cursor + '.css?0.3.0') +
-            '" /><link id="eye-dropper-css" rel="stylesheet" type="text/css" href="' +
-            chrome.extension.getURL('inject/edropper2.css?0.3.0') +
-            '" />'
-        if ($('head').length == 0) {
-            // rare cases as i.e. image page
-            $('body').before(injectedCss)
-        } else {
-            $('head').append(injectedCss)
-        }
+
         // create overlay div
-        $('body').before(
-            '<div id="eye-dropper-overlay" style="position: absolute; width: ' +
-                page.width +
-                'px; height: ' +
-                page.height +
-                'px; opacity: 1; background: none; border: none; z-index: 5000;"></div>',
-        )
+        page.elOverlay = createNode('div', {
+            id: 'eye-dropper-overlay',
+            style: [
+                'position: absolute',
+                `width: ${page.width}px`,
+                `height: ${page.height}px`,
+                'opacity: 1',
+                'background: none',
+                'border: none',
+                'z-index: 5000',
+            ].join(';'),
+        })
+
         // insert tooltip and toolbox
-        var inserted = ''
         if (page.options.enableColorTooltip === true) {
-            inserted += '<div id="color-tooltip"> </div>'
+            page.elColorTooltip = createNode('div', {
+                id: 'color-tooltip',
+                style: [
+                    'z-index: 1000',
+                    'color: black',
+                    'position: absolute',
+                    'display: none',
+                    'font-size: 15px',
+                    'border: 1px solid black',
+                    'width: 10px',
+                    'height: 10px',
+                ].join(';'),
+            })
+            page.elOverlay.append(page.elColorTooltip)
         }
         if (page.options.enableColorToolbox === true) {
-            inserted +=
-                '<div id="color-toolbox"><div id="color-toolbox-color"></div><div id="color-toolbox-text"></div></div>'
+            page.elColorToolbox = createNode('div', {
+                id: 'color-toolbox',
+                style: [
+                    'z-index: 1000',
+                    'color: black',
+                    'position: absolute',
+                    'display: none',
+                    'font-size: 15px',
+                    'border: 1px solid black',
+                    'width: 160px',
+                    'height: 42px',
+                    'bottom: 4px',
+                    'right: 4px',
+                    'border-radius: 2px',
+                    '-webkit-box-shadow: 2px 2px 0px rgba(0,0,128,0.25)',
+                    'background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#0f0f0f), to(#3f3f3f))',
+                    'color: white',
+                    'font-family: monospace',
+                    'border: 1px solid transparent',
+                    'position: fixed',
+                ].join(';'),
+            })
+            page.elColorToolboxColor = createNode('div', {
+                id: 'color-toolbox-color',
+                style: [
+                    'width: 32px',
+                    'height: 32px',
+                    'margin: 4px',
+                    'margin-right: 8px',
+                    'float: left',
+                    'border: 1px solid white',
+                    'background-color: #ffbbca',
+                ].join(';'),
+            })
+            page.elColorToolboxText = createNode('div', {
+                id: 'color-toolbox-text',
+                style: [
+                    'font-size: 11px',
+                    'padding: 5px 0px',
+                    'overflow: hidden',
+                    'text-align: center',
+                    'color: white',
+                ].join(';'),
+            })
+
+            page.elColorToolbox.append(page.elColorToolboxColor)
+            page.elColorToolbox.append(page.elColorToolboxText)
+
+            page.elOverlay.append(page.elColorToolbox)
         }
-        $('#eye-dropper-overlay').append(inserted)
-        if (page.options.enableColorTooltip === true) {
-            page.elColorTooltip = $('#color-tooltip')
-        }
-        if (page.options.enableColorToolbox === true) {
-            page.elColorToolbox = $('#color-toolbox')
-            page.elColorToolboxColor = $('#color-toolbox-color')
-            page.elColorToolboxText = $('#color-toolbox-text')
-        }
+        document.body.prepend(page.elOverlay)
         console.log('dropper: activating page dropper')
         page.defaults()
         page.dropperActivated = true
         page.screenChanged()
         // set listeners
-        $(document).bind('scrollstop', page.onScrollStop)
+        scrollStop(page.onScrollStop)
         document.addEventListener('mousemove', page.onMouseMove, false)
         document.addEventListener('click', page.onMouseClick, false)
         if (page.options.enableRightClickDeactivate === true) {
@@ -144,9 +196,8 @@ var page = {
         // disable keyboard shortcuts
         page.shortcuts(false)
         // reset cursor changes
-        $('#eye-dropper-overlay').css('cursor', 'default')
-        $('#eye-dropper-css').remove()
-        $('#eye-dropper-css-cursor').remove()
+        page.elOverlay.style.cursor = 'default'
+
         page.dropperActivated = false
         console.log('dropper: deactivating page dropper')
         document.removeEventListener('mousemove', page.onMouseMove, false)
@@ -154,14 +205,16 @@ var page = {
         if (page.options.enableRightClickDeactivate === true) {
             document.removeEventListener('contextmenu', page.onContextMenu, false)
         }
-        $(document).unbind('scrollstop', page.onScrollStop)
+
+        scrollStop(page.onScrollStop, 'stop')
+
         if (page.options.enableColorTooltip === true) {
             page.elColorTooltip.remove()
         }
         if (page.options.enableColorToolbox === true) {
             page.elColorToolbox.remove()
         }
-        $('#eye-dropper-overlay').remove()
+        page.elOverlay.remove()
     },
     // ---------------------------------
     // EVENT HANDLING
@@ -190,6 +243,7 @@ var page = {
     // keyboard shortcuts
     // enable with argument as true, disable with false
     shortcuts: function(start) {
+        return
         // enable shortcuts
         if (start == true) {
             shortcut.add('Esc', function(evt) {
@@ -216,48 +270,34 @@ var page = {
         console.log('dropper: window resized')
         // set defaults
         page.defaults()
-        // width and height changed so we have to get new one
-        page.width = $(document).width()
-        page.height = $(document).height()
-        //page.screenWidth = window.innerWidth;
-        //page.screenHeight = window.innerHeight;
+
         // also don't forget to set overlay
-        $('#eye-dropper-overlay')
-            .css('width', page.width)
-            .css('height', page.height)
+        page.elOverlay.style.width = `${page.width}px`
+        page.elOverlay.style.height = `${page.height}px`
+
         // call screen chaned
         page.screenChanged()
     },
     // ---------------------------------
     // MISC
     // ---------------------------------
-    tooltip: function(e : MouseEvent) {
+    tooltip: function(e: MouseEvent) {
         if (!page.dropperActivated || page.screenshoting) return
         var color = page.pickColor(e)
-        var fromTop = -15
-        var fromLeft = 10
-        if (e.pageX - page.XOffset > page.screenWidth / 2) fromLeft = -20
-        if (e.pageY - page.YOffset < page.screenHeight / 2) fromTop = 15
         // set tooltip
         if (page.options.enableColorTooltip === true) {
-            page.elColorTooltip
-                .css({
-                    'background-color': '#' + color.rgbhex,
-                    top: e.pageY + fromTop,
-                    left: e.pageX + fromLeft,
-                    'border-color': '#' + color.opposite,
-                })
-                .show()
+            let fromTop = e.pageX - page.XOffset > page.screenWidth / 2 ? -20 : -15
+            let fromLeft = e.pageY - page.YOffset < page.screenHeight / 2 ? 15 : 10
+
+            page.elColorTooltip.style.backgroundColor = `#${color.rgbhex}`
+            page.elColorTooltip.style.borderColor = `#${color.opposite}`
+            page.elColorTooltip.style.top = `${e.pageY + fromTop}px`
+            page.elColorTooltip.style.left = `${e.pageX + fromLeft}px`
         }
         // set toolbox
         if (page.options.enableColorToolbox === true) {
-            page.elColorToolboxColor.css({
-                'background-color': '#' + color.rgbhex,
-            })
-            page.elColorToolboxText.html(
-                '#' + color.rgbhex + '<br />rgb(' + color.r + ',' + color.g + ',' + color.b + ')',
-            )
-            page.elColorToolbox.show()
+            page.elColorToolboxText.innerHTML = `#${color.rgbhex}<br/>rgb(${color.r},${color.g},${color.b})`
+            page.elColorToolboxColor.style.backgroundColor = `#${color.rgbhex}`
         }
     },
     // return true if rectangle A is whole in rectangle B
@@ -271,7 +311,7 @@ var page = {
     rectMergeGeneric: function(a, b, length) {
         // swap them if b is above a
         if (b < a) {
-            [a, b] = [b, a]
+            ;[a, b] = [b, a]
         }
         // shapes are overlaping
         if (b <= a + length)
@@ -307,11 +347,11 @@ var page = {
     // ---------------------------------
     // COLORS
     // ---------------------------------
-    pickColor: function(e : MouseEvent) {
+    pickColor: function(e: MouseEvent) {
         if (page.canvasData === null) return
         var canvasIndex = (e.pageX + e.pageY * page.canvas.width) * 4
         ////console.log(e.pageX + ' ' + e.pageY + ' ' + page.canvas.width);
-        let color: color = {
+        let color: Color = {
             r: page.canvasData[canvasIndex],
             g: page.canvasData[canvasIndex + 1],
             b: page.canvasData[canvasIndex + 2],
@@ -375,42 +415,23 @@ var page = {
             }
         }
         page.screenshoting = true
-        $('#eye-dropper-overlay').css('cursor', 'progress')
+        page.elOverlay.style.cursor = 'progress'
+
         console.log('dropper: screenshoting')
-        // TODO: this is terrible. It have to be done better way
-        if (page.options.enableColorTooltip === true && page.options.enableColorToolbox === true) {
-            page.elColorTooltip.hide(1, function() {
-                page.elColorToolbox.hide(1, function() {
-                    page.sendMessage(
-                        {
-                            type: 'screenshot',
-                        }
-                    )
-                })
-            })
-        } else if (page.options.enableColorTooltip === true) {
-            page.elColorTooltip.hide(1, function() {
-                page.sendMessage(
-                    {
-                        type: 'screenshot',
-                    },
-                )
-            })
-        } else if (page.options.enableColorToolbox === true) {
-            page.elColorToolbox.hide(1, function() {
-                page.sendMessage(
-                    {
-                        type: 'screenshot',
-                    },
-                )
-            })
-        } else {
-            page.sendMessage(
-                {
-                    type: 'screenshot',
-                },
-            )
+
+        if (page.options.enableColorTooltip === true) {
+            page.elColorTooltip.style.display = 'none'
         }
+
+        if (page.options.enableColorToolbox === true) {
+            page.elColorToolbox.style.display = 'none'
+        }
+
+        console.log('screenshot: sendMessage')
+        page.sendMessage({
+            type: 'screenshot',
+        })
+        console.log('screenshot: sendMessage end')
     },
     // capture actual Screenshot
     capture: function() {
@@ -446,13 +467,14 @@ var page = {
             page.canvasData = page.canvasContext.getImageData(0, 0, page.canvas.width, page.canvas.height).data
             // TODO - je nutne refreshnout ctverecek a nastavit mu spravnou barvu
             page.screenshoting = false
-            $('#eye-dropper-overlay').css('cursor', page.options.cursor)
+            page.elOverlay.style.cursor = page.options.cursor
+            console.log('reenabling color toolbox/tooltip')
             // re-enable tooltip and toolbox
             if (page.options.enableColorTooltip === true) {
-                page.elColorTooltip.show(1)
+                page.elColorTooltip.style.display = ''
             }
             if (page.options.enableColorToolbox === true) {
-                page.elColorToolbox.show(1)
+                page.elColorToolbox.style.display = ''
             }
             if (DEBUG) {
                 page.sendMessage({ type: 'debug-tab', image: page.canvas.toDataURL() })

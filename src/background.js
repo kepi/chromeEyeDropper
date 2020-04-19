@@ -83,29 +83,11 @@ var bg = {
         console.log("bg: injecting dropper scripts");
         chrome.tabs.executeScript(bg.tab.id, {
             allFrames: false,
-            file: "/inc/jquery-2.1.0.min.js"
-        }, function () {
-            console.log('bg: jquery injected');
-            chrome.tabs.executeScript(bg.tab.id, {
-                allFrames: false,
-                file: "/inc/jquery.scrollstop.js"
-            }, function () {
-                console.log('bg: jquery.scrollstop injected');
-                chrome.tabs.executeScript(bg.tab.id, {
-                    allFrames: false,
-                    file: "/inc/shortcut.js"
-                }, function () {
-                    console.log('bg: shortcuts injected');
-                    chrome.tabs.executeScript(bg.tab.id, {
-                        allFrames: false,
-                        file: "/js/edropper2.js"
+            file: "/js/edropper2.js"
                     }, function () {
                         console.log('bg: edropper2 injected');
                         bg.pickupActivate();
                     });
-                });
-            });
-        });
     },
     refreshDropper: function () {
         console.log("bg: refreshing dropper scripts");
