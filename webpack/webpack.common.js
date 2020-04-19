@@ -9,7 +9,7 @@ module.exports = {
     popup: path.join(__dirname, srcDir + "popup.js"),
     options: path.join(__dirname, srcDir + "options.js"),
     background: path.join(__dirname, srcDir + "background.js"),
-    edropper2: path.join(__dirname, srcDir + "edropper2.js")
+    edropper2: path.join(__dirname, srcDir + "edropper2.ts")
   },
   output: {
     path: path.join(__dirname, "../dist/js"),
