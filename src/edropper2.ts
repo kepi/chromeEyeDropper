@@ -1,6 +1,6 @@
-import { shortcut } from '../vendor/js/shortcut'
-import { createNode } from './helpers'
+import shortcut from './vendor/shortcut'
 import scrollStop from './scrollStop'
+import { createNode } from './helpers'
 
 interface Color {
     r: number
@@ -243,7 +243,6 @@ var page = {
     // keyboard shortcuts
     // enable with argument as true, disable with false
     shortcuts: function(start) {
-        return
         // enable shortcuts
         if (start == true) {
             shortcut.add('Esc', function(evt) {
