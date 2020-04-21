@@ -17,7 +17,7 @@ const scrollStop = function(callback, action='start'): void {
         isScrolling = setTimeout(function() {
             // Run the callback
             callback()
-        }, 66)
+        }, 250)
     }
 
     if ( action == 'start') {

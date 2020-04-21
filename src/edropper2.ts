@@ -1,5 +1,5 @@
 import shortcut from './vendor/shortcut'
-import scrollStop from './scrollStop'
+import scrollStop from './vendor/scrollStop'
 import { createNode } from './helpers'
 
 interface Color {
