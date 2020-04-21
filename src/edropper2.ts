@@ -1,28 +1,20 @@
 import shortcut from './vendor/shortcut'
 import scrollStop from './vendor/scrollStop'
 import { createNode } from './helpers'
-
-interface Color {
-    r: number
-    g: number
-    b: number
-    alpha: number
-    rgbhex?: string
-    opposite?: string
-}
+import Overlay from './overlay'
+import Color from './Color.d'
 
 var EDROPPER_VERSION = 11
 var CANVAS_MAX_SIZE = 32767 - 20
-var DEBUG = false
+var DEBUG = true
 var page = {
     width: 0,
     height: 0,
-    imageData: null,
-    canvasBorders: 20,
-    canvasData: null,
-    dropperActivated: false,
+
     screenWidth: 0,
     screenHeight: 0,
+
+    overlay: null as Overlay,
 
     options: {
         cursor: 'default',
@@ -31,29 +23,24 @@ var page = {
         enableRightClickDeactivate: true,
     },
 
-    // Variables for later use
-    elColorTooltip: null as HTMLElement,
-    elColorToolbox: null as HTMLElement,
-    elColorToolboxColor: null as HTMLElement,
-    elColorToolboxText: null as HTMLElement,
-
-    elOverlay: null as HTMLElement,
-
-    XOffset: document.documentElement.scrollTop,
-    YOffset: document.documentElement.scrollLeft,
-
     canvas: null,
-    rects: null,
-    screenshoting: false,
+    canvasData: null,
     canvasContext: null,
+    canvasBorders: 20,
+    imageData: null,
+
+    rects: null,
+
+    screenshoting: false,
+    dropperActivated: false,
 
     // function to set defaults - used during init and later for reset
     defaults: function() {
         page.canvas = document.createElement('canvas')
         page.rects = []
         page.screenshoting = false
-        page.width = document.documentElement.clientWidth
-        page.height = document.documentElement.clientHeight
+        page.width = document.documentElement.scrollWidth
+        page.height = document.documentElement.scrollHeight
     },
 
     // ---------------------------------
@@ -62,6 +49,7 @@ var page = {
     messageListener: function() {
         // Listen for pickup activate
         console.log('dropper: page activated')
+        console.log(`dropper: debug page at ${chrome.runtime.getURL('debug-tab.html')}`)
         chrome.runtime.onMessage.addListener(function(req, sender, sendResponse) {
             switch (req.type) {
                 case 'edropper-version':
@@ -94,89 +82,12 @@ var page = {
     dropperActivate: function() {
         if (page.dropperActivated) return
 
-        // create overlay div
-        page.elOverlay = createNode('div', {
-            id: 'eye-dropper-overlay',
-            style: [
-                'position: absolute',
-                `width: ${page.width}px`,
-                `height: ${page.height}px`,
-                'opacity: 1',
-                'background: none',
-                'border: none',
-                'z-index: 5000',
-            ].join(';'),
+        page.overlay = new Overlay({
+            enableToolbox: page.options.enableColorToolbox,
+            enableTooltip: page.options.enableColorTooltip,
+            cursor: page.options.cursor,
         })
 
-        // insert tooltip and toolbox
-        if (page.options.enableColorTooltip === true) {
-            page.elColorTooltip = createNode('div', {
-                id: 'color-tooltip',
-                style: [
-                    'z-index: 1000',
-                    'color: black',
-                    'position: absolute',
-                    'display: none',
-                    'font-size: 15px',
-                    'border: 1px solid black',
-                    'width: 10px',
-                    'height: 10px',
-                ].join(';'),
-            })
-            page.elOverlay.append(page.elColorTooltip)
-        }
-        if (page.options.enableColorToolbox === true) {
-            page.elColorToolbox = createNode('div', {
-                id: 'color-toolbox',
-                style: [
-                    'z-index: 1000',
-                    'color: black',
-                    'position: absolute',
-                    'display: none',
-                    'font-size: 15px',
-                    'border: 1px solid black',
-                    'width: 160px',
-                    'height: 42px',
-                    'bottom: 4px',
-                    'right: 4px',
-                    'border-radius: 2px',
-                    '-webkit-box-shadow: 2px 2px 0px rgba(0,0,128,0.25)',
-                    'background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#0f0f0f), to(#3f3f3f))',
-                    'color: white',
-                    'font-family: monospace',
-                    'border: 1px solid transparent',
-                    'position: fixed',
-                ].join(';'),
-            })
-            page.elColorToolboxColor = createNode('div', {
-                id: 'color-toolbox-color',
-                style: [
-                    'width: 32px',
-                    'height: 32px',
-                    'margin: 4px',
-                    'margin-right: 8px',
-                    'float: left',
-                    'border: 1px solid white',
-                    'background-color: #ffbbca',
-                ].join(';'),
-            })
-            page.elColorToolboxText = createNode('div', {
-                id: 'color-toolbox-text',
-                style: [
-                    'font-size: 11px',
-                    'padding: 5px 0px',
-                    'overflow: hidden',
-                    'text-align: center',
-                    'color: white',
-                ].join(';'),
-            })
-
-            page.elColorToolbox.append(page.elColorToolboxColor)
-            page.elColorToolbox.append(page.elColorToolboxText)
-
-            page.elOverlay.append(page.elColorToolbox)
-        }
-        document.body.prepend(page.elOverlay)
         console.log('dropper: activating page dropper')
         page.defaults()
         page.dropperActivated = true
@@ -195,8 +106,6 @@ var page = {
         if (!page.dropperActivated) return
         // disable keyboard shortcuts
         page.shortcuts(false)
-        // reset cursor changes
-        page.elOverlay.style.cursor = 'default'
 
         page.dropperActivated = false
         console.log('dropper: deactivating page dropper')
@@ -208,13 +117,7 @@ var page = {
 
         scrollStop(page.onScrollStop, 'stop')
 
-        if (page.options.enableColorTooltip === true) {
-            page.elColorTooltip.remove()
-        }
-        if (page.options.enableColorToolbox === true) {
-            page.elColorToolbox.remove()
-        }
-        page.elOverlay.remove()
+        page.overlay.deactivate()
     },
     // ---------------------------------
     // EVENT HANDLING
@@ -270,10 +173,7 @@ var page = {
         // set defaults
         page.defaults()
 
-        // also don't forget to set overlay
-        page.elOverlay.style.width = `${page.width}px`
-        page.elOverlay.style.height = `${page.height}px`
-
+        page.overlay.resized()
         // call screen chaned
         page.screenChanged()
     },
@@ -283,21 +183,8 @@ var page = {
     tooltip: function(e: MouseEvent) {
         if (!page.dropperActivated || page.screenshoting) return
         var color = page.pickColor(e)
-        // set tooltip
-        if (page.options.enableColorTooltip === true) {
-            let fromTop = e.pageX - page.XOffset > page.screenWidth / 2 ? -20 : -15
-            let fromLeft = e.pageY - page.YOffset < page.screenHeight / 2 ? 15 : 10
 
-            page.elColorTooltip.style.backgroundColor = `#${color.rgbhex}`
-            page.elColorTooltip.style.borderColor = `#${color.opposite}`
-            page.elColorTooltip.style.top = `${e.pageY + fromTop}px`
-            page.elColorTooltip.style.left = `${e.pageX + fromLeft}px`
-        }
-        // set toolbox
-        if (page.options.enableColorToolbox === true) {
-            page.elColorToolboxText.innerHTML = `#${color.rgbhex}<br/>rgb(${color.r},${color.g},${color.b})`
-            page.elColorToolboxColor.style.backgroundColor = `#${color.rgbhex}`
-        }
+        page.overlay.tooltip({screenWidth: page.screenWidth, screenHeight: page.screenHeight, x: e.pageX, y: e.pageY, color: color})
     },
     // return true if rectangle A is whole in rectangle B
     rectInRect: function(A, B) {
@@ -384,23 +271,27 @@ var page = {
             page.canvas.width != page.width + page.canvasBorders ||
             page.canvas.height != page.height + page.canvasBorders
         ) {
-            console.log('dropper: creating new canvas')
             page.canvas = document.createElement('canvas')
             page.canvas.width = page.width + page.canvasBorders
             page.canvas.height = page.height + page.canvasBorders
+            console.log(`dropper: creating new canvas ${page.canvas.width}x${page.canvas.height}`)
             page.canvasContext = page.canvas.getContext('2d')
             page.canvasContext.scale(1 / window.devicePixelRatio, 1 / window.devicePixelRatio)
             page.rects = []
         }
     },
+    setScreenshoting: function(state) {
+        page.screenshoting = state
+        page.overlay.screenshoting(state)
+    },
     screenChanged: function(force = false) {
         if (!page.dropperActivated) return
         console.log('dropper: screenChanged')
-        page.YOffset = document.documentElement.scrollTop
-        page.XOffset = document.documentElement.scrollLeft
+        let yOffset = document.documentElement.scrollTop
+        let xOffset = document.documentElement.scrollLeft
         var rect = {
-            x: page.XOffset,
-            y: page.YOffset,
+            x: xOffset,
+            y: yOffset,
             width: page.screenWidth,
             height: page.screenHeight,
         }
@@ -413,27 +304,21 @@ var page = {
                 }
             }
         }
-        page.screenshoting = true
-        page.elOverlay.style.cursor = 'progress'
+        page.setScreenshoting(true)
 
         console.log('dropper: screenshoting')
 
-        if (page.options.enableColorTooltip === true) {
-            page.elColorTooltip.style.display = 'none'
-        }
+        // hide tools while screenshoting
 
-        if (page.options.enableColorToolbox === true) {
-            page.elColorToolbox.style.display = 'none'
-        }
-
-        console.log('screenshot: sendMessage')
         page.sendMessage({
             type: 'screenshot',
         })
-        console.log('screenshot: sendMessage end')
     },
     // capture actual Screenshot
     capture: function() {
+        const yOffset = document.documentElement.scrollTop
+        const xOffset = document.documentElement.scrollLeft
+
         page.checkCanvas()
         ////console.log(page.rects);
         //    var image = new Image();
@@ -442,8 +327,8 @@ var page = {
             page.screenWidth = image.width
             page.screenHeight = image.height
             var rect = {
-                x: page.XOffset,
-                y: page.YOffset,
+                x: xOffset,
+                y: yOffset,
                 width: image.width,
                 height: image.height,
             }
@@ -462,22 +347,13 @@ var page = {
             }
             // put rectangle in array
             if (merged == false) page.rects.push(rect)
-            page.canvasContext.drawImage(image, page.XOffset, page.YOffset)
+            page.canvasContext.drawImage(image, xOffset, yOffset)
             page.canvasData = page.canvasContext.getImageData(0, 0, page.canvas.width, page.canvas.height).data
-            // TODO - je nutne refreshnout ctverecek a nastavit mu spravnou barvu
-            page.screenshoting = false
-            page.elOverlay.style.cursor = page.options.cursor
-            console.log('reenabling color toolbox/tooltip')
-            // re-enable tooltip and toolbox
-            if (page.options.enableColorTooltip === true) {
-                page.elColorTooltip.style.display = ''
-            }
-            if (page.options.enableColorToolbox === true) {
-                page.elColorToolbox.style.display = ''
-            }
+
+            page.setScreenshoting(false)
+
             if (DEBUG) {
                 page.sendMessage({ type: 'debug-tab', image: page.canvas.toDataURL() })
-                debugger
             }
         }
         if (page.imageData) {
