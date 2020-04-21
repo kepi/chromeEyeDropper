@@ -184,11 +184,23 @@ var page = {
         if (!page.dropperActivated || page.screenshoting) return
         var color = page.pickColor(e)
 
-        page.overlay.tooltip({screenWidth: page.screenWidth, screenHeight: page.screenHeight, x: e.pageX, y: e.pageY, color: color})
+        page.overlay.tooltip({
+            screenWidth: page.screenWidth,
+            screenHeight: page.screenHeight,
+            x: e.pageX,
+            y: e.pageY,
+            color: color,
+        })
     },
     // return true if rectangle A is whole in rectangle B
     rectInRect: function(A, B) {
-        if (A.x >= B.x && A.y >= B.y && A.x + A.width <= B.x + B.width && A.y + A.height <= B.y + B.height) return true
+        if (
+            A.x >= B.x &&
+            A.y >= B.y &&
+            A.x + A.width <= B.x + B.width &&
+            A.y + A.height <= B.y + B.height
+        )
+            return true
         else return false
     },
     // found out if two points and length overlaps
@@ -348,7 +360,12 @@ var page = {
             // put rectangle in array
             if (merged == false) page.rects.push(rect)
             page.canvasContext.drawImage(image, xOffset, yOffset)
-            page.canvasData = page.canvasContext.getImageData(0, 0, page.canvas.width, page.canvas.height).data
+            page.canvasData = page.canvasContext.getImageData(
+                0,
+                0,
+                page.canvas.width,
+                page.canvas.height,
+            ).data
 
             page.setScreenshoting(false)
 
