@@ -293,6 +293,9 @@ var page = {
         }
     },
     setScreenshoting: function(state) {
+        if (page.screenshoting && state) {
+            return
+        }
         page.screenshoting = state
         page.overlay.screenshoting(state)
     },
