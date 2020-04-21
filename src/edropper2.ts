@@ -319,15 +319,13 @@ var page = {
                 }
             }
         }
+
         page.setScreenshoting(true)
-
-        console.log('dropper: screenshoting')
-
-        // hide tools while screenshoting
-
-        page.sendMessage({
-            type: 'screenshot',
-        })
+        setTimeout(function() {
+            page.sendMessage({
+                type: 'screenshot',
+            })
+        }, 50)
     },
     // capture actual Screenshot
     capture: function() {
