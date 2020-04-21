@@ -277,7 +277,7 @@ var bg = {
         }
         else
             chrome.tabs.create({
-                url: '/html/debug-tab.html',
+                url: '/debug-tab.html',
                 selected: false
             }, function (tab) {
                 bg.debugTab = tab.id;
@@ -403,7 +403,7 @@ var bg = {
                 console.info("Just installed: opening installed page in new tab.");
                 window.localStorage.seenInstalledPage = true;
                 chrome.tabs.create({
-                    url: 'html/installed.html',
+                    url: '/installed.html',
                     selected: true
                 });
             }
