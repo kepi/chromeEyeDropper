@@ -4,7 +4,7 @@ import { createNode } from './helpers'
 import Overlay from './overlay'
 import Color from './Color.d'
 
-var EDROPPER_VERSION = 11
+var EDROPPER_VERSION = 12
 var CANVAS_MAX_SIZE = 32767 - 20
 var DEBUG = true
 var page = {
@@ -288,7 +288,6 @@ var page = {
             page.canvas.height = page.height + page.canvasBorders
             console.log(`dropper: creating new canvas ${page.canvas.width}x${page.canvas.height}. Pixel Ratio: ${window.devicePixelRatio}`)
             page.canvasContext = page.canvas.getContext('2d')
-            page.canvasContext.scale(1 / window.devicePixelRatio, 1 / window.devicePixelRatio)
             page.rects = []
         }
     },
