@@ -286,7 +286,7 @@ var page = {
             page.canvas = document.createElement('canvas')
             page.canvas.width = page.width + page.canvasBorders
             page.canvas.height = page.height + page.canvasBorders
-            console.log(`dropper: creating new canvas ${page.canvas.width}x${page.canvas.height}`)
+            console.log(`dropper: creating new canvas ${page.canvas.width}x${page.canvas.height}. Pixel Ratio: ${window.devicePixelRatio}`)
             page.canvasContext = page.canvas.getContext('2d')
             page.canvasContext.scale(1 / window.devicePixelRatio, 1 / window.devicePixelRatio)
             page.rects = []
@@ -335,8 +335,10 @@ var page = {
         page.checkCanvas()
         ////console.log(page.rects);
         //    var image = new Image();
+        console.log('dropper: creating image element and waiting on load')
         var image = document.createElement('img')
         image.onload = function() {
+            console.log(`dropper: got new screenshot ${image.width}x${image.height}`)
             page.screenWidth = image.width
             page.screenHeight = image.height
             var rect = {
