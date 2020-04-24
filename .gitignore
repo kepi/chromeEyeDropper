@@ -3,3 +3,4 @@ inc/jPicker/images/Thumbs.db
 .idea/*
 dist
 node_modules
+yarn-error.log
