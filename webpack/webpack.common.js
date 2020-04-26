@@ -44,8 +44,12 @@ module.exports = {
                 files: ['manifest.json', 'button-about.html'],
                 rules: [
                     {
+                        search: '@versionname',
+                        replace: process.env.npm_package_version.replace(/-/, ' '),
+                    },
+                    {
                         search: '@version',
-                        replace: process.env.npm_package_version,
+                        replace: process.env.npm_package_version.replace(/-.*/, ''),
                     },
                 ],
             },
