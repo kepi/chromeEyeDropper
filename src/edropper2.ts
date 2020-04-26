@@ -6,7 +6,6 @@ import Color from './Color.d'
 
 var EDROPPER_VERSION = 12
 var CANVAS_MAX_SIZE = 32767 - 20
-var DEBUG = true
 var page = {
     width: 0,
     height: 0,
@@ -371,7 +370,7 @@ var page = {
 
             page.setScreenshoting(false)
 
-            if (DEBUG) {
+            if (DEV_MODE) {
                 page.sendMessage({ type: 'debug-tab', image: page.canvas.toDataURL() })
             }
         }
