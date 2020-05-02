@@ -30,6 +30,7 @@ var page = {
     canvasContext: null,
     canvasBorders: 20,
     imageData: null,
+    resetCanvas: true,
 
     rects: [] as Array<Rect>,
 
@@ -42,6 +43,7 @@ var page = {
         page.screenHeight = window.innerHeight
 
         page.canvas = document.createElement('canvas')
+        page.resetCanvas = true
         page.rects = []
         page.screenshoting = false
         page.width = Math.round(document.documentElement.scrollWidth)
@@ -252,26 +254,24 @@ var page = {
     checkCanvas: function() {
         const scale = window.devicePixelRatio
 
-        // width and height with borders
-        // const widthWB = page.width * scale + page.canvasBorders
-        // const heightWB = page.height * scale + page.canvasBorders
-        const widthWB = page.width + page.canvasBorders
-        const heightWB = page.height + page.canvasBorders
-
         // we have to create new canvas element
-        if (page.canvas.width != widthWB || page.canvas.height != heightWB) {
+        if (
+            page.resetCanvas ||
+            page.canvas.width != page.width ||
+            page.canvas.height != page.height
+        ) {
             page.canvas = document.createElement('canvas')
-            page.canvas.width = widthWB
-            page.canvas.height = heightWB
+            page.canvas.width = page.width
+            page.canvas.height = page.height
 
             console.log(
-                `dropper: creating new canvas ${page.canvas.width}x${page.canvas.height}. Pixel Ratio: ${window.devicePixelRatio}`,
+                `dropper: creating new canvas ${page.canvas.width}x${page.canvas.height}. Pixel Ratio: ${window.devicePixelRatio}. Page dimension: ${page.width}x${page.height}`,
             )
 
             page.canvasContext = page.canvas.getContext('2d')
             page.canvasContext.scale(1 / scale, 1 / scale)
-            // page.canvasContext.scale(scale, scale)
             page.rects = []
+            page.resetCanvas = false
         }
     },
     setScreenshoting: function(state) {
@@ -351,11 +351,27 @@ var page = {
         var image = document.createElement('img')
         image.onload = function() {
             console.log(`dropper: got new screenshot ${image.width}x${image.height}`)
-            // page.screenWidth = image.width
-            // page.screenHeight = image.height
-            const rect = new Rect(page.xOffset, page.yOffset, image.width, image.height)
+
+            const rect = new Rect(
+                page.xOffset,
+                page.yOffset,
+                Math.round(image.width / window.devicePixelRatio),
+                Math.round(image.height / window.devicePixelRatio),
+            )
             page.updateRects(rect)
-            page.canvasContext.drawImage(image, page.xOffset, page.yOffset)
+
+            // we changed scale of canvasContext and image data are parsed accroding to this
+            // but unfortunately not sx,sy dimensions so we need to adjust them
+            const scale = window.devicePixelRatio
+            const sx = page.xOffset * scale
+            const sy = page.yOffset * scale
+
+            console.log(
+                `dropper: drawing image at ${page.xOffset},${page.yOffset} and internally at ${sx},${sy}`,
+            )
+            page.canvasContext.drawImage(image, sx, sy)
+
+            // get whole canvas data
             page.canvasData = page.canvasContext.getImageData(
                 0,
                 0,
@@ -384,6 +400,8 @@ var page = {
             page.onWindowResize()
         }
 
+        // FIXME: implement device pixel ration changes same as scrollstop
+        // with some timeout so it works ok during zoom change i.e.
         const mqString = `(resolution: ${window.devicePixelRatio}dppx)`
         matchMedia(mqString).addListener(page.onWindowResize)
     },
