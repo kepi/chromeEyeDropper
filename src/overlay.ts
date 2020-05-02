@@ -5,6 +5,8 @@ class Overlay {
     el: HTMLElement
     enableToolbox: boolean = true
     enableTooltip: boolean = true
+    pageWidth: number
+    pageHeight: number
     cursor: string
 
     _toolbox: ToolBox
@@ -12,7 +14,13 @@ class Overlay {
 
     tools: Array<Tool> = []
 
-    constructor(args: { enableToolbox: boolean; enableTooltip: boolean; cursor: string }) {
+    constructor(args: {
+        width: number
+        height: number
+        enableToolbox: boolean
+        enableTooltip: boolean
+        cursor: string
+    }) {
         // set options
         this.cursor = args.cursor
 
@@ -33,8 +41,8 @@ class Overlay {
             id: 'eye-dropper-overlay',
             style: [
                 'position: absolute',
-                `width: ${document.documentElement.scrollWidth}px`,
-                `height: ${document.documentElement.scrollHeight}px`,
+                `width: ${args.width}px`,
+                `height: ${args.height}px`,
                 'opacity: 1',
                 'background: none',
                 'border: none',
@@ -68,10 +76,10 @@ class Overlay {
         }
     }
 
-    resized() {
+    resized(args: { width: number; height: number }) {
         // also don't forget to set overlay
-        this.el.style.width = `${document.documentElement.scrollWidth}px`
-        this.el.style.height = `${document.documentElement.scrollHeight}px`
+        this.el.style.width = `${args.width}px`
+        this.el.style.height = `${args.height}px`
     }
 
     deactivate() {
@@ -91,8 +99,9 @@ class Overlay {
         y: number
         color: Color
     }) {
-        const yOffset = document.documentElement.scrollTop
-        const xOffset = document.documentElement.scrollLeft
+        // offset is used for positioning element on screen
+        const yOffset = Math.round(document.documentElement.scrollTop)
+        const xOffset = Math.round(document.documentElement.scrollLeft)
 
         // set tooltip
         if (this.enableTooltip === true) {
@@ -113,11 +122,15 @@ class Overlay {
 class Tool {
     el: HTMLElement
     color: Color
+    x: number
+    y: number
 
     constructor() {}
 
     hookColor(args) {
         this.color = args.color
+        this.x = args.x
+        this.y = args.y
     }
 
     hookDeactivate(args) {
@@ -179,7 +192,7 @@ class ToolBox extends Tool {
                 'font-size: 15px',
                 'border: 1px solid black',
                 'width: 160px',
-                'height: 42px',
+                'height: 52px',
                 'bottom: 4px',
                 'right: 4px',
                 'border-radius: 2px',
@@ -220,7 +233,7 @@ class ToolBox extends Tool {
     hookColor(args) {
         super.hookColor(args)
 
-        this.elText.innerHTML = `#${this.color.rgbhex}<br/>rgb(${this.color.r},${this.color.g},${this.color.b})`
+        this.elText.innerHTML = `#${this.color.rgbhex}<br/>rgb(${this.color.r},${this.color.g},${this.color.b})<br/>${args.x}, ${args.y}`
         this.elColor.style.backgroundColor = `#${this.color.rgbhex}`
     }
 }

@@ -12,6 +12,8 @@ var page = {
 
     screenWidth: 0,
     screenHeight: 0,
+    xOffset: 0,
+    yOffset: 0,
 
     overlay: null as Overlay,
 
@@ -35,11 +37,24 @@ var page = {
 
     // function to set defaults - used during init and later for reset
     defaults: function() {
+        page.screenWidth = window.innerWidth
+        page.screenHeight = window.innerHeight
+
         page.canvas = document.createElement('canvas')
         page.rects = []
         page.screenshoting = false
-        page.width = document.documentElement.scrollWidth
-        page.height = document.documentElement.scrollHeight
+        page.width = Math.round(document.documentElement.scrollWidth)
+        page.height = Math.round(document.documentElement.scrollHeight)
+
+        // TODO: check if this is needed
+        if (page.width > CANVAS_MAX_SIZE) {
+            page.width = CANVAS_MAX_SIZE
+            console.warn('Page width is larger then maximum Canvas width.')
+        }
+        if (page.height > CANVAS_MAX_SIZE) {
+            page.height = CANVAS_MAX_SIZE
+            console.warn('Page height is larger then maximum Canvas height.')
+        }
     },
 
     // ---------------------------------
@@ -82,6 +97,8 @@ var page = {
         if (page.dropperActivated) return
 
         page.overlay = new Overlay({
+            width: page.width,
+            height: page.height,
             enableToolbox: page.options.enableColorToolbox,
             enableTooltip: page.options.enableColorTooltip,
             cursor: page.options.cursor,
@@ -131,12 +148,12 @@ var page = {
         page.dropperDeactivate()
         page.sendMessage({
             type: 'set-color',
-            color: page.pickColor(e),
+            color: page.pickColor(e.pageX, e.pageY),
         })
     },
     onScrollStop: function() {
         if (!page.dropperActivated) return
-        console.log('dropper: Scroll stop')
+        console.log('dropper: scroll stopped')
         page.screenChanged()
     },
     onScrollStart: function() {
@@ -172,23 +189,27 @@ var page = {
         // set defaults
         page.defaults()
 
-        page.overlay.resized()
         // call screen chaned
         page.screenChanged()
+        page.overlay.resized({ width: page.width, height: page.height })
     },
     // ---------------------------------
     // MISC
     // ---------------------------------
     tooltip: function(e: MouseEvent) {
         if (!page.dropperActivated || page.screenshoting) return
-        var color = page.pickColor(e)
+
+        const x = e.pageX
+        const y = e.pageY
+
+        var color = page.pickColor(x, y)
 
         page.overlay.tooltip({
             screenWidth: page.screenWidth,
             screenHeight: page.screenHeight,
-            x: e.pageX,
-            y: e.pageY,
-            color: color,
+            x,
+            y,
+            color,
         })
     },
     // return true if rectangle A is whole in rectangle B
@@ -244,7 +265,7 @@ var page = {
     // ---------------------------------
     // COLORS
     // ---------------------------------
-    pickColor: function(e: MouseEvent) {
+    pickColor: function(x, y) {
         if (page.canvasData === null) return
         var canvasIndex = (e.pageX + e.pageY * page.canvas.width) * 4
         ////console.log(e.pageX + ' ' + e.pageY + ' ' + page.canvas.width);
@@ -277,16 +298,27 @@ var page = {
     // UPDATING SCREEN
     // ---------------------------------
     checkCanvas: function() {
+        const scale = window.devicePixelRatio
+
+        // width and height with borders
+        // const widthWB = page.width * scale + page.canvasBorders
+        // const heightWB = page.height * scale + page.canvasBorders
+        const widthWB = page.width + page.canvasBorders
+        const heightWB = page.height + page.canvasBorders
+
         // we have to create new canvas element
-        if (
-            page.canvas.width != page.width + page.canvasBorders ||
-            page.canvas.height != page.height + page.canvasBorders
-        ) {
+        if (page.canvas.width != widthWB || page.canvas.height != heightWB) {
             page.canvas = document.createElement('canvas')
-            page.canvas.width = page.width + page.canvasBorders
-            page.canvas.height = page.height + page.canvasBorders
-            console.log(`dropper: creating new canvas ${page.canvas.width}x${page.canvas.height}. Pixel Ratio: ${window.devicePixelRatio}`)
+            page.canvas.width = widthWB
+            page.canvas.height = heightWB
+
+            console.log(
+                `dropper: creating new canvas ${page.canvas.width}x${page.canvas.height}. Pixel Ratio: ${window.devicePixelRatio}`,
+            )
+
             page.canvasContext = page.canvas.getContext('2d')
+            page.canvasContext.scale(1 / scale, 1 / scale)
+            // page.canvasContext.scale(scale, scale)
             page.rects = []
         }
     },
@@ -300,14 +332,14 @@ var page = {
     screenChanged: function(force = false) {
         if (!page.dropperActivated) return
         console.log('dropper: screenChanged')
-        let yOffset = document.documentElement.scrollTop
-        let xOffset = document.documentElement.scrollLeft
         var rect = {
             x: xOffset,
             y: yOffset,
             width: page.screenWidth,
             height: page.screenHeight,
         }
+        page.yOffset = Math.round(document.documentElement.scrollTop)
+        page.xOffset = Math.round(document.documentElement.scrollLeft)
         // don't screenshot if we already have this one
         if (!force && page.rects.length > 0) {
             for (let index in page.rects) {
@@ -327,9 +359,6 @@ var page = {
     },
     // capture actual Screenshot
     capture: function() {
-        const yOffset = document.documentElement.scrollTop
-        const xOffset = document.documentElement.scrollLeft
-
         page.checkCanvas()
         ////console.log(page.rects);
         //    var image = new Image();
@@ -337,14 +366,6 @@ var page = {
         var image = document.createElement('img')
         image.onload = function() {
             console.log(`dropper: got new screenshot ${image.width}x${image.height}`)
-            page.screenWidth = image.width
-            page.screenHeight = image.height
-            var rect = {
-                x: xOffset,
-                y: yOffset,
-                width: image.width,
-                height: image.height,
-            }
             var merged = false
             // if there are already any rectangles
             if (page.rects.length > 0) {
@@ -361,6 +382,8 @@ var page = {
             // put rectangle in array
             if (merged == false) page.rects.push(rect)
             page.canvasContext.drawImage(image, xOffset, yOffset)
+            // page.screenWidth = image.width
+            // page.screenHeight = image.height
             page.canvasData = page.canvasContext.getImageData(
                 0,
                 0,
@@ -382,11 +405,6 @@ var page = {
     },
     init: function() {
         page.messageListener()
-        if (page.width > CANVAS_MAX_SIZE) {
-            page.width = CANVAS_MAX_SIZE
-        }
-        if (page.height > CANVAS_MAX_SIZE) {
-            page.height = CANVAS_MAX_SIZE
         }
     },
 }
