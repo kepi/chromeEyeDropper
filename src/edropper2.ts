@@ -3,6 +3,7 @@ import scrollStop from './vendor/scrollStop'
 import { createNode } from './helpers'
 import Overlay from './overlay'
 import Color from './Color.d'
+import Rect from './rect'
 
 var EDROPPER_VERSION = 12
 var CANVAS_MAX_SIZE = 32767 - 20
@@ -30,7 +31,7 @@ var page = {
     canvasBorders: 20,
     imageData: null,
 
-    rects: null,
+    rects: [] as Array<Rect>,
 
     screenshoting: false,
     dropperActivated: false,
@@ -185,7 +186,7 @@ var page = {
     // window is resized
     onWindowResize: function() {
         if (!page.dropperActivated) return
-        console.log('dropper: window resized')
+        console.log('dropper: window resized or pixelRatio changed')
         // set defaults
         page.defaults()
 
@@ -212,68 +213,19 @@ var page = {
             color,
         })
     },
-    // return true if rectangle A is whole in rectangle B
-    rectInRect: function(A, B) {
-        if (
-            A.x >= B.x &&
-            A.y >= B.y &&
-            A.x + A.width <= B.x + B.width &&
-            A.y + A.height <= B.y + B.height
-        )
-            return true
-        else return false
-    },
-    // found out if two points and length overlaps
-    // and merge it if needed. Helper method for
-    // rectMerge
-    rectMergeGeneric: function(a, b, length) {
-        // swap them if b is above a
-        if (b < a) {
-            ;[a, b] = [b, a]
-        }
-        // shapes are overlaping
-        if (b <= a + length)
-            return {
-                a: a,
-                length: b - a + length,
-            }
-        else return false
-    },
-    // merge same x or y positioned rectangles if overlaps
-    // width (or height) of B has to be equal to A
-    rectMerge: function(a, b) {
-        var t
-        // same x position and same width
-        if (a.x == b.x && a.width == b.width) {
-            t = page.rectMergeGeneric(a.y, b.y, a.height)
-            if (t != false) {
-                a.y = t.a
-                a.height = length
-                return a
-            }
-            // same y position and same height
-        } else if (a.y == b.y && a.height == b.height) {
-            t = page.rectMergeGeneric(a.x, b.x, a.width)
-            if (t != false) {
-                a.x = t.a
-                a.width = length
-                return a
-            }
-        }
-        return false
-    },
+
     // ---------------------------------
     // COLORS
     // ---------------------------------
     pickColor: function(x, y) {
         if (page.canvasData === null) return
-        var canvasIndex = (e.pageX + e.pageY * page.canvas.width) * 4
-        ////console.log(e.pageX + ' ' + e.pageY + ' ' + page.canvas.width);
+        const redIndex = y * page.canvas.width * 4 + x * 4
+
         let color: Color = {
-            r: page.canvasData[canvasIndex],
-            g: page.canvasData[canvasIndex + 1],
-            b: page.canvasData[canvasIndex + 2],
-            alpha: page.canvasData[canvasIndex + 3],
+            r: page.canvasData[redIndex],
+            g: page.canvasData[redIndex + 1],
+            b: page.canvasData[redIndex + 2],
+            alpha: page.canvasData[redIndex + 3],
         }
         color.rgbhex = page.rgbToHex(color.r, color.g, color.b)
         color.opposite = page.rgbToHex(255 - color.r, 255 - color.g, 255 - color.b)
@@ -332,23 +284,23 @@ var page = {
     screenChanged: function(force = false) {
         if (!page.dropperActivated) return
         console.log('dropper: screenChanged')
-        var rect = {
-            x: xOffset,
-            y: yOffset,
-            width: page.screenWidth,
-            height: page.screenHeight,
-        }
         page.yOffset = Math.round(document.documentElement.scrollTop)
         page.xOffset = Math.round(document.documentElement.scrollLeft)
+
+        const rect = new Rect(page.xOffset, page.yOffset, page.screenWidth, page.screenHeight)
+
+        console.group(`comparing rect ${rect} with [ ${page.rects.join(', ')} ]`)
         // don't screenshot if we already have this one
         if (!force && page.rects.length > 0) {
-            for (let index in page.rects) {
-                if (page.rectInRect(rect, page.rects[index])) {
+            for (let r of page.rects) {
+                if (r.contains(rect)) {
                     console.log('dropper: already shoted, skipping')
+                    console.groupEnd()
                     return
                 }
             }
         }
+        console.groupEnd()
 
         page.setScreenshoting(true)
         setTimeout(function() {
@@ -357,33 +309,53 @@ var page = {
             })
         }, 50)
     },
+
+    updateRects: function(rect) {
+        console.group('updateRects')
+
+        if (page.rects.length === 0) {
+            page.rects.push(rect)
+            console.log('no rects yet, pushing first')
+            console.groupEnd()
+            return
+        }
+
+        let merged = false
+
+        page.rects.forEach((r, i) => {
+            console.group(`Trying merge ${rect} with ${r}`)
+            let t = rect.merge(r)
+            if (t !== null) {
+                console.log('merged')
+                merged = true
+                page.rects.splice(i, 1)
+                page.updateRects(t)
+            }
+            console.groupEnd()
+        })
+
+        if (!merged) {
+            console.log('dropper: pushing merged to rects')
+            page.rects.push(rect)
+        }
+
+        console.groupEnd()
+    },
+
     // capture actual Screenshot
     capture: function() {
+        console.group('capture')
         page.checkCanvas()
-        ////console.log(page.rects);
-        //    var image = new Image();
+
         console.log('dropper: creating image element and waiting on load')
         var image = document.createElement('img')
         image.onload = function() {
             console.log(`dropper: got new screenshot ${image.width}x${image.height}`)
-            var merged = false
-            // if there are already any rectangles
-            if (page.rects.length > 0) {
-                // try to merge shot with others
-                for (let index in page.rects) {
-                    var t = page.rectMerge(rect, page.rects[index])
-                    if (t != false) {
-                        console.log('dropper: merging')
-                        merged = true
-                        page.rects[index] = t
-                    }
-                }
-            }
-            // put rectangle in array
-            if (merged == false) page.rects.push(rect)
-            page.canvasContext.drawImage(image, xOffset, yOffset)
             // page.screenWidth = image.width
             // page.screenHeight = image.height
+            const rect = new Rect(page.xOffset, page.yOffset, image.width, image.height)
+            page.updateRects(rect)
+            page.canvasContext.drawImage(image, page.xOffset, page.yOffset)
             page.canvasData = page.canvasContext.getImageData(
                 0,
                 0,
@@ -402,13 +374,18 @@ var page = {
         } else {
             console.error('ed: no imageData')
         }
+
+        console.groupEnd()
     },
     init: function() {
         page.messageListener()
+
+        window.onresize = function() {
+            page.onWindowResize()
         }
+
+        const mqString = `(resolution: ${window.devicePixelRatio}dppx)`
+        matchMedia(mqString).addListener(page.onWindowResize)
     },
 }
 page.init()
-window.onresize = function() {
-    page.onWindowResize()
-}
