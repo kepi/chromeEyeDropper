@@ -100,20 +100,7 @@ class Overlay {
         y: number
         color: Color
     }) {
-        // offset is used for positioning element on screen
-        const yOffset = Math.round(document.documentElement.scrollTop)
-        const xOffset = Math.round(document.documentElement.scrollLeft)
-
-        let fromTop = args.x - xOffset > args.screenWidth / 2 ? -20 : -15
-        let fromLeft = args.y - yOffset < args.screenHeight / 2 ? 15 : 10
-
-        this.hook('hookColor', {
-            color: args.color,
-            x: args.x,
-            y: args.y,
-            top: fromTop,
-            left: fromLeft,
-        })
+        this.hook('hookColor', args)
     }
 }
 
@@ -163,13 +150,26 @@ class ToolTip extends Tool {
         })
     }
 
-    hookColor(args: { color: any; x: number; y: number; top: number; left: number }) {
+    hookColor(args: {
+        color: any
+        x: number
+        y: number
+        screenWidth: number
+        screenHeight: number
+    }) {
         super.hookColor(args)
+
+        // offset is used for positioning element on screen
+        const yOffset = Math.round(document.documentElement.scrollTop)
+        const xOffset = Math.round(document.documentElement.scrollLeft)
+
+        let fromTop = args.y - yOffset > args.screenHeight / 2 ? -15 : 20
+        let fromLeft = args.x - xOffset < args.screenWidth / 2 ? 15 : -30
 
         this.el.style.backgroundColor = `#${args.color.rgbhex}`
         this.el.style.borderColor = `#${args.color.opposite}`
-        this.el.style.top = `${args.y + args.top}px`
-        this.el.style.left = `${args.x + args.left}px`
+        this.el.style.top = `${args.y + fromTop}px`
+        this.el.style.left = `${args.x + fromLeft}px`
     }
 }
 
