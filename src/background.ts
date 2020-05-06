@@ -78,14 +78,14 @@ var bg = {
             },
             function(res: { version: number; tabid: number }) {
                 console.log('bg: checking dropper version 2')
-                if (res) {
+                if (chrome.runtime.lastError || !res) {
+                    bg.injectDropper()
+                } else {
                     if (res.version < NEED_DROPPER_VERSION) {
                         bg.refreshDropper()
                     } else {
                         bg.pickupActivate()
                     }
-                } else {
-                    bg.injectDropper()
                 }
             },
         )
