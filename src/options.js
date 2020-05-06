@@ -73,6 +73,12 @@ function init() {
     })
 
     donateBitcoinButton()
+
+    document.getElementById('shortcutPageLink').onclick = () => {
+      chrome.tabs.create({
+        url: 'chrome://extensions/shortcuts',
+      })
+    }
 }
 
 function bgPageReady() {
