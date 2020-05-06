@@ -629,8 +629,9 @@ function loadColorPicker() {
   document.head.appendChild(cpicker_script);
 
   document.getElementById("colorpicker-select").onclick = () => {
-    colorBox("current", cpicker.target.value);
-    bgPage.bg.setColor(cpicker.target.value, true, 2);
+    let color = cpicker.target.value.toLowerCase()
+    colorBox("current", color);
+    bgPage.bg.setColor(color, true, 2);
     drawColorHistory();
   };
 }
@@ -659,8 +660,9 @@ function showColorPicker() {
   // invalid and pusher library can't handle wrong syntax
   function update_from_input() {
     try {
-      colorBox("new", cpicker.target.value);
-      cpicker.set(cpicker.target.value);
+      let color = cpicker.target.value.toLowerCase()
+      colorBox("new", color);
+      cpicker.set(color);
     } catch (err) {}
   }
 
