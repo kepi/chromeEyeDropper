@@ -17,6 +17,9 @@ class Overlay {
         enableTooltip: boolean
         cursor: string
     }) {
+        console.log(
+            `overlay: Enabling overlay ${args.width}x${args.height} with cursor ${args.cursor}`,
+        )
         // set options
         this.cursor = args.cursor
 
@@ -73,6 +76,8 @@ class Overlay {
     }
 
     resized(args: { width: number; height: number }) {
+        console.log(`overlay: Resizing overlay ${args.width}x${args.height}`)
+
         // also don't forget to set overlay
         this.el.style.width = `${args.width}px`
         this.el.style.height = `${args.height}px`

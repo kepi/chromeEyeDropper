@@ -98,6 +98,9 @@ var page = {
     dropperActivate: function() {
         if (page.dropperActivated) return
 
+        console.log('dropper: activating page dropper')
+        page.defaults()
+
         page.overlay = new Overlay({
             width: page.width,
             height: page.height,
@@ -106,8 +109,6 @@ var page = {
             cursor: page.options.cursor,
         })
 
-        console.log('dropper: activating page dropper')
-        page.defaults()
         page.dropperActivated = true
         page.screenChanged()
         // set listeners
