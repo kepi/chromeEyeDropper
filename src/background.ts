@@ -13,6 +13,20 @@ interface BgSettings {
     plus_type: string
 }
 
+interface HistoryColorItem {
+    h: string
+    n: string
+    s: number
+    t: number
+    f: number
+}
+
+interface Palette {
+    name: string
+    created: number
+    colors: Array<string>
+}
+
 // base bg object
 var bg = {
     tab: null as chrome.tabs.Tab,
@@ -28,8 +42,7 @@ var bg = {
         version: BG_VERSION,
         last_color: DEFAULT_COLOR,
         current_palette: 'default',
-        palettes: [],
-        backups: [],
+        palettes: [] as Array<Palette>,
     },
     defaultSettings: {
         autoClipboard: false,
@@ -51,7 +64,7 @@ var bg = {
     },
     // use selected tab
     // need to null all tab-specific variables
-    useTab: function(tab) {
+    useTab: function(tab: chrome.tabs.Tab) {
         bg.tab = tab
         bg.screenshotData = ''
         bg.canvas = document.createElement('canvas')
@@ -63,7 +76,7 @@ var bg = {
             {
                 type: 'edropper-version',
             },
-            function(res) {
+            function(res: { version: number; tabid: number }) {
                 console.log('bg: checking dropper version 2')
                 if (res) {
                     if (res.version < NEED_DROPPER_VERSION) {
@@ -82,10 +95,9 @@ var bg = {
         chrome.tabs.executeScript(
             bg.tab.id,
             {
-                allFrames: false,
                 file: '/js/edropper2.js',
             },
-            function() {
+            function(_results: Array<any>) {
                 console.log('bg: edropper2 injected')
                 bg.pickupActivate()
             },
@@ -99,17 +111,17 @@ var bg = {
                 allFrames: true,
                 file: '/js/edropper2.js',
             },
-            function() {
+            function(_results: Array<any>) {
                 console.log('bg: edropper2 updated')
                 bg.pickupActivate()
             },
         )
     },
-    sendMessage: function(message, callback) {
+    sendMessage: function(message: any, callback?: (response: any) => void) {
         chrome.tabs.sendMessage(bg.tab.id, message, callback)
     },
     shortcutListener: function() {
-        chrome.commands.onCommand.addListener(function(command) {
+        chrome.commands.onCommand.addListener(command => {
             console.log('bg: command: ', command)
             switch (command) {
                 case 'activate':
@@ -120,7 +132,7 @@ var bg = {
     },
     messageListener: function() {
         // simple messages
-        chrome.runtime.onMessage.addListener(function(req, sender, sendResponse) {
+        chrome.runtime.onMessage.addListener((req, _sender, sendResponse) => {
             switch (req.type) {
                 case 'activate-from-hotkey':
                     bg.activate2()
@@ -137,8 +149,8 @@ var bg = {
             }
         })
         // longer connections
-        chrome.runtime.onConnect.addListener(function(port) {
-            port.onMessage.addListener(function(req, sender) {
+        chrome.runtime.onConnect.addListener(port => {
+            port.onMessage.addListener((req, sender) => {
                 switch (req.type) {
                     // Taking screenshot for content script
                     case 'screenshot':
@@ -161,20 +173,7 @@ var bg = {
             })
         })
     },
-    // function for injecting new content
-    inject: function(file, tab) {
-        if (tab == undefined) tab = bg.tab.id
-        ////console.log("Injecting " + file + " into tab " + tab)
-        chrome.tabs.executeScript(
-            tab,
-            {
-                allFrames: false,
-                file: file,
-            },
-            function() {},
-        )
-    },
-    setBadgeColor: function(color) {
+    setBadgeColor: function(color: string) {
         console.info('Setting badge color to ' + color)
         chrome.browserAction.setBadgeBackgroundColor({
             color: [
@@ -187,16 +186,7 @@ var bg = {
     },
     // method for setting color. It set bg color, update badge and save to history if possible
     // source - see historyColorItem for description
-    setColor: function(color, history, source, url) {
-        if (history === void 0) {
-            history = true
-        }
-        if (source === void 0) {
-            source = 1
-        }
-        if (url === void 0) {
-            url = null
-        }
+    setColor: function(color: string, history = true, source = 1, url?: string) {
         console.group('setColor')
         console.info('Received color ' + color + ', history: ' + history)
         if (!color || !color.match(/^#[0-9a-f]{6}$/)) {
@@ -216,35 +206,29 @@ var bg = {
         }
         console.groupEnd()
     },
-    saveToHistory: function(color, source, url) {
-        if (source === void 0) {
-            source = 1
-        }
-        if (url === void 0) {
-            url = null
-        }
+    saveToHistory: function(color: string, source = 1, url?: string) {
         var palette = bg.getPalette()
         if (
-            !palette.colors.find(function(x) {
-                return x.hex == color
+            !palette.colors.find((x: HistoryColorItem) => {
+                return x.h == color
             })
         ) {
-            palette.colors.push(bg.historyColorItem(color, Date.now(), source, url))
+            palette.colors.push(bg.historyColorItem(color, Date.now(), source, false, url))
             console.info('Color ' + color + ' saved to palette ' + bg.getPaletteName())
             bg.saveHistory()
         } else {
             console.info('Color ' + color + ' already in palette ' + bg.getPaletteName())
         }
     },
-    copyToClipboard: function(color) {
+    copyToClipboard: function(color: string) {
         bg.edCb.value = bg.settings.autoClipboardNoGrid ? color.substring(1) : color
         bg.edCb.select()
         document.execCommand('copy', false, null)
     },
     // activate from content script
     activate2: function() {
-        chrome.tabs.getSelected(null, function(tab) {
-            bg.useTab(tab)
+        chrome.tabs.query({ active: true }, (tabs: Array<chrome.tabs.Tab>) => {
+            bg.useTab(tabs[0])
             bg.activate()
         })
     },
@@ -256,18 +240,15 @@ var bg = {
     },
     pickupActivate: function() {
         // activate picker
-        bg.sendMessage(
-            {
-                type: 'pickup-activate',
-                options: {
-                    cursor: bg.settings.dropperCursor,
-                    enableColorToolbox: bg.settings.enableColorToolbox,
-                    enableColorTooltip: bg.settings.enableColorTooltip,
-                    enableRightClickDeactivate: bg.settings.enableRightClickDeactivate,
-                },
+        bg.sendMessage({
+            type: 'pickup-activate',
+            options: {
+                cursor: bg.settings.dropperCursor,
+                enableColorToolbox: bg.settings.enableColorToolbox,
+                enableColorTooltip: bg.settings.enableColorTooltip,
+                enableRightClickDeactivate: bg.settings.enableRightClickDeactivate,
             },
-            function() {},
-        )
+        })
         console.log('bg: activating pickup')
     },
     // capture actual Screenshot
@@ -289,16 +270,13 @@ var bg = {
     getColor: function() {
         return bg.history.last_color
     },
-    doCapture: function(data) {
+    doCapture: function(data: string) {
         if (data) {
             console.log('bg: sending updated image')
-            bg.sendMessage(
-                {
-                    type: 'update-image',
-                    data: data,
-                },
-                function() {},
-            )
+            bg.sendMessage({
+                type: 'update-image',
+                data: data,
+            })
         } else {
             console.error('bg: did not receive data from captureVisibleTab')
         }
@@ -322,27 +300,24 @@ var bg = {
     },
     tabOnChangeListener: function() {
         // deactivate dropper if tab changed
-        chrome.tabs.onSelectionChanged.addListener(function(tabId, selectInfo) {
+        chrome.tabs.onSelectionChanged.addListener((tabId, _selectInfo) => {
             if (bg.tab && bg.tab.id == tabId)
-                bg.sendMessage(
-                    {
-                        type: 'pickup-deactivate',
-                    },
-                    function() {},
-                )
+                bg.sendMessage({
+                    type: 'pickup-deactivate',
+                })
         })
     },
     getPaletteName: function() {
         return bg.getPalette().name
     },
-    isPalette: function(name) {
-        return bg.history.palettes.find(function(x) {
+    isPalette: function(name: string) {
+        return bg.history.palettes.find((x: Palette) => {
             return x.name == name
         })
             ? true
             : false
     },
-    getPalette: function(name?) {
+    getPalette: function(name?: string) {
         if (name === undefined) {
             name =
                 bg.history.current_palette === undefined ||
@@ -350,11 +325,11 @@ var bg = {
                     ? 'default'
                     : bg.history.current_palette
         }
-        return bg.history.palettes.find(function(x) {
+        return bg.history.palettes.find((x: Palette) => {
             return x.name == name
         })
     },
-    changePalette: function(palette_name) {
+    changePalette: function(palette_name: string) {
         if (bg.history.current_palette === palette_name) {
             console.info('Not switching, already on palette ' + palette_name)
         } else if (bg.isPalette(palette_name)) {
@@ -366,18 +341,18 @@ var bg = {
         }
     },
     getPaletteNames: function() {
-        return bg.history.palettes.map(function(x) {
+        return bg.history.palettes.map((x: Palette) => {
             return x.name
         })
     },
-    uniquePaletteName: function(name) {
+    uniquePaletteName: function(name: string) {
         // default name is palette if we receive empty or undefined name
         if (name === undefined || !name || name.length < 1) {
             console.info('uniquePaletteName: ' + name + " empty, trying 'palette'")
             return bg.uniquePaletteName('palette')
             // if there is already palette with same name
         } else if (
-            bg.getPaletteNames().find(function(x) {
+            bg.getPaletteNames().find((x: string) => {
                 return x == name
             })
         ) {
@@ -397,7 +372,7 @@ var bg = {
             return name
         }
     },
-    createPalette: function(name) {
+    createPalette: function(name: string) {
         var palette_name = bg.uniquePaletteName(name)
         console.info('Creating new palette ' + name + '. Unique name: ' + palette_name)
         bg.history.palettes.push({
@@ -408,7 +383,7 @@ var bg = {
         bg.saveHistory()
         return bg.getPalette(palette_name)
     },
-    destroyPalette: function(name) {
+    destroyPalette: function(name: string) {
         if (!bg.isPalette(name)) {
             return
         }
@@ -418,7 +393,7 @@ var bg = {
         } else {
             console.info('Destroying palette ' + name)
             var destroying_current = name === bg.getPalette().name
-            bg.history.palettes = bg.history.palettes.filter(function(obj) {
+            bg.history.palettes = bg.history.palettes.filter((obj: Palette) => {
                 return obj.name !== name
             })
             // if we are destroying current palette, switch to default one
@@ -429,7 +404,7 @@ var bg = {
         bg.saveHistory(false)
         chrome.storage.sync.remove('palette.' + name)
     },
-    clearHistory: function(sendResponse) {
+    clearHistory: function(sendResponse: ({ state: string }) => void) {
         var palette = bg.getPalette()
         console.info('Clearing history for palette ' + palette.name)
         palette.colors = []
@@ -464,7 +439,7 @@ var bg = {
      */
     loadHistory: function() {
         console.info('Loading history from storage')
-        chrome.storage.sync.get(function(items) {
+        chrome.storage.sync.get(items => {
             if (items.history) {
                 bg.history.current_palette = items.history.cp
                 bg.history.last_color = items.history.lc
@@ -472,7 +447,7 @@ var bg = {
                 console.info('Default palette before loading: ' + bg.defaultPalette)
                 var count_default_1 = 0
                 var count_converted_1 = 0
-                Object.keys(items).forEach(function(key, index) {
+                Object.keys(items).forEach((key, _index) => {
                     var matches = key.match(/^palette\.(.*)$/)
                     if (matches) {
                         var palette = items[key]
@@ -507,7 +482,7 @@ var bg = {
     /**
      * Check if there are needed upgrades to history and exec if needed
      **/
-    checkHistoryUpgrades: function(version) {
+    checkHistoryUpgrades: function(version: number) {
         // Wrong timestamp saved before version 14
         //
         // There was error in bg versions before 14 that caused saving
@@ -561,11 +536,11 @@ var bg = {
      * f = favorite
      */
     historyColorItem: function(
-        color,
+        color: string,
         timestamp = Date.now(),
         source = 1,
-        source_url = null,
         favorite = false,
+        _url?: string,
     ) {
         return {
             h: color,
@@ -681,7 +656,7 @@ var bg = {
             },
         )
     },
-    unlockPlus: function(type) {
+    unlockPlus: function(type: string) {
         bg.settings.plus = true
         bg.settings.plus_type = type
         bg.saveSettings()
@@ -694,17 +669,12 @@ var bg = {
     plus: function() {
         return bg.settings.plus ? bg.settings.plus_type : false
     },
-    plusColor: function(color) {
-        if (color === void 0) {
-            color = bg.settings.plus_type
-        }
+    plusColor: function(color = bg.settings.plus_type) {
         switch (color) {
             case 'free':
                 return 'gray'
-                break
             case 'alpha':
                 return 'silver'
-                break
             default:
                 return color
         }
