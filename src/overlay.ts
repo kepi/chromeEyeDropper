@@ -3,14 +3,10 @@ import Color from './Color.d'
 
 class Overlay {
     el: HTMLElement
-    enableToolbox: boolean = true
-    enableTooltip: boolean = true
-    pageWidth: number
-    pageHeight: number
-    cursor: string
+    private cursor: string
 
-    _toolbox: ToolBox
-    _tooltip: ToolTip
+    private _toolbox: ToolBox
+    private _tooltip: ToolTip
 
     tools: Array<Tool> = []
 
@@ -57,7 +53,7 @@ class Overlay {
         document.body.prepend(this.el)
     }
 
-    hook(hook, args) {
+    hook(hook: string, args: any) {
         for (let tool of this.tools) {
             tool[hook](args)
         }
@@ -104,7 +100,7 @@ class Overlay {
         const xOffset = Math.round(document.documentElement.scrollLeft)
 
         // set tooltip
-        if (this.enableTooltip === true) {
+        if (this._tooltip) {
             let fromTop = args.x - xOffset > args.screenWidth / 2 ? -20 : -15
             let fromLeft = args.y - yOffset < args.screenHeight / 2 ? 15 : 10
 
@@ -119,7 +115,7 @@ class Overlay {
     }
 }
 
-class Tool {
+abstract class Tool {
     el: HTMLElement
     color: Color
     x: number
@@ -127,21 +123,21 @@ class Tool {
 
     constructor() {}
 
-    hookColor(args) {
+    hookColor(args: { color: any; x: number; y: number }) {
         this.color = args.color
         this.x = args.x
         this.y = args.y
     }
 
-    hookDeactivate(args) {
+    hookDeactivate(_args: {}) {
         this.el.remove()
     }
 
-    hookShow(args) {
+    hookShow(_args: {}) {
         this.el.style.display = ''
     }
 
-    hookHide(args) {
+    hookHide(_args: {}) {
         this.el.style.display = 'none'
     }
 }
@@ -165,7 +161,7 @@ class ToolTip extends Tool {
         })
     }
 
-    hookColor(args) {
+    hookColor(args: { color: any; x: number; y: number; top: number; left: number }) {
         super.hookColor(args)
 
         this.el.style.backgroundColor = `#${args.color.rgbhex}`
@@ -192,7 +188,7 @@ class ToolBox extends Tool {
                 'font-size: 15px',
                 'border: 1px solid black',
                 'width: 160px',
-                'height: 52px',
+                'height: 42px',
                 'bottom: 4px',
                 'right: 4px',
                 'border-radius: 2px',
@@ -230,10 +226,14 @@ class ToolBox extends Tool {
         this.el.append(this.elText)
     }
 
-    hookColor(args) {
+    hookColor(args: { color: any; x: number; y: number; top: number; left: number }) {
         super.hookColor(args)
 
-        this.elText.innerHTML = `#${this.color.rgbhex}<br/>rgb(${this.color.r},${this.color.g},${this.color.b})<br/>${args.x}, ${args.y}`
+        let debug_info = DEV_MODE
+            ? `<div style="font-size: 0.8em">coord: ${args.x},${args.y}</div>`
+            : ''
+
+        this.elText.innerHTML = `#${this.color.rgbhex}<br/>rgb(${this.color.r},${this.color.g},${this.color.b})${debug_info}`
         this.elColor.style.backgroundColor = `#${this.color.rgbhex}`
     }
 }

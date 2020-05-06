@@ -1,6 +1,5 @@
 import shortcut from './vendor/shortcut'
 import scrollStop from './vendor/scrollStop'
-import { createNode } from './helpers'
 import Overlay from './overlay'
 import Color from './Color.d'
 import Rect from './rect'
@@ -67,7 +66,7 @@ var page = {
         // Listen for pickup activate
         console.log('dropper: page activated')
         console.log(`dropper: debug page at ${chrome.runtime.getURL('debug-tab.html')}`)
-        chrome.runtime.onMessage.addListener(function(req, sender, sendResponse) {
+        chrome.runtime.onMessage.addListener(function(req, _sender, sendResponse) {
             switch (req.type) {
                 case 'edropper-version':
                     sendResponse({
@@ -90,7 +89,7 @@ var page = {
             }
         })
     },
-    sendMessage: function(message) {
+    sendMessage: function(message: any) {
         chrome.runtime.connect().postMessage(message)
     },
     // ---------------------------------
@@ -141,11 +140,11 @@ var page = {
     // ---------------------------------
     // EVENT HANDLING
     // ---------------------------------
-    onMouseMove: function(e) {
+    onMouseMove: function(e: MouseEvent) {
         if (!page.dropperActivated) return
         page.tooltip(e)
     },
-    onMouseClick: function(e) {
+    onMouseClick: function(e: MouseEvent) {
         if (!page.dropperActivated) return
         e.preventDefault()
         page.dropperDeactivate()
@@ -164,13 +163,13 @@ var page = {
     },
     // keyboard shortcuts
     // enable with argument as true, disable with false
-    shortcuts: function(start) {
+    shortcuts: function(start: boolean) {
         // enable shortcuts
         if (start == true) {
-            shortcut.add('Esc', function(evt) {
+            shortcut.add('Esc', function(_evt: KeyboardEvent) {
                 page.dropperDeactivate()
             })
-            shortcut.add('U', function(evt) {
+            shortcut.add('U', function(_evt: KeyboardEvent) {
                 page.screenChanged(true)
             })
             // disable shortcuts
@@ -180,7 +179,7 @@ var page = {
         }
     },
     // right click
-    onContextMenu: function(e) {
+    onContextMenu: function(e: MouseEvent) {
         if (!page.dropperActivated) return
         e.preventDefault()
         page.dropperDeactivate()
@@ -219,7 +218,7 @@ var page = {
     // ---------------------------------
     // COLORS
     // ---------------------------------
-    pickColor: function(x, y) {
+    pickColor: function(x: number, y: number) {
         if (page.canvasData === null) return
         const redIndex = y * page.canvas.width * 4 + x * 4
 
@@ -235,7 +234,7 @@ var page = {
     },
     // i: color channel value, integer 0-255
     // returns two character string hex representation of a color channel (00-FF)
-    toHex: function(i) {
+    toHex: function(i: number) {
         if (i === undefined) return 'FF' // TODO this shouldn't happen; looks like offset/x/y might be off by one
         var str = i.toString(16)
         while (str.length < 2) {
@@ -245,7 +244,7 @@ var page = {
     },
     // r,g,b: color channel value, integer 0-255
     // returns six character string hex representation of a color
-    rgbToHex: function(r, g, b) {
+    rgbToHex: function(r: number, g: number, b: number) {
         return page.toHex(r) + page.toHex(g) + page.toHex(b)
     },
     // ---------------------------------
@@ -274,7 +273,7 @@ var page = {
             page.resetCanvas = false
         }
     },
-    setScreenshoting: function(state) {
+    setScreenshoting: function(state: boolean) {
         if (page.screenshoting && state) {
             return
         }
@@ -310,7 +309,7 @@ var page = {
         }, 50)
     },
 
-    updateRects: function(rect) {
+    updateRects: function(rect: Rect) {
         console.group('updateRects')
 
         if (page.rects.length === 0) {
