@@ -8,6 +8,7 @@ module.exports = {
     entry: {
         popup: path.join(__dirname, srcDir + 'popup'),
         options: path.join(__dirname, srcDir + 'options'),
+        plus: path.join(__dirname, srcDir + 'plus'),
         background: path.join(__dirname, srcDir + 'background'),
         edropper2: path.join(__dirname, srcDir + 'edropper2'),
         debug_tab: path.join(__dirname, srcDir + 'debug_tab'),
