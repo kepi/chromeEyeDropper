@@ -99,19 +99,16 @@ class Overlay {
         const yOffset = Math.round(document.documentElement.scrollTop)
         const xOffset = Math.round(document.documentElement.scrollLeft)
 
-        // set tooltip
-        if (this._tooltip) {
-            let fromTop = args.x - xOffset > args.screenWidth / 2 ? -20 : -15
-            let fromLeft = args.y - yOffset < args.screenHeight / 2 ? 15 : 10
+        let fromTop = args.x - xOffset > args.screenWidth / 2 ? -20 : -15
+        let fromLeft = args.y - yOffset < args.screenHeight / 2 ? 15 : 10
 
-            this.hook('hookColor', {
-                color: args.color,
-                x: args.x,
-                y: args.y,
-                top: fromTop,
-                left: fromLeft,
-            })
-        }
+        this.hook('hookColor', {
+            color: args.color,
+            x: args.x,
+            y: args.y,
+            top: fromTop,
+            left: fromLeft,
+        })
     }
 }
 
