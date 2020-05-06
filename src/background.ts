@@ -497,7 +497,7 @@ var bg = {
                     bg.checkHistoryUpgrades(items.history.v)
                 }
             } else {
-                console.warn('No history in storage')
+                console.log('No history in storage')
                 bg.createPalette('default')
             }
             // in any case we will try to convert local history
@@ -516,7 +516,7 @@ var bg = {
         //
         // We will check for such times and set them to start of epoch
         if (version < 14) {
-            console.warn('History version is pre 14: Fixing color times')
+            console.log('History version is pre 14: Fixing color times')
             for (var _i = 0, _a = bg.history.palettes; _i < _a.length; _i++) {
                 var palette = _a[_i]
                 for (var _b = 0, _c = palette.colors; _b < _c.length; _b++) {
@@ -539,7 +539,7 @@ var bg = {
                 console.info('Settings loaded')
                 bg.settings = items.settings
             } else {
-                console.warn('No settings in storage')
+                console.log('No settings in storage')
                 bg.tryConvertOldSettings()
             }
         })
@@ -734,5 +734,4 @@ var bg = {
 document.addEventListener('DOMContentLoaded', function() {
     bg.init()
 })
-
 ;(<any>window).bg = bg
