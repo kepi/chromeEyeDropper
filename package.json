@@ -8,7 +8,8 @@
     "build": "webpack --config webpack/webpack.prod.js",
     "clean": "rimraf dist",
     "zip": "unlink ../archives/EyeDropper_${npm_package_version}.zip; cd dist && bestzip ../../archives/EyeDropper_${npm_package_version}.zip *",
-    "test": "jest"
+    "test": "jest",
+    "deploy": "yarn run clean && yarn run test && yarn run build && yarn run zip"
   },
   "author": "Ondra Kudlík (Kepi)",
   "license": "MIT",
