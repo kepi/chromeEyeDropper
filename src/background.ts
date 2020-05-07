@@ -172,6 +172,19 @@ var bg = {
                 }
             })
         })
+
+        /**
+         * When Eye Dropper is just installed, we want to display nice
+         * page to user with some instructions
+         */
+        chrome.runtime.onInstalled.addListener((object: chrome.runtime.InstalledDetails) => {
+            if (object.reason === 'install') {
+                chrome.tabs.create({
+                    url: '/installed.html',
+                    selected: true,
+                })
+            }
+        })
     },
     setBadgeColor: function(color: string) {
         console.info('Setting badge color to ' + color)
@@ -413,25 +426,6 @@ var bg = {
             sendResponse({
                 state: 'OK',
             })
-        }
-    },
-    /**
-     * When Eye Dropper is just installed, we want to display nice
-     * page to user with some instructions
-     */
-    pageInstalled: function() {
-        // only if we have support for localStorage
-        if (window.localStorage != null) {
-            // show installed or updated page
-            // do not display if localStorage is not supported - we don't want to spam user
-            if (window.localStorage && !window.localStorage.seenInstalledPage) {
-                console.info('Just installed: opening installed page in new tab.')
-                window.localStorage.seenInstalledPage = true
-                chrome.tabs.create({
-                    url: '/installed.html',
-                    selected: true,
-                })
-            }
         }
     },
     /**
@@ -681,7 +675,6 @@ var bg = {
     },
     init: function() {
         console.group('init')
-        bg.pageInstalled()
         bg.edCb = document.getElementById('edClipboard')
         bg.loadSettings()
         bg.loadHistory()
