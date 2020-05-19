@@ -4,12 +4,15 @@
   "description": "Eye Dropper for Google Chrome™",
   "main": "index.js",
   "scripts": {
-    "watch": "webpack --config webpack/webpack.dev.js --watch",
+    "watch": "rimraf dist && webpack --config webpack/webpack.dev.js --watch",
     "build": "webpack --config webpack/webpack.prod.js",
+    "build-dev": "webpack --config webpack/webpack.dev.js",
     "clean": "rimraf dist",
     "zip": "unlink ../archives/EyeDropper_${npm_package_version}.zip; cd dist && bestzip ../../archives/EyeDropper_${npm_package_version}.zip *",
+    "zip-dev": "unlink ../archives/EyeDropper_${npm_package_version}_dev.zip; cd dist && bestzip ../../archives/EyeDropper_${npm_package_version}_dev.zip *",
     "test": "jest",
-    "deploy": "yarn run clean && yarn run test && yarn run build && yarn run zip"
+    "deploy": "yarn run clean && yarn run test && yarn run build && yarn run zip",
+    "deploy-dev": "yarn run clean && yarn run test && yarn run build-dev && yarn run zip-dev"
   },
   "author": "Ondra Kudlík (Kepi)",
   "license": "MIT",
