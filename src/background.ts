@@ -167,6 +167,7 @@ var bg = {
                     // FIXME: asi lepší z inject scriptu posílat jen rgbhex, už to tak máme stejně skoro všude
                     case 'set-color':
                         console.log(sender.sender)
+                        console.log(req.color)
                         bg.setColor('#' + req.color.rgbhex, true, 1, sender.sender.url)
                         break
                 }
