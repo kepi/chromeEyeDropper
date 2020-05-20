@@ -146,12 +146,21 @@ var page = {
         page.tooltip(e)
     },
     onMouseClick: function(e: MouseEvent) {
+        console.log('dropper: mouse click')
+        console.dir(e)
         if (!page.dropperActivated) return
         e.preventDefault()
         page.dropperDeactivate()
+
+        const x = e.pageX
+        const y = e.pageY
+
+        const color = page.pickColor(x, y)
+        console.log(`dropper: click: ${x},${y}. Color: ${color.rgbhex}`)
+
         page.sendMessage({
             type: 'set-color',
-            color: page.pickColor(e.pageX, e.pageY),
+            color,
         })
     },
     onScrollStop: function() {
@@ -205,7 +214,8 @@ var page = {
         const x = e.pageX
         const y = e.pageY
 
-        var color = page.pickColor(x, y)
+        const color = page.pickColor(x, y)
+        console.log(`dropper: move: ${x},${y}. Color: ${color.rgbhex}`)
 
         page.overlay.tooltip({
             screenWidth: page.screenWidth,
