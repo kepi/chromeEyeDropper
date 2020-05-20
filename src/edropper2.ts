@@ -236,7 +236,11 @@ var page = {
     // i: color channel value, integer 0-255
     // returns two character string hex representation of a color channel (00-FF)
     toHex: function(i: number) {
-        if (i === undefined) return 'FF' // TODO this shouldn't happen; looks like offset/x/y might be off by one
+        // TODO this shouldn't happen; looks like offset/x/y might be off by one
+        if (i === undefined) {
+            console.error(`Wrong color channel value: ${i}. Can't convert to hex.`)
+            return 'ff'
+        }
         var str = i.toString(16)
         while (str.length < 2) {
             str = '0' + str
@@ -246,7 +250,7 @@ var page = {
     // r,g,b: color channel value, integer 0-255
     // returns six character string hex representation of a color
     rgbToHex: function(r: number, g: number, b: number) {
-        return page.toHex(r) + page.toHex(g) + page.toHex(b)
+        return `${page.toHex(r)}${page.toHex(g)}${page.toHex(b)}`
     },
     // ---------------------------------
     // UPDATING SCREEN
