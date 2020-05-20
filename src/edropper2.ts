@@ -229,7 +229,10 @@ var page = {
     // ---------------------------------
     // COLORS
     // ---------------------------------
-    pickColor: function(x: number, y: number) {
+    pickColor: function(x_coord: number, y_coord: number) {
+        const x = Math.round(x_coord)
+        const y = Math.round(y_coord)
+
         if (page.canvasData === null) return
         const redIndex = y * page.canvas.width * 4 + x * 4
 
