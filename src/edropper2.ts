@@ -146,12 +146,21 @@ var page = {
         page.tooltip(e)
     },
     onMouseClick: function(e: MouseEvent) {
+        console.log('dropper: mouse click')
+        console.dir(e)
         if (!page.dropperActivated) return
         e.preventDefault()
         page.dropperDeactivate()
+
+        const x = e.pageX
+        const y = e.pageY
+
+        const color = page.pickColor(x, y)
+        console.log(`dropper: click: ${x},${y}. Color: ${color.rgbhex}`)
+
         page.sendMessage({
             type: 'set-color',
-            color: page.pickColor(e.pageX, e.pageY),
+            color,
         })
     },
     onScrollStop: function() {
@@ -205,7 +214,8 @@ var page = {
         const x = e.pageX
         const y = e.pageY
 
-        var color = page.pickColor(x, y)
+        const color = page.pickColor(x, y)
+        console.log(`dropper: move: ${x},${y}. Color: ${color.rgbhex}`)
 
         page.overlay.tooltip({
             screenWidth: page.screenWidth,
@@ -219,7 +229,10 @@ var page = {
     // ---------------------------------
     // COLORS
     // ---------------------------------
-    pickColor: function(x: number, y: number) {
+    pickColor: function(x_coord: number, y_coord: number) {
+        const x = Math.round(x_coord)
+        const y = Math.round(y_coord)
+
         if (page.canvasData === null) return
         const redIndex = y * page.canvas.width * 4 + x * 4
 
@@ -236,7 +249,11 @@ var page = {
     // i: color channel value, integer 0-255
     // returns two character string hex representation of a color channel (00-FF)
     toHex: function(i: number) {
-        if (i === undefined) return 'FF' // TODO this shouldn't happen; looks like offset/x/y might be off by one
+        // TODO this shouldn't happen; looks like offset/x/y might be off by one
+        if (i === undefined) {
+            console.error(`Wrong color channel value: ${i}. Can't convert to hex.`)
+            return 'ff'
+        }
         var str = i.toString(16)
         while (str.length < 2) {
             str = '0' + str
@@ -246,7 +263,7 @@ var page = {
     // r,g,b: color channel value, integer 0-255
     // returns six character string hex representation of a color
     rgbToHex: function(r: number, g: number, b: number) {
-        return page.toHex(r) + page.toHex(g) + page.toHex(b)
+        return `${page.toHex(r)}${page.toHex(g)}${page.toHex(b)}`
     },
     // ---------------------------------
     // UPDATING SCREEN
