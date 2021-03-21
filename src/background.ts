@@ -181,7 +181,7 @@ var bg = {
         chrome.runtime.onInstalled.addListener((object: chrome.runtime.InstalledDetails) => {
             if (object.reason === 'install') {
                 chrome.tabs.create({
-                    url: '/installed.html',
+                    url: 'https://eyedropper.org/installed',
                     selected: true,
                 })
             }
