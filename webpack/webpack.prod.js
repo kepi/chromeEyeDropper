@@ -1,4 +1,4 @@
-const merge = require('webpack-merge')
+const { merge } = require('webpack-merge')
 const common = require('./webpack.common.js')
 const webpack = require('webpack')
 const TerserPlugin = require('terser-webpack-plugin')
@@ -16,7 +16,6 @@ module.exports = merge(common, {
             new TerserPlugin({
                 extractComments: true,
                 terserOptions: {
-                    extractComments: 'all',
                     compress: {
                         drop_console: true,
                     },
