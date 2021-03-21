@@ -24,48 +24,21 @@
         </div>
     </div>
 
-    <section class="center bg-washed-green w-90 pa3 mt2 ba br2 b--washed-green black-90">
+    <section class="center bg-washed-yellow w-90 pa3 mt2 ba br2 b--washed-yellow black-90">
         <p>
             Eye Dropper is created and enhanced in my free time. Your donation will encourage me to
             continue with its development.
         </p>
         <p>Any amount is greatly appreciated.</p>
-        <!-- Begin PayPal Donations -->
-        <form
-            id="paypal-donation-footer"
-            action="https://www.paypal.com/cgi-bin/webscr"
-            method="post"
-            target="_blank"
-        >
-            <div
-                class="paypal-donations hint--top hint--no-animate hint--rounded hint--small"
-                aria-label="Want to support my Steam addiction?"
-            >
-                <input type="hidden" name="cmd" value="_donations" class="form-control" />
-                <input
-                    type="hidden"
-                    name="business"
-                    value="kepi@orthank.net"
-                    class="form-control"
+
+        <p>
+            <a href="https://opencollective.com/eyedropper/contribute" target="_blank">
+                <img
+                    src="https://opencollective.com/eyedropper/contribute/button@2x.png?color=blue"
+                    width="300"
                 />
-                <input
-                    type="hidden"
-                    name="return"
-                    value="https://eyedropper.org/thanks-for-your-donation"
-                    class="form-control"
-                />
-                <input type="hidden" name="item_name" value="Eye Dropper" class="form-control" />
-                <input type="hidden" name="currency_code" value="USD" class="form-control" />
-                <input
-                    type="image"
-                    class="btn grow"
-                    src="/inc/btn_donate_LG.gif"
-                    name="submit"
-                    alt="PayPal - The safer, easier way to pay online."
-                />
-            </div>
-        </form>
-        <!-- End PayPal Donations -->
+            </a>
+        </p>
     </section>
 
     <h3>Eye Dropper is using these awesome libraries</h3>
@@ -84,20 +57,22 @@
             <a
                 class="ed-external link"
                 href="#"
+                data-url="https://vanillajstoolkit.com/helpers/scrollstop/"
+                >scrollStop function</a
+            >
+            by
+            <a class="ed-external link" href="#" data-url="https://gomakethings.com"
+                >Chris Ferdinandi</a
+            >
+        </li>
+        <li>
+            <a
+                class="ed-external link"
+                href="#"
                 data-url="https://bitbucket.org/bcronin/pusher.color.git"
                 >pusher.color.js</a
             >
             by PusherTech
-        </li>
-        <li>
-            <a class="ed-external link" href="#" data-url="http://www.jquery.com/">jQuery</a>
-            and plugin
-            <a
-                class="ed-external link"
-                href="#"
-                data-url="https://github.com/ssorallen/jquery-scrollstop"
-                >jquery-scrollstop</a
-            >
         </li>
         <li>
             <a

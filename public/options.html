@@ -8,13 +8,19 @@
 
         <link type="text/css" rel="stylesheet" href="/inc/bootstrap/3.3.6/css/bootstrap.min.css" />
 
-        <!-- cointipper -->
-        <script type="text/javascript" src="/inc/jquery-2.1.0.min.js"></script>
-        <script type="text/javascript" src="/inc/cointipper/jquery.cointipper-pack.min.js"></script>
-        <link rel="stylesheet" href="/inc/cointipper/jquery.cointipper.min.css" />
-        <!-- cointipper end -->
-
         <script src="/js/options.js"></script>
+        <style type="text/css">
+            .donate-button {
+                padding: 1rem 2rem;
+                background-color: blue;
+                color: white;
+                border-radius: 5px;
+            }
+
+            .donate-button:hover {
+                color: white;
+            }
+        </style>
     </head>
 
     <body id="options-body">
@@ -197,67 +203,35 @@
                     <br />
 
                     <section>
-                        <section class="col-sm-3 col-md-3">
-                            <a href="/plus.html" class="donate-btn" style="background-color: red"
-                                >Unlock
-                                <span style="font-variant: small-caps; font-weight: bold"
-                                    >Plus</span
-                                ></a
+                        <p>Became a backer or send one-time donation any time.</p>
+                        <p>
+                            <a
+                                href="https://opencollective.com/eyedropper/contribute"
+                                target="_blank"
                             >
-                        </section>
-
-                        <section class="col-sm-3 col-md-3" style="text-align: left">
-                            <!-- Begin PayPal Donations -->
-                            <form
-                                id="paypal-donation-options"
-                                action="https://www.paypal.com/cgi-bin/webscr"
-                                method="post"
-                            >
-                                <div class="paypal-donations">
-                                    <input
-                                        type="hidden"
-                                        name="cmd"
-                                        value="_donations"
-                                        class="form-control"
-                                    />
-                                    <input
-                                        type="hidden"
-                                        name="business"
-                                        value="kepi@orthank.net"
-                                        class="form-control"
-                                    />
-                                    <input
-                                        type="hidden"
-                                        name="return"
-                                        value="https://eyedropper.org/thanks-for-your-donation"
-                                        class="form-control"
-                                    /><input
-                                        type="hidden"
-                                        name="item_name"
-                                        value="Eye Dropper"
-                                        class="form-control"
-                                    />
-                                    <input
-                                        type="hidden"
-                                        name="currency_code"
-                                        value="USD"
-                                        class="form-control"
-                                    />
-                                    <input
-                                        type="image"
-                                        class="btn"
-                                        src="/inc/btn_donate_LG.gif"
-                                        name="submit"
-                                        alt="PayPal - The safer, easier way to pay online."
-                                        class="form-control"
-                                    />
-                                </div>
-                            </form>
-                        </section>
-
-                        <section class="col-sm-3 col-md-3">
-                            <div id="donate-bitcoin" class="center"></div>
-                        </section>
+                                <img
+                                    src="https://opencollective.com/eyedropper/contribute/button@2x.png?color=blue"
+                                    width="400"
+                                />
+                            </a>
+                        </p>
+                        <p>or send some good old crypto:</p>
+                        <ul>
+                            <li>
+                                <strong>Bitcon</strong> to
+                                <code>19HekXcETbG8VWdywbEkKxzxp4fFm5YCUc</code>
+                            </li>
+                            <li>
+                                <strong>Nano</strong> to
+                                <code
+                                    >nano_361bejwriittx6uix8iz7jx7df1m49i3buwfp5ghnfebckr7ozqxp7rh4hi8</code
+                                >
+                            </li>
+                            <li>
+                                <strong>Ethereum</strong> to
+                                <code>0x94b48b162f78747092121004F68C65dB069c60D4</code>
+                            </li>
+                        </ul>
                     </section>
                 </section>
             </div>

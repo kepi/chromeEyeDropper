@@ -23,7 +23,7 @@ function isChecked(elementId) {
 
 // Saves options to localStorage.
 function save_options() {
-    console.group("Saving options to storage")
+    console.group('Saving options to storage')
 
     for (setting in bgPage.bg.settings) {
         let element = document.getElementById(setting)
@@ -34,24 +34,26 @@ function save_options() {
     }
 
     // cursor has multiple values (radio) - special handling needed
-    bgPage.bg.settings.dropperCursor = document.getElementById('dropperCursorcrosshair').checked ? 'crosshair' : 'default'
+    bgPage.bg.settings.dropperCursor = document.getElementById('dropperCursorcrosshair').checked
+        ? 'crosshair'
+        : 'default'
     console.info(`Setting dropperCursor: ${bgPage.bg.settings.dropperCursor}`)
 
     bgPage.bg.saveSettings()
 
     // Update status to let user know options were saved.
-    let status = document.getElementById("status")
-    status.innerHTML = "Options Saved."
-    setTimeout(function() {
-        status.innerHTML = ""
+    let status = document.getElementById('status')
+    status.innerHTML = 'Options Saved.'
+    setTimeout(function () {
+        status.innerHTML = ''
     }, 750)
 
-    console.groupEnd("Saving options to storage")
+    console.groupEnd('Saving options to storage')
 }
 
 // Restores select box state to saved value from localStorage.
 function restore_options() {
-    console.group("Restoring options from storage")
+    console.group('Restoring options from storage')
     for (setting in bgPage.bg.settings) {
         let element = document.getElementById(setting)
         if (element) {
@@ -64,7 +66,7 @@ function restore_options() {
     document.getElementById(`dropperCursor${bgPage.bg.settings.dropperCursor}`).checked = true
     console.info(`Setting dropperCursor: ${bgPage.bg.settings.dropperCursor}`)
 
-    console.groupEnd("Restoring options from storage")
+    console.groupEnd('Restoring options from storage')
 }
 
 function init() {
@@ -72,12 +74,10 @@ function init() {
         gotBgPage(backgroundPage)
     })
 
-    donateBitcoinButton()
-
     document.getElementById('shortcutPageLink').onclick = () => {
-      chrome.tabs.create({
-        url: 'chrome://extensions/shortcuts',
-      })
+        chrome.tabs.create({
+            url: 'chrome://extensions/shortcuts',
+        })
     }
 }
 
@@ -92,22 +92,14 @@ function bgPageReady() {
 function gotBgPage(backgroundPage) {
     bgPage = backgroundPage
     if (bgPage.bg.version === undefined || bgPage.bg.version < NEED_BG_VERSION) {
-        console.warn(`Background page reload. Current version: ${bgPage.bg.version}, need version: ${NEED_BG_VERSION}`)
+        console.warn(
+            `Background page reload. Current version: ${bgPage.bg.version}, need version: ${NEED_BG_VERSION}`,
+        )
         chrome.runtime.sendMessage({
-            type: "reload-background"
+            type: 'reload-background',
         })
         setTimeout(bgPageReady, 1000)
     } else {
         bgPageReady()
     }
-}
-
-function donateBitcoinButton() {
-    $('#donate-bitcoin').coinTipper({
-	      type: 'donate',
-	      currency: 'bitcoin',
-	      iso: 'BTC',
-	      address: '19HekXcETbG8VWdywbEkKxzxp4fFm5YCUc',
-	      label: 'Eye Dropper'
-    });
 }

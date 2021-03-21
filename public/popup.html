@@ -1,137 +1,211 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/inc/tachyons.min.css" />
+        <link rel="stylesheet" href="/css/hint.css" />
+        <link rel="stylesheet" href="/inc/msc/msc-style.css" />
+        <link type="text/css" rel="stylesheet" href="/inc/color-picker/color-picker.css" />
+        <link rel="stylesheet" href="/css/popup.css" />
 
-    <link rel="stylesheet" href="/inc/tachyons-4.0.4.css">
-    <link rel="stylesheet" href="/css/hint.css">
-    <link rel="stylesheet" href="/inc/msc/msc-style.css">
-    <link type="text/css" rel="stylesheet" href="/inc/color-picker/color-picker.css">
-    <link rel="stylesheet" href="/css/popup.css">
+        <script src="/inc/pusher.color.min.js"></script>
+        <script src="/inc/msc/msc-script.js"></script>
+        <script src="/js/popup.js" async></script>
+    </head>
 
-    <script src="/inc/pusher.color.min.js"></script>
-    <script src="/inc/msc/msc-script.js"></script>
-    <script src="/js/popup.js" async></script>
+    <body class="bg-black-10">
+        <article class="w-100 center bg-white pa2" style="width: 34rem">
+            <section class="cf">
+                <section class="fl w-75">
+                    <header class="w-100">
+                        <nav class="mb3 pb1">
+                            <span class="ed-tab b f6 f5-ns dib mr2 ttu" id="tab-ed">
+                                <span id="tab-ed-active" class="ed-tab-in">Eye Dropper</span>
+                                <a
+                                    id="tab-ed-link"
+                                    class="ed-tab-in link blue hint--bottom hint--no-animate hint--rounded hint--small"
+                                    aria-label="Pick Color from Any Web"
+                                    href="#"
+                                >
+                                    <span class="dim">Eye Dropper</span>
+                                </a>
+                            </span>
 
-</head>
+                            <span class="f6 f5-ns mr2 silver">|</span>
 
-<body class="bg-black-10">
-    <article class="w-100 center bg-white pa2" style="width: 34rem">
+                            <span class="ed-tab b f6 f5-ns dib mr2 ttu" id="tab-cp">
+                                <span id="tab-cp-active" class="ed-tab-in">Color Picker</span>
+                                <a
+                                    id="tab-cp-link"
+                                    class="ed-tab-in link blue hint--bottom hint--no-animate hint--rounded hint--small"
+                                    aria-label="Want to Mix Your Own?"
+                                    href="#"
+                                >
+                                    <span class="dim">Color Picker</span>
+                                </a>
+                            </span>
+                        </nav>
+                    </header>
 
-        <section class="cf">
-
-            <section class="fl w-75">
-                <header class="w-100">
-                    <nav class="mb3 pb1">
-                        <span class="ed-tab b f6 f5-ns dib mr2 ttu" id="tab-ed">
-                            <span id="tab-ed-active" class="ed-tab-in">Eye Dropper</span>
-                        <a id="tab-ed-link" class="ed-tab-in link blue hint--bottom hint--no-animate hint--rounded hint--small" aria-label="Pick Color from Any Web" href="#">
-                            <span class="dim">Eye Dropper</span>
-                        </a>
-                        </span>
-
-                        <span class="f6 f5-ns mr2 silver">|</span>
-
-                        <span class="ed-tab b f6 f5-ns dib mr2 ttu" id="tab-cp">
-                            <span id="tab-cp-active" class="ed-tab-in">Color Picker</span>
-                        <a id="tab-cp-link" class="ed-tab-in link blue hint--bottom hint--no-animate hint--rounded hint--small" aria-label="Want to Mix Your Own?" href="#">
-                            <span class="dim">Color Picker</span>
-                        </a>
-                        </span>
-                    </nav>
-                </header>
-
-                <section id="content">
-
-                    <div id="tab-ed-content" class="content-page">
-                        <div class="bg-yellow w-75 ph3 mt2 ba br1 b--gold" id="pick-message" style="display: none"></div>
-                        <a class="ba b--black-20 bg-white black-70 link br2 dim b dib mr3 pv2 ph3" id="pick" href="#">
-                            <svg class="w1 h1 dib v-mid" viewBox="0 0 1792 1792" style="fill:currentcolor">
-                                <use xlink:href="/img/icons.svg#fa-tint">
-                            </svg>
-                            <div class="h1 dib">Pick color from web page</div>
-                        </a>
-                    </div>
-
-                </section>
-            </section>
-
-            <section class="fr" id="color-boxes">
-                <div id="box-current-label" class="black-40 helvetica b ed-color-box-label">Selected</div>
-                <div id="box-current" class="ed-color-box w-100 br2 cf pa2 mb2">
-                </div>
-                <div id="box-new-label" class="black-40 helvetica b ed-color-box-label">New</div>
-                <div id="box-new" class="ed-color-box w-100 br2 cf pa2">
-                </div>
-            </section>
-
-            <section class="cf mt2" id="color-history">
-                <section class="fl w-60">
-                    <div class="mt3 cf">
-                        <span class="f5 fl">Palette: <span id="palette-name" data-palette="default">default</span></span>
-                        <div id="colors-history-toolbar" class="fl ml2">
-                            <a class="link dib w1 hint--top hint--no-animate hint--rounded" aria-label="Different Palette?" href="#" id="colors-palette-change">
-                                <svg class="dim" viewBox="0 0 1792 1792" style="fill:gray;width:14px;">
-                                <use xlink:href="/img/icons.svg#fa-th">
-                            </svg>
-                            </a>
-                            <a class="link dib w1 hint--top hint--no-animate hint--rounded eb-history-tool-noempty" aria-label="Trash Colors in this Palette!" href="#" id="colors-history-clear">
-                                <svg class="dim" viewBox="0 0 1792 1792" style="fill:gray;width:16px;">
-                                <use xlink:href="/img/icons.svg#fa-trash-o">
-                            </svg>
-                            </a>
-                            <a class="link dib w1 hint--top hint--no-animate hint--rounded eb-history-tool-noempty" aria-label="Give me CSV" href="#" id="colors-history-export">
-                                <svg class="dim" viewBox="0 0 1792 1792" style="fill:gray;width:14px;">
-                                <use xlink:href="/img/icons.svg#fa-floppy-o">
-                            </svg>
+                    <section id="content">
+                        <div id="tab-ed-content" class="content-page">
+                            <div
+                                class="bg-yellow w-75 ph3 mt2 ba br1 b--gold"
+                                id="pick-message"
+                                style="display: none"
+                            ></div>
+                            <a
+                                class="ba b--black-20 bg-white black-70 link br2 dim b dib mr3 pv2 ph3"
+                                id="pick"
+                                href="#"
+                            >
+                                <svg
+                                    class="w1 h1 dib v-mid"
+                                    viewBox="0 0 1792 1792"
+                                    style="fill: currentcolor"
+                                >
+                                    <use xlink:href="/img/icons.svg#fa-tint" />
+                                </svg>
+                                <div class="h1 dib">Pick color from web page</div>
                             </a>
                         </div>
+                    </section>
+                </section>
+
+                <section class="fr" id="color-boxes">
+                    <div id="box-current-label" class="black-40 helvetica b ed-color-box-label">
+                        Selected
                     </div>
+                    <div id="box-current" class="ed-color-box w-100 br2 cf pa2 mb2"></div>
+                    <div id="box-new-label" class="black-40 helvetica b ed-color-box-label">
+                        New
+                    </div>
+                    <div id="box-new" class="ed-color-box w-100 br2 cf pa2"></div>
+                </section>
 
-                    <section id="colors-palette" class="mt1" style="display:none"></section>
+                <section class="cf mt2" id="color-history">
+                    <section class="fl w-60">
+                        <div class="mt3 cf">
+                            <span class="f5 fl"
+                                >Palette:
+                                <span id="palette-name" data-palette="default">default</span></span
+                            >
+                            <div id="colors-history-toolbar" class="fl ml2">
+                                <a
+                                    class="link dib w1 hint--top hint--no-animate hint--rounded"
+                                    aria-label="Different Palette?"
+                                    href="#"
+                                    id="colors-palette-change"
+                                >
+                                    <svg
+                                        class="dim"
+                                        viewBox="0 0 1792 1792"
+                                        style="fill: gray; width: 14px"
+                                    >
+                                        <use xlink:href="/img/icons.svg#fa-th" />
+                                    </svg>
+                                </a>
+                                <a
+                                    class="link dib w1 hint--top hint--no-animate hint--rounded eb-history-tool-noempty"
+                                    aria-label="Trash Colors in this Palette!"
+                                    href="#"
+                                    id="colors-history-clear"
+                                >
+                                    <svg
+                                        class="dim"
+                                        viewBox="0 0 1792 1792"
+                                        style="fill: gray; width: 16px"
+                                    >
+                                        <use xlink:href="/img/icons.svg#fa-trash-o" />
+                                    </svg>
+                                </a>
+                                <a
+                                    class="link dib w1 hint--top hint--no-animate hint--rounded eb-history-tool-noempty"
+                                    aria-label="Give me CSV"
+                                    href="#"
+                                    id="colors-history-export"
+                                >
+                                    <svg
+                                        class="dim"
+                                        viewBox="0 0 1792 1792"
+                                        style="fill: gray; width: 14px"
+                                    >
+                                        <use xlink:href="/img/icons.svg#fa-floppy-o" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
 
-                    <section id="colors-history" class="cf mt2"></section>
+                        <section id="colors-palette" class="mt1" style="display: none"></section>
 
-                    <p class="i black-80" id="colors-history-instructions">
-                        History is empty, try to pick some color first.
-                    </p>
+                        <section id="colors-history" class="cf mt2"></section>
+
+                        <p class="i black-80" id="colors-history-instructions">
+                            History is empty, try to pick some color first.
+                        </p>
+                    </section>
                 </section>
             </section>
+        </article>
+        <section class="mw5 mw7-ns center bg-light-gray cf pa2" style="width: 34rem">
+            <section class="fl">
+                <a
+                    href="#"
+                    data-url="/plus.html"
+                    aria-label="Unlock more features"
+                    id="plus-badge"
+                    class="ed-external link hint--right hint--no-animate block bg-red pv1 ph2 br1 mt1 db white no-underline"
+                    >Unlock <span class="small-caps b">Plus</span></a
+                >
+            </section>
+            <section class="fr">
+                <a
+                    href="#"
+                    data-url="https://eyedropper.org"
+                    class="ed-external link gray dib h2 w2 bg-near-white ba b--black-10 br-100 pa1 mr1 hint--top hint--no-animate hint--rounded"
+                    aria-label="It's Bigger On the Inside"
+                >
+                    <svg class="dim" viewBox="0 0 1792 1792" style="fill: currentcolor">
+                        <use xlink:href="/img/icons.svg#fa-home"></use>
+                    </svg>
+                </a>
+
+                <a
+                    href="#"
+                    id="button-about"
+                    aria-label="Thats My Bio..."
+                    class="ed-tab link gray dib h2 w2 bg-near-white ba b--black-10 br-100 pa1 mr1 hint--top hint--no-animate hint--rounded"
+                >
+                    <svg class="dim" viewBox="0 0 1792 1792" style="fill: currentcolor">
+                        <use xlink:href="/img/icons.svg#fa-question-circle" />
+                    </svg>
+                </a>
+
+                <a
+                    href="#"
+                    data-url="https://github.com/kepi/chromeEyeDropper/issues"
+                    aria-label="Found a Bug? Have an Idea?"
+                    id="button-bug"
+                    class="ed-external link gray dib h2 w2 bg-near-white ba b--black-10 br-100 pa1 mr1 hint--top hint--no-animate hint--rounded hint--small"
+                >
+                    <svg class="dim" viewBox="0 0 1792 1792" style="fill: currentcolor">
+                        <use xlink:href="/img/icons.svg#fa-bug" />
+                    </svg>
+                </a>
+
+                <a
+                    href="#"
+                    data-url="/options.html"
+                    aria-label="Too Many Options"
+                    class="ed-external link gray dib h2 w2 bg-near-white ba b--black-10 br-100 pa1 mr1 hint--left hint--no-animate hint--rounded hint--small"
+                >
+                    <svg class="dim" viewBox="0 0 1792 1792" style="fill: currentcolor">
+                        <use xlink:href="/img/icons.svg#fa-cog" />
+                    </svg>
+                </a>
+            </section>
         </section>
-
-    </article>
-    <section class="mw5 mw7-ns center bg-light-gray cf pa2" style="width: 34rem">
-        <section class="fl">
-            <a href="#" data-url="/plus.html" aria-label="Unlock more features" id="plus-badge" class="ed-external link hint--right hint--no-animate block bg-red pv1 ph2 br1 mt1 db white no-underline">Unlock <span class="small-caps b">Plus</span></a>
-        </section>
-        <section class="fr">
-            <a href="#" data-url="https://eyedropper.org" class="ed-external link gray dib h1 w1 bg-near-white ba b--black-10 br-100 pa1 mr1 hint--top hint--no-animate hint--rounded" aria-label="It's Bigger On the Inside">
-                <svg class="dim" viewBox="0 0 1792 1792" style="fill:currentcolor">
-                    <use xlink:href="/img/icons.svg#fa-home">
-                </svg>
-            </a>
-
-            <a href="#" id="button-about" aria-label="Thats My Bio..." class="ed-tab link gray dib h1 w1 bg-near-white ba b--black-10 br-100 pa1 mr1 hint--top hint--no-animate hint--rounded">
-                <svg class="dim" viewBox="0 0 1792 1792" style="fill:currentcolor">
-                    <use xlink:href="/img/icons.svg#fa-question-circle">
-                </svg>
-            </a>
-
-            <a href="#" data-url="https://github.com/kepi/chromeEyeDropper/issues" aria-label="Found a Bug? Have an Idea?" id="button-bug" class="ed-external link gray dib h1 w1 bg-near-white ba b--black-10 br-100 pa1 mr1 hint--top hint--no-animate hint--rounded hint--small">
-                <svg class="dim" viewBox="0 0 1792 1792" style="fill:currentcolor">
-                    <use xlink:href="/img/icons.svg#fa-bug">
-                </svg>
-            </a>
-
-            <a href="#" data-url="/options.html" aria-label="Too Many Options" class="ed-external link gray dib h1 w1 bg-near-white ba b--black-10 br-100 pa1 mr1 hint--left hint--no-animate hint--rounded hint--small">
-                <svg class="dim" viewBox="0 0 1792 1792" style="fill:currentcolor">
-                    <use xlink:href="/img/icons.svg#fa-cog">
-                </svg>
-            </a>
-        </section>
-    </section>
-</body>
-
+    </body>
 </html>

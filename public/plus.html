@@ -6,16 +6,9 @@
 
         <title>Eye Dropper PLUS</title>
 
-        <script type="text/javascript" src="/inc/buy.js"></script>
         <script type="text/javascript" src="/js/plus.js"></script>
 
-        <link rel="stylesheet" href="/inc/tachyons-4.0.4.css" />
-
-        <!-- cointipper -->
-        <script type="text/javascript" src="/inc/jquery-2.1.0.min.js"></script>
-        <script type="text/javascript" src="/inc/cointipper/jquery.cointipper-pack.min.js"></script>
-        <link rel="stylesheet" href="/inc/cointipper/jquery.cointipper.min.css" />
-        <!-- cointipper end -->
+        <link rel="stylesheet" href="/inc/tachyons.min.css" />
 
         <style type="text/css">
             ul {
@@ -47,153 +40,162 @@
         </style>
     </head>
     <body>
-        <section class="bg-black-10 h4 cf">
+        <section class="bg-black-10 cf">
             <header class="center w-50-l w-75-m w-100-ns">
                 <h1 class="f1 helvetica">Eye Dropper <span class="small-caps">Plus</span></h1>
+
+                <section class="w-100 br1 mv3 pv1 f5 lh-copy">
+                    <p>
+                        <span class="small-caps">Plus</span> is little experiment of mine. There are
+                        some new futures not available in "basic version". You can unlock them
+                        either using few bucks or for free.
+                    </p>
+
+                    <p>
+                        If enough people use money option, I'll be able to spend more time working
+                        on new features, fixes and polishing.
+                    </p>
+                </section>
             </header>
         </section>
 
-        <section class="center w-50-l w-75-m w-100-ns">
-            <section class="w-100 bg-washed-green br1 mv3 pv1 ph4 f5 lh-copy">
-                <p>
-                    <span class="small-caps">Plus</span> is little experiment of mine. There are
-                    some new futures not available in "basic version". You can unlock them either
-                    using few bucks or for free.
-                </p>
-
-                <p>
-                    If enough people use money option, I'll be able to spend more time working on
-                    new features, fixes and polishing.
-                </p>
-            </section>
-
-            <section class="fl w-50 lh-copy">
+        <section class="bg-washed-green cf">
+            <section class="center w-75 pa2">
                 <h2><span class="small-caps">Plus</span> Features</h2>
-                <h3>Color Palettes</h3>
-                <ul>
-                    <li class="done">Create separate palettes for different projects</li>
-                    <li>TODO: Export all colors and palettes to one CSV</li>
-                    <li>TODO: Possibility to rename palettes</li>
-                    <li>TODO: Trash Colors Undo</li>
-                    <li>TODO: Palette Destroy Undo</li>
-                </ul>
+            </section>
+        </section>
 
-                <h3>Color Features</h3>
-                <ul>
-                    <li class="done">Date and time when color was picked</li>
-                    <li class="done">
-                        Source of picking - Web Page, Color Picker, Conversion (from old history)
-                    </li>
-                    <li>TODO: Possibility to add color to favorites</li>
-                </ul>
-
-                <h3>New Pick from Web Page Features</h3>
-                <ul>
-                    <li>TODO: Pick multpile colors at once</li>
-                    <li>TODO: New picker cursor with magnifier</li>
-                </ul>
-
+        <section>
+            <section class="center w-75-l w-100-m flex">
+                <section class="fl w-third lh-copy pa2">
+                    <h3>Color Palettes</h3>
+                    <ul>
+                        <li class="done">Create separate palettes for different projects</li>
+                        <li>TODO: Export all colors and palettes to one CSV</li>
+                        <li>TODO: Possibility to rename palettes</li>
+                        <li>TODO: Trash Colors Undo</li>
+                        <li>TODO: Palette Destroy Undo</li>
+                    </ul>
+                </section>
+                <section class="fl w-third lh-copy pa2">
+                    <h3>Color Features</h3>
+                    <ul>
+                        <li class="done">Date and time when color was picked</li>
+                        <li class="done">
+                            Source of picking - Web Page, Color Picker, Conversion (from old
+                            history)
+                        </li>
+                        <li>TODO: Possibility to add color to favorites</li>
+                    </ul>
+                </section>
+                <section class="fl w-third lh-copy pa2">
+                    <h3>Pick from Web Page</h3>
+                    <ul>
+                        <li>TODO: Pick multpile colors at once</li>
+                        <li>TODO: New picker cursor with magnifier</li>
+                    </ul>
+                </section>
+            </section>
+            <section class="center w-75-l w-100-m flex">
                 <p>and more later&hellip;</p>
             </section>
+        </section>
 
-            <section class="fr w-33 lh-copy">
-                <section id="plus-locked">
-                    <h2>Unlock <span class="small-caps">Plus</span></h2>
-                    <p>
-                        Any option will unlock all <span class="small-caps">Plus</span> features for
-                        all your Chrome browsers (with same google account). Its up to you.
-                    </p>
-
-                    <div id="edplus-failed"></div>
-
-                    <section id="edplus-products"></section>
-
-                    <p>
-                        Already donated or can't spare coins now?
-                        <a id="unlock-free" href="#" class="black">Unlock for free</a>.
-                    </p>
-
-                    <h2>Donate</h2>
-
-                    <p>
-                        Can't use Google's payment system, and still want to support Eye Dropper's
-                        development? You can always send donation using Paypal or Bitcoins and
-                        <a href="#" id="unlock-donations">unlock by donation here</a>.
-                    </p>
+        <section>
+            <section class="bg-washed-green cf">
+                <section class="center w-75 pa2">
+                    <h2 class="plus-locked">Unlock <span class="small-caps">Plus</span></h2>
+                    <h2 class="plus-unlocked"><span class="small-caps">Plus</span> Unlocked</h2>
                 </section>
-
-                <section id="plus-unlocked">
-                    <h2><span class="small-caps">Plus</span> unlocked</h2>
-
-                    <p>
-                        Thanks! All Eye Dropper <span class="small-caps">Plus</span> features are
-                        unlocked in all Chrome browsers where you are signed in with same account.
-                    </p>
-
-                    <div id="plus-type"></div>
-
-                    <h2>Donate</h2>
-
-                    <p>
-                        If you want to support Eye Dropper development in the future, you can always
-                        use donate buttons.
-                    </p>
+            </section>
+            <section class="bg-washed-blue cf plus-locked">
+                <section class="center w-75 pa2">
+                    <h3>1. Donate if you can</h3>
                 </section>
+            </section>
 
-                <section>
-                    <section class="fl w-50">
-                        <div id="donate-bitcoin" class="center"></div>
-                    </section>
+            <section class="center w-75-l w-100-m w-100-ns lh-copy pl4">
+                <p class="mw6 plus-locked">
+                    If you want to support the development of
+                    <strong>Eye Dropper</strong>, please consider
+                    <strong>becoming a backer</strong> or send one time <em>donation</em> to our
+                    <a href="https://opencollective.com/eyedropper">Open Collective</a>.
+                </p>
+                <p class="plus-unlocked">
+                    You have <span class="small-caps">Plus</span> already unlocked, but feel free to
+                    became a backer (if you are already not one) or send one-time donation any time.
+                </p>
 
-                    <section class="fr w-50 mt1">
-                        <!-- Begin PayPal Donations -->
-                        <form
-                            id="paypal-donation-options"
-                            action="https://www.paypal.com/cgi-bin/webscr"
-                            method="post"
+                <p>
+                    <a href="https://opencollective.com/eyedropper/contribute" target="_blank">
+                        <img
+                            src="https://opencollective.com/eyedropper/contribute/button@2x.png?color=blue"
+                            width="400"
+                        />
+                    </a>
+                </p>
+                <p>or send some good old crypto:</p>
+                <ul>
+                    <li>
+                        <strong>Bitcon</strong> to <code>19HekXcETbG8VWdywbEkKxzxp4fFm5YCUc</code>
+                    </li>
+                    <li>
+                        <strong>Nano</strong> to
+                        <code
+                            >nano_361bejwriittx6uix8iz7jx7df1m49i3buwfp5ghnfebckr7ozqxp7rh4hi8</code
                         >
-                            <div class="paypal-donations">
-                                <input
-                                    type="hidden"
-                                    name="cmd"
-                                    value="_donations"
-                                    class="form-control"
-                                />
-                                <input
-                                    type="hidden"
-                                    name="business"
-                                    value="kepi@orthank.net"
-                                    class="form-control"
-                                />
-                                <input
-                                    type="hidden"
-                                    name="return"
-                                    value="https://eyedropper.org/thanks-for-your-donation"
-                                    class="form-control"
-                                /><input
-                                    type="hidden"
-                                    name="item_name"
-                                    value="Eye Dropper"
-                                    class="form-control"
-                                />
-                                <input
-                                    type="hidden"
-                                    name="currency_code"
-                                    value="USD"
-                                    class="form-control"
-                                />
-                                <input
-                                    type="image"
-                                    class="btn"
-                                    src="/inc/btn_donate_LG.gif"
-                                    name="submit"
-                                    alt="PayPal - The safer, easier way to pay online."
-                                    class="form-control"
-                                />
-                            </div>
-                        </form>
-                    </section>
+                    </li>
+                    <li>
+                        <strong>Ethereum</strong> to
+                        <code>0x94b48b162f78747092121004F68C65dB069c60D4</code>
+                    </li>
+                </ul>
+
+                <h4 class="plus-locked">Can't donate?</h4>
+                <h4 class="plus-unlocked">Unlocked for free?</h4>
+                <p class="plus-locked">
+                    It's totally OK if you can't spare money now. Maybe some day in the future or
+                    maybe not, you can still unlock for free below.
+                </p>
+                <p class="plus-unlocked">
+                    It's totally OK if you can't spare money now. Maybe some day in the future or
+                    maybe not.
+                </p>
+                <p>If you want to help Eye Dropper in other way, please consider to:</p>
+                <ul>
+                    <li>
+                        Give it <em>Five Stars</em> at
+                        <a
+                            href="https://chrome.google.com/webstore/detail/eye-dropper/hmdcmlfkchdmnmnmheododdhjedfccka"
+                            target="_blank"
+                            >Chrome Web Store</a
+                        >.
+                    </li>
+                    <li>
+                        <a href="https://github.com/kepi/chromeEyeDropper/issues" target="_blank"
+                            >Report</a
+                        >
+                        bugs and send your ideas for improvements.
+                    </li>
+                </ul>
+            </section>
+
+            <section class="bg-washed-blue cf plus-locked">
+                <section class="center w-75 pa2">
+                    <h3>2. Click on Unlock</h3>
                 </section>
+            </section>
+            <section class="center w-75-l w-100-m w-100-ns lh-copy pl4 plus-locked">
+                <p class="mw6">
+                    Just use following link to
+                    <a href="#" id="unlock-new">Unlock <span class="small-caps">Plus</span></a
+                    >.
+                </p>
+                <p class="mw6">
+                    <cite
+                        >Btw. you can unlock they Eye Dropper in as many browsers as you want.</cite
+                    >
+                </p>
             </section>
         </section>
     </body>

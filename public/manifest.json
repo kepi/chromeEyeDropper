@@ -31,8 +31,6 @@
     "permissions": ["activeTab", "storage"],
 
     "web_accessible_resources": [
-        "inc/jquery-2.1.0.min.js",
-        "inc/jquery.scrollstop.js",
         "js/edropper2.js",
         "inject/anchor-cursor-default.css",
         "inject/anchor-cursor-crosshair.css",
