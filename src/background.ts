@@ -64,19 +64,19 @@ var bg = {
     },
     // use selected tab
     // need to null all tab-specific variables
-    useTab: function(tab: chrome.tabs.Tab) {
+    useTab: function (tab: chrome.tabs.Tab) {
         bg.tab = tab
         bg.screenshotData = ''
         bg.canvas = document.createElement('canvas')
         bg.canvasContext = null
     },
-    checkDropperScripts: function() {
+    checkDropperScripts: function () {
         console.log('bg: checking dropper version')
         bg.sendMessage(
             {
                 type: 'edropper-version',
             },
-            function(res: { version: number; tabid: number }) {
+            function (res: { version: number; tabid: number }) {
                 console.log('bg: checking dropper version 2')
                 if (chrome.runtime.lastError || !res) {
                     bg.injectDropper()
@@ -90,20 +90,20 @@ var bg = {
             },
         )
     },
-    injectDropper: function() {
+    injectDropper: function () {
         console.log('bg: injecting dropper scripts')
         chrome.tabs.executeScript(
             bg.tab.id,
             {
                 file: '/js/edropper2.js',
             },
-            function(_results: Array<any>) {
+            function (_results: Array<any>) {
                 console.log('bg: edropper2 injected')
                 bg.pickupActivate()
             },
         )
     },
-    refreshDropper: function() {
+    refreshDropper: function () {
         console.log('bg: refreshing dropper scripts')
         chrome.tabs.executeScript(
             bg.tab.id,
@@ -111,17 +111,17 @@ var bg = {
                 allFrames: true,
                 file: '/js/edropper2.js',
             },
-            function(_results: Array<any>) {
+            function (_results: Array<any>) {
                 console.log('bg: edropper2 updated')
                 bg.pickupActivate()
             },
         )
     },
-    sendMessage: function(message: any, callback?: (response: any) => void) {
+    sendMessage: function (message: any, callback?: (response: any) => void) {
         chrome.tabs.sendMessage(bg.tab.id, message, callback)
     },
-    shortcutListener: function() {
-        chrome.commands.onCommand.addListener(command => {
+    shortcutListener: function () {
+        chrome.commands.onCommand.addListener((command) => {
             console.log('bg: command: ', command)
             switch (command) {
                 case 'activate':
@@ -130,7 +130,7 @@ var bg = {
             }
         })
     },
-    messageListener: function() {
+    messageListener: function () {
         // simple messages
         chrome.runtime.onMessage.addListener((req, _sender, sendResponse) => {
             switch (req.type) {
@@ -149,7 +149,7 @@ var bg = {
             }
         })
         // longer connections
-        chrome.runtime.onConnect.addListener(port => {
+        chrome.runtime.onConnect.addListener((port) => {
             port.onMessage.addListener((req, sender) => {
                 switch (req.type) {
                     // Taking screenshot for content script
@@ -187,7 +187,7 @@ var bg = {
             }
         })
     },
-    setBadgeColor: function(color: string) {
+    setBadgeColor: function (color: string) {
         console.info('Setting badge color to ' + color)
         chrome.browserAction.setBadgeBackgroundColor({
             color: [
@@ -200,7 +200,7 @@ var bg = {
     },
     // method for setting color. It set bg color, update badge and save to history if possible
     // source - see historyColorItem for description
-    setColor: function(color: string, history = true, source = 1, url?: string) {
+    setColor: function (color: string, history = true, source = 1, url?: string) {
         console.group('setColor')
         console.info('Received color ' + color + ', history: ' + history)
         if (!color || !color.match(/^#[0-9a-f]{6}$/)) {
@@ -220,7 +220,7 @@ var bg = {
         }
         console.groupEnd()
     },
-    saveToHistory: function(color: string, source = 1, url?: string) {
+    saveToHistory: function (color: string, source = 1, url?: string) {
         var palette = bg.getPalette()
         if (
             !palette.colors.find((x: HistoryColorItem) => {
@@ -234,25 +234,25 @@ var bg = {
             console.info('Color ' + color + ' already in palette ' + bg.getPaletteName())
         }
     },
-    copyToClipboard: function(color: string) {
+    copyToClipboard: function (color: string) {
         bg.edCb.value = bg.settings.autoClipboardNoGrid ? color.substring(1) : color
         bg.edCb.select()
         document.execCommand('copy', false, null)
     },
     // activate from content script
-    activate2: function() {
+    activate2: function () {
         chrome.tabs.query({ active: true }, (tabs: Array<chrome.tabs.Tab>) => {
             bg.useTab(tabs[0])
             bg.activate()
         })
     },
     // activate Pick
-    activate: function() {
+    activate: function () {
         console.log('bg: received pickup activate')
         // check scripts and activate pickup
         bg.checkDropperScripts()
     },
-    pickupActivate: function() {
+    pickupActivate: function () {
         // activate picker
         bg.sendMessage({
             type: 'pickup-activate',
@@ -266,7 +266,7 @@ var bg = {
         console.log('bg: activating pickup')
     },
     // capture actual Screenshot
-    capture: function() {
+    capture: function () {
         ////console.log('capturing')
         try {
             chrome.tabs.captureVisibleTab(
@@ -281,10 +281,10 @@ var bg = {
             chrome.tabs.captureVisibleTab(null, bg.doCapture)
         }
     },
-    getColor: function() {
+    getColor: function () {
         return bg.history.last_color
     },
-    doCapture: function(data: string) {
+    doCapture: function (data: string) {
         if (data) {
             console.log('bg: sending updated image')
             bg.sendMessage({
@@ -295,7 +295,7 @@ var bg = {
             console.error('bg: did not receive data from captureVisibleTab')
         }
     },
-    createDebugTab: function() {
+    createDebugTab: function () {
         // DEBUG
         if (bg.debugTab != 0) {
             chrome.tabs.sendMessage(bg.debugTab, {
@@ -307,12 +307,12 @@ var bg = {
                     url: '/debug-tab.html',
                     selected: false,
                 },
-                function(tab) {
+                function (tab) {
                     bg.debugTab = tab.id
                 },
             )
     },
-    tabOnChangeListener: function() {
+    tabOnChangeListener: function () {
         // deactivate dropper if tab changed
         chrome.tabs.onSelectionChanged.addListener((tabId, _selectInfo) => {
             if (bg.tab && bg.tab.id == tabId)
@@ -321,17 +321,17 @@ var bg = {
                 })
         })
     },
-    getPaletteName: function() {
+    getPaletteName: function () {
         return bg.getPalette().name
     },
-    isPalette: function(name: string) {
+    isPalette: function (name: string) {
         return bg.history.palettes.find((x: Palette) => {
             return x.name == name
         })
             ? true
             : false
     },
-    getPalette: function(name?: string) {
+    getPalette: function (name?: string) {
         if (name === undefined) {
             name =
                 bg.history.current_palette === undefined ||
@@ -343,7 +343,7 @@ var bg = {
             return x.name == name
         })
     },
-    changePalette: function(palette_name: string) {
+    changePalette: function (palette_name: string) {
         if (bg.history.current_palette === palette_name) {
             console.info('Not switching, already on palette ' + palette_name)
         } else if (bg.isPalette(palette_name)) {
@@ -354,12 +354,12 @@ var bg = {
             console.error('Cannot switch to palette ' + palette_name + '. Palette not found.')
         }
     },
-    getPaletteNames: function() {
+    getPaletteNames: function () {
         return bg.history.palettes.map((x: Palette) => {
             return x.name
         })
     },
-    uniquePaletteName: function(name: string) {
+    uniquePaletteName: function (name: string) {
         // default name is palette if we receive empty or undefined name
         if (name === undefined || !name || name.length < 1) {
             console.info('uniquePaletteName: ' + name + " empty, trying 'palette'")
@@ -386,7 +386,7 @@ var bg = {
             return name
         }
     },
-    createPalette: function(name: string) {
+    createPalette: function (name: string) {
         var palette_name = bg.uniquePaletteName(name)
         console.info('Creating new palette ' + name + '. Unique name: ' + palette_name)
         bg.history.palettes.push({
@@ -397,7 +397,7 @@ var bg = {
         bg.saveHistory()
         return bg.getPalette(palette_name)
     },
-    destroyPalette: function(name: string) {
+    destroyPalette: function (name: string) {
         if (!bg.isPalette(name)) {
             return
         }
@@ -418,7 +418,7 @@ var bg = {
         bg.saveHistory(false)
         chrome.storage.sync.remove('palette.' + name)
     },
-    clearHistory: function(sendResponse: ({ state: string }) => void) {
+    clearHistory: function (sendResponse: ({ state: string }) => void) {
         var palette = bg.getPalette()
         console.info('Clearing history for palette ' + palette.name)
         palette.colors = []
@@ -432,9 +432,9 @@ var bg = {
     /**
      * Load history from storage on extension start
      */
-    loadHistory: function() {
+    loadHistory: function () {
         console.info('Loading history from storage')
-        chrome.storage.sync.get(items => {
+        chrome.storage.sync.get((items) => {
             if (items.history) {
                 bg.history.current_palette = items.history.cp
                 bg.history.last_color = items.history.lc
@@ -477,7 +477,7 @@ var bg = {
     /**
      * Check if there are needed upgrades to history and exec if needed
      **/
-    checkHistoryUpgrades: function(version: number) {
+    checkHistoryUpgrades: function (version: number) {
         // Wrong timestamp saved before version 14
         //
         // There was error in bg versions before 14 that caused saving
@@ -502,9 +502,9 @@ var bg = {
     /**
      * Load settings from storage on extension start
      */
-    loadSettings: function() {
+    loadSettings: function () {
         console.info('Loading settings from storage')
-        chrome.storage.sync.get('settings', function(items) {
+        chrome.storage.sync.get('settings', function (items) {
             if (items.settings) {
                 console.info('Settings loaded')
                 bg.settings = items.settings
@@ -530,7 +530,7 @@ var bg = {
      * t = timestamp when taken
      * f = favorite
      */
-    historyColorItem: function(
+    historyColorItem: function (
         color: string,
         timestamp = Date.now(),
         source = 1,
@@ -551,7 +551,7 @@ var bg = {
      * Backup of old history is stored in local storage in _history_backup
      * in case something goes south.
      */
-    tryConvertOldHistory: function() {
+    tryConvertOldHistory: function () {
         if (window.localStorage.history) {
             var oldHistory = JSON.parse(window.localStorage.history)
             var converted_palette = bg.createPalette('converted')
@@ -588,7 +588,7 @@ var bg = {
      * strings only.
      *
      */
-    tryConvertOldSettings: function() {
+    tryConvertOldSettings: function () {
         // load default settings first
         bg.settings = bg.defaultSettings
         // convert old settings
@@ -620,7 +620,7 @@ var bg = {
         }
         console.info('Removed old settings from locale storage.')
     },
-    saveHistory: function(all_palettes = true) {
+    saveHistory: function (all_palettes = true) {
         var saved_object = {
             history: {
                 v: bg.history.version,
@@ -637,34 +637,34 @@ var bg = {
                 }
             }
         }
-        chrome.storage.sync.set(saved_object, function() {
+        chrome.storage.sync.set(saved_object, function () {
             console.info('History synced to storage')
         })
     },
-    saveSettings: function() {
+    saveSettings: function () {
         chrome.storage.sync.set(
             {
                 settings: bg.settings,
             },
-            function() {
+            function () {
                 console.info('Settings synced to storage')
             },
         )
     },
-    unlockPlus: function(type: string) {
+    unlockPlus: function (type: string) {
         bg.settings.plus = true
         bg.settings.plus_type = type
         bg.saveSettings()
     },
-    lockPlus: function() {
+    lockPlus: function () {
         bg.settings.plus = false
         bg.settings.plus_type = null
         bg.saveSettings()
     },
-    plus: function() {
+    plus: function () {
         return bg.settings.plus ? bg.settings.plus_type : false
     },
-    plusColor: function(color = bg.settings.plus_type) {
+    plusColor: function (color = bg.settings.plus_type) {
         switch (color) {
             case 'free':
                 return 'gray'
@@ -674,7 +674,7 @@ var bg = {
                 return color
         }
     },
-    init: function() {
+    init: function () {
         console.group('init')
         bg.edCb = document.getElementById('edClipboard')
         bg.loadSettings()
@@ -695,7 +695,7 @@ var bg = {
     },
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     bg.init()
 })
 ;(<any>window).bg = bg

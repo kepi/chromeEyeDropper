@@ -37,7 +37,7 @@ var page = {
     dropperActivated: false,
 
     // function to set defaults - used during init and later for reset
-    defaults: function() {
+    defaults: function () {
         page.screenWidth = window.innerWidth
         page.screenHeight = window.innerHeight
 
@@ -62,11 +62,11 @@ var page = {
     // ---------------------------------
     // MESSAGING
     // ---------------------------------
-    messageListener: function() {
+    messageListener: function () {
         // Listen for pickup activate
         console.log('dropper: page activated')
         console.log(`dropper: debug page at ${chrome.runtime.getURL('debug-tab.html')}`)
-        chrome.runtime.onMessage.addListener(function(req, _sender, sendResponse) {
+        chrome.runtime.onMessage.addListener(function (req, _sender, sendResponse) {
             switch (req.type) {
                 case 'edropper-version':
                     sendResponse({
@@ -89,13 +89,13 @@ var page = {
             }
         })
     },
-    sendMessage: function(message: any) {
+    sendMessage: function (message: any) {
         chrome.runtime.connect().postMessage(message)
     },
     // ---------------------------------
     // DROPPER CONTROL
     // ---------------------------------
-    dropperActivate: function() {
+    dropperActivate: function () {
         if (page.dropperActivated) return
 
         console.log('dropper: activating page dropper')
@@ -121,7 +121,7 @@ var page = {
         // enable keyboard shortcuts
         page.shortcuts(true)
     },
-    dropperDeactivate: function() {
+    dropperDeactivate: function () {
         if (!page.dropperActivated) return
         // disable keyboard shortcuts
         page.shortcuts(false)
@@ -141,11 +141,11 @@ var page = {
     // ---------------------------------
     // EVENT HANDLING
     // ---------------------------------
-    onMouseMove: function(e: MouseEvent) {
+    onMouseMove: function (e: MouseEvent) {
         if (!page.dropperActivated) return
         page.tooltip(e)
     },
-    onMouseClick: function(e: MouseEvent) {
+    onMouseClick: function (e: MouseEvent) {
         console.log('dropper: mouse click')
         console.dir(e)
         if (!page.dropperActivated) return
@@ -163,23 +163,23 @@ var page = {
             color,
         })
     },
-    onScrollStop: function() {
+    onScrollStop: function () {
         if (!page.dropperActivated) return
         console.log('dropper: scroll stopped')
         page.screenChanged()
     },
-    onScrollStart: function() {
+    onScrollStart: function () {
         if (!page.dropperActivated) return
     },
     // keyboard shortcuts
     // enable with argument as true, disable with false
-    shortcuts: function(start: boolean) {
+    shortcuts: function (start: boolean) {
         // enable shortcuts
         if (start == true) {
-            shortcut.add('Esc', function(_evt: KeyboardEvent) {
+            shortcut.add('Esc', function (_evt: KeyboardEvent) {
                 page.dropperDeactivate()
             })
-            shortcut.add('U', function(_evt: KeyboardEvent) {
+            shortcut.add('U', function (_evt: KeyboardEvent) {
                 page.screenChanged(true)
             })
             // disable shortcuts
@@ -189,13 +189,13 @@ var page = {
         }
     },
     // right click
-    onContextMenu: function(e: MouseEvent) {
+    onContextMenu: function (e: MouseEvent) {
         if (!page.dropperActivated) return
         e.preventDefault()
         page.dropperDeactivate()
     },
     // window is resized
-    onWindowResize: function() {
+    onWindowResize: function () {
         if (!page.dropperActivated) return
         console.log('dropper: window resized or pixelRatio changed')
         // set defaults
@@ -208,7 +208,7 @@ var page = {
     // ---------------------------------
     // MISC
     // ---------------------------------
-    tooltip: function(e: MouseEvent) {
+    tooltip: function (e: MouseEvent) {
         if (!page.dropperActivated || page.screenshoting) return
 
         const x = e.pageX
@@ -229,7 +229,7 @@ var page = {
     // ---------------------------------
     // COLORS
     // ---------------------------------
-    pickColor: function(x_coord: number, y_coord: number) {
+    pickColor: function (x_coord: number, y_coord: number) {
         const x = Math.round(x_coord)
         const y = Math.round(y_coord)
 
@@ -248,7 +248,7 @@ var page = {
     },
     // i: color channel value, integer 0-255
     // returns two character string hex representation of a color channel (00-FF)
-    toHex: function(i: number) {
+    toHex: function (i: number) {
         // TODO this shouldn't happen; looks like offset/x/y might be off by one
         if (i === undefined) {
             console.error(`Wrong color channel value: ${i}. Can't convert to hex.`)
@@ -262,13 +262,13 @@ var page = {
     },
     // r,g,b: color channel value, integer 0-255
     // returns six character string hex representation of a color
-    rgbToHex: function(r: number, g: number, b: number) {
+    rgbToHex: function (r: number, g: number, b: number) {
         return `${page.toHex(r)}${page.toHex(g)}${page.toHex(b)}`
     },
     // ---------------------------------
     // UPDATING SCREEN
     // ---------------------------------
-    checkCanvas: function() {
+    checkCanvas: function () {
         const scale = window.devicePixelRatio
 
         // we have to create new canvas element
@@ -291,14 +291,14 @@ var page = {
             page.resetCanvas = false
         }
     },
-    setScreenshoting: function(state: boolean) {
+    setScreenshoting: function (state: boolean) {
         if (page.screenshoting && state) {
             return
         }
         page.screenshoting = state
         page.overlay.screenshoting(state)
     },
-    screenChanged: function(force = false) {
+    screenChanged: function (force = false) {
         if (!page.dropperActivated) return
         console.log('dropper: screenChanged')
         page.yOffset = Math.round(document.documentElement.scrollTop)
@@ -320,14 +320,14 @@ var page = {
         console.groupEnd()
 
         page.setScreenshoting(true)
-        setTimeout(function() {
+        setTimeout(function () {
             page.sendMessage({
                 type: 'screenshot',
             })
         }, 50)
     },
 
-    updateRects: function(rect: Rect) {
+    updateRects: function (rect: Rect) {
         console.group('updateRects')
 
         if (page.rects.length === 0) {
@@ -360,13 +360,13 @@ var page = {
     },
 
     // capture actual Screenshot
-    capture: function() {
+    capture: function () {
         console.group('capture')
         page.checkCanvas()
 
         console.log('dropper: creating image element and waiting on load')
         var image = document.createElement('img')
-        image.onload = function() {
+        image.onload = function () {
             console.log(`dropper: got new screenshot ${image.width}x${image.height}`)
 
             const rect = new Rect(
@@ -410,10 +410,10 @@ var page = {
 
         console.groupEnd()
     },
-    init: function() {
+    init: function () {
         page.messageListener()
 
-        window.onresize = function() {
+        window.onresize = function () {
             page.onWindowResize()
         }
 
