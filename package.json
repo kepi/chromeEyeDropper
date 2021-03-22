@@ -1,6 +1,6 @@
 {
   "name": "eye-dropper",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "description": "Eye Dropper for Google Chrome™",
   "main": "index.js",
   "scripts": {
