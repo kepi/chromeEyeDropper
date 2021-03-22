@@ -108,15 +108,19 @@ function initTabs() {
  * Because we are using this from popup, we can't use simple
  * href attribute, we will create new tab with help of chrome api.
  */
+
+function initExternalLink(n) {
+    if (n.dataset.url) {
+        n.onclick = () => {
+            chrome.tabs.create({
+                url: n.dataset.url,
+            })
+        }
+    }
+}
 function initExternalLinks() {
     for (let n of document.getElementsByClassName('ed-external')) {
-        if (n.dataset.url) {
-            n.onclick = () => {
-                chrome.tabs.create({
-                    url: n.dataset.url,
-                })
-            }
-        }
+        initExternalLink(n)
     }
     console.info('external links initialized')
 }
@@ -160,6 +164,27 @@ function bgPageReady() {
 }
 
 /**
+ * Add Pick Button with enabled or disabled state and appropriate message
+ *
+ */
+
+function pickButton(enabled, message = '') {
+    let pick_el = document.getElementById('pick')
+    if (enabled) {
+        pick_el.onclick = () => {
+            bgPage.bg.useTab(tab)
+            bgPage.bg.activate()
+            window.close()
+        }
+    } else {
+        let message_el = document.getElementById('pick-message')
+        message_el.innerHTML = `<h3 class="normal">&#128542; Whoops. Can't pick from this page</h3><p class="lh-copy">${message}</p>`
+        message_el.style.display = 'block'
+        pick_el.style.display = 'none'
+    }
+}
+
+/**
  * Callback - Init pick button if it is possible
  *
  * We need to check if we are not on one of special pages:
@@ -174,33 +199,30 @@ function initPickButton(tab) {
 
     // special chrome pages
     if (tab.url === undefined || tab.url.indexOf('chrome') == 0) {
-        message =
-            "Chrome doesn't allow <i>extensions</i> to play with special Chrome pages like this one. <pre>chrome://...</pre>"
-        pickEnabled = false
+        pickButton(
+            false,
+            "Chrome doesn't allow <i>extensions</i> to play with special Chrome pages like this one. <pre>chrome://...</pre>",
+        )
     }
     // chrome gallery
     else if (tab.url.indexOf('https://chrome.google.com/webstore') == 0) {
-        message = "Chrome doesn't allow its <i>extensions</i> to play on Web Store."
-        pickEnabled = false
+        pickButton(false, "Chrome doesn't allow its <i>extensions</i> to play on Web Store.")
     }
     // local pages
-    else if (tab.url.indexOf('file') == 0) {
-        message = "Chrome doesn't allow its <i>extensions</i> to play with your local pages."
-        pickEnabled = false
-    }
-
-    let pick_el = document.getElementById('pick')
-    if (pickEnabled) {
-        pick_el.onclick = () => {
-            bgPage.bg.useTab(tab)
-            bgPage.bg.activate()
-            window.close()
-        }
+    else if (tab.url.indexOf('file') === 0) {
+        chrome.extension.isAllowedFileSchemeAccess((isAllowedAccess) => {
+            if (isAllowedAccess) {
+                pickButton(true)
+            } else {
+                pickButton(
+                    false,
+                    '<strong>Eye Dropper</strong> can\'t access local pages unless you grant it the permission. Check <a href="#" id="link-help-file-urls" data-url="https://eyedropper.test/help/file-urls">the instructions how to allow it</a>.',
+                )
+                initExternalLink(document.getElementById('link-help-file-urls'))
+            }
+        })
     } else {
-        let message_el = document.getElementById('pick-message')
-        message_el.innerHTML = `<h3 class="normal">&#128542; Whoops. Can't pick from this page</h3><p>${message}</p>`
-        message_el.style.display = 'block'
-        pick_el.style.display = 'none'
+        pickButton(true)
     }
 }
 
