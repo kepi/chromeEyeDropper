@@ -179,7 +179,7 @@ function bgPageReady() {
  *
  */
 
-function pickButton(enabled, message = '') {
+function pickButton(tab, enabled, message = '') {
     let pick_el = document.getElementById('pick')
     if (enabled) {
         pick_el.onclick = () => {
@@ -211,21 +211,23 @@ function initPickButton(tab) {
     // special chrome pages
     if (tab.url === undefined || tab.url.indexOf('chrome') == 0) {
         pickButton(
+            tab,
             false,
             "Chrome doesn't allow <i>extensions</i> to play with special Chrome pages like this one. <pre>chrome://...</pre>",
         )
     }
     // chrome gallery
     else if (tab.url.indexOf('https://chrome.google.com/webstore') == 0) {
-        pickButton(false, "Chrome doesn't allow its <i>extensions</i> to play on Web Store.")
+        pickButton(tab, false, "Chrome doesn't allow its <i>extensions</i> to play on Web Store.")
     }
     // local pages
     else if (tab.url.indexOf('file') === 0) {
         chrome.extension.isAllowedFileSchemeAccess((isAllowedAccess) => {
             if (isAllowedAccess) {
-                pickButton(true)
+                pickButton(tab, true)
             } else {
                 pickButton(
+                    tab,
                     false,
                     '<strong>Eye Dropper</strong> can\'t access local pages unless you grant it the permission. Check <a href="#" id="link-help-file-urls" data-url="https://eyedropper.test/help/file-urls">the instructions how to allow it</a>.',
                 )
@@ -233,7 +235,7 @@ function initPickButton(tab) {
             }
         })
     } else {
-        pickButton(true)
+        pickButton(tab, true)
     }
 }
 
