@@ -59,6 +59,17 @@ function init() {
     badge.style.display = 'none'
 }
 
+/**
+ * Workaround around wrong output from color library
+ *
+ * FIXME: fix directly in library later
+ *
+ */
+function hslFixed(hsl_html) {
+    const parts = hsl_html.split(/[,)]/)
+    return `${parts[0]},${parts[1]}%,${parts[2]}%)`
+}
+
 function initPlus() {
     let colors_palette_change = document.getElementById('colors-palette-change')
 
@@ -466,7 +477,7 @@ function exportHistory() {
             color = pusher.color(color.h)
             let formats = [
                 color.hex3(),
-                color.html('hsl'),
+                hslFixed(color.html('hsl')),
                 color.html('rgb'),
                 color.html('keyword'),
             ]
@@ -492,7 +503,7 @@ function exportHistory() {
             color = pusher.color(color.h)
             let formats = [
                 color.hex3(),
-                color.html('hsl'),
+                hslFixed(color.html('hsl')),
                 color.html('rgb'),
                 color.html('keyword'),
             ]
@@ -608,7 +619,7 @@ function colorBox(type, color) {
             color.hex6(),
             color.hex3(),
             color.html('keyword'),
-            color.html('hsl'),
+            hslFixed(color.html('hsl')),
             color.html('rgb'),
         ]
 
