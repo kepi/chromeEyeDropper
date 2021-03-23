@@ -1,4 +1,5 @@
 import { ColorModel, RgbNotation } from './color'
+import type Color from 'color'
 
 const copyToClipboard = async (text: string) => {
     try {
