@@ -1,5 +1,4 @@
 import { createNode } from './helpers'
-import Color from './Color.d'
 
 class Overlay {
     el: HTMLElement

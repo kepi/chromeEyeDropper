@@ -1,4 +1,4 @@
-export default interface Color {
+declare interface Color {
     r: number
     g: number
     b: number

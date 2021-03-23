@@ -1,8 +1,9 @@
 import shortcut from './vendor/shortcut'
 import scrollStop from './vendor/scrollStop'
 import Overlay from './overlay'
-import Color from './Color.d'
 import Rect from './rect'
+import { clipColor } from './clipboard'
+import { ColorModel, RgbNotation } from './color'
 
 var EDROPPER_VERSION = 12
 var CANVAS_MAX_SIZE = 32767 - 20
@@ -22,6 +23,8 @@ var page = {
         enableColorToolbox: true,
         enableColorTooltip: true,
         enableRightClickDeactivate: true,
+        autoClipboard: false,
+        autoClipboardNoGrid: false,
     },
 
     canvas: null,
@@ -145,6 +148,13 @@ var page = {
         if (!page.dropperActivated) return
         page.tooltip(e)
     },
+    copyToClipboard: async function (text: string) {
+        try {
+            await navigator.clipboard.writeText(text)
+        } catch (err) {
+            console.error('Failed to copy color to clipboard: ', err)
+        }
+    },
     onMouseClick: function (e: MouseEvent) {
         console.log('dropper: mouse click')
         console.dir(e)
@@ -157,6 +167,15 @@ var page = {
 
         const color = page.pickColor(x, y)
         console.log(`dropper: click: ${x},${y}. Color: ${color.rgbhex}`)
+
+        console.log('copying to clipboard?')
+        if (page.options.autoClipboard) {
+            console.log('yes')
+            const format = page.options.autoClipboardNoGrid
+                ? RgbNotation.HexadecimalNoGrid
+                : RgbNotation.Hexadecimal
+            clipColor({ color: color, model: ColorModel.RGB, format: format })
+        }
 
         page.sendMessage({
             type: 'set-color',

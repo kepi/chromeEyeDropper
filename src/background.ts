@@ -210,10 +210,6 @@ var bg = {
         } // we are storing color with first # character
         bg.setBadgeColor(color)
         bg.history.last_color = color
-        if (bg.settings.autoClipboard) {
-            console.info('Copying color to clipboard')
-            bg.copyToClipboard(color)
-        }
         if (history) {
             console.info('Saving color to history')
             bg.saveToHistory(color, source, url)
@@ -233,11 +229,6 @@ var bg = {
         } else {
             console.info('Color ' + color + ' already in palette ' + bg.getPaletteName())
         }
-    },
-    copyToClipboard: function (color: string) {
-        bg.edCb.value = bg.settings.autoClipboardNoGrid ? color.substring(1) : color
-        bg.edCb.select()
-        document.execCommand('copy', false, null)
     },
     // activate from content script
     activate2: function () {
@@ -261,6 +252,8 @@ var bg = {
                 enableColorToolbox: bg.settings.enableColorToolbox,
                 enableColorTooltip: bg.settings.enableColorTooltip,
                 enableRightClickDeactivate: bg.settings.enableRightClickDeactivate,
+                autoClipboard: bg.settings.autoClipboard,
+                autoClipboardNoGrid: bg.settings.autoClipboardNoGrid,
             },
         })
         console.log('bg: activating pickup')
