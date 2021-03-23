@@ -1,5 +1,5 @@
-const BG_VERSION = 17
-const NEED_DROPPER_VERSION = 12
+const BG_VERSION = 18
+const NEED_DROPPER_VERSION = 13
 const DEFAULT_COLOR = '#b48484'
 
 interface BgSettings {

@@ -5,7 +5,7 @@ import Rect from './rect'
 import { clipColor } from './clipboard'
 import { ColorModel, RgbNotation } from './color'
 
-var EDROPPER_VERSION = 12
+var EDROPPER_VERSION = 13
 var CANVAS_MAX_SIZE = 32767 - 20
 var page = {
     width: 0,
