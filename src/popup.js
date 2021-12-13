@@ -70,6 +70,14 @@ function hslFixed(hsl_html) {
     return `${parts[0]},${parts[1]}%,${parts[2]}%)`
 }
 
+/**
+ * Converts RGB values into normalized form
+ */
+function normalizeRgb(rbg_html) {
+    const parts = rbg_html.split(/[(,)]/)
+    return `rgbNormed(${(parts[1]/255).toFixed(4)},${(parts[2]/255).toFixed(4)},${(parts[3]/255).toFixed(4)})`
+}
+
 function initPlus() {
     let colors_palette_change = document.getElementById('colors-palette-change')
 
@@ -623,6 +631,7 @@ function colorBox(type, color) {
             color.html('keyword'),
             hslFixed(color.html('hsl')),
             color.html('rgb'),
+            normalizeRgb(color.html('rgb')),
         ]
 
         let html = ''
