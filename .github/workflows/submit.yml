@@ -1,0 +1,24 @@
+name: Submit extension
+
+on:
+  workflow_dispatch:
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: source
+    - run: mkdir archives
+    - name: Install, build, zip
+      run: |
+        cd source
+        npm i
+        npm run build:prod
+        npm run zip:prod
+    - name: Browser Plugin Publish
+      uses: plasmo-corp/bpp@v1
+      with:
+        artifact: "archives/EyeDropper_{version}.zip"
+        keys: ${{ secrets.SUBMIT_KEYS }}
