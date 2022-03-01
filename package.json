@@ -26,7 +26,7 @@
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.33.0",
     "bestzip": "^2.1.5",
-    "copy-webpack-plugin": "^8.0.0",
+    "copy-webpack-plugin": "^10.2.4",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.4.0",
     "eslint-plugin-prettier": "^4.0.0",
