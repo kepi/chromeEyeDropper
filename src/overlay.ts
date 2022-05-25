@@ -44,7 +44,7 @@ class Overlay {
                 'opacity: 1',
                 'background: none',
                 'border: none',
-                'z-index: 5000',
+                'z-index: 1000001',
             ].join(';'),
         })
 
@@ -137,7 +137,7 @@ class ToolTip extends Tool {
         this.el = createNode('div', {
             id: 'color-tooltip',
             style: [
-                'z-index: 1000',
+                'z-index: 1000001',
                 'color: black',
                 'position: absolute',
                 'display: none',
@@ -182,7 +182,7 @@ class ToolBox extends Tool {
         this.el = createNode('div', {
             id: 'color-toolbox',
             style: [
-                'z-index: 1000',
+                'z-index: 1000001',
                 'color: black',
                 'position: absolute',
                 'display: none',
