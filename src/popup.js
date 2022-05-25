@@ -229,7 +229,7 @@ function initPickButton(tab) {
                 pickButton(
                     tab,
                     false,
-                    '<strong>Eye Dropper</strong> can\'t access local pages unless you grant it the permission. Check <a href="#" id="link-help-file-urls" data-url="https://eyedropper.test/help/file-urls">the instructions how to allow it</a>.',
+                    '<strong>Eye Dropper</strong> can\'t access local pages unless you grant it the permission. Check <a href="#" id="link-help-file-urls" data-url="https://eyedropper.org/help/file-urls">the instructions how to allow it</a>.',
                 )
                 initExternalLink(document.getElementById('link-help-file-urls'))
             }
