@@ -2,7 +2,6 @@ const webpack = require('webpack')
 const path = require('path')
 const CopyPlugin = require('copy-webpack-plugin')
 const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin')
-const SizePlugin = require('size-plugin')
 const srcDir = '../src/'
 
 module.exports = {
@@ -37,7 +36,6 @@ module.exports = {
         extensions: ['.ts', '.tsx', '.js'],
     },
     plugins: [
-        new SizePlugin(),
         // exclude locale files in moment
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
         new CopyPlugin({

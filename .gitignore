@@ -4,7 +4,6 @@ inc/jPicker/images/Thumbs.db
 dist
 node_modules
 .log/*
-size-plugin.json
 # yarn
 .pnp.*
 .yarn/*
