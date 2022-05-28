@@ -1,0 +1,48 @@
+---
+name: 💡 Idea or Feature Request
+description: Do you have an idea for this project?
+labels:
+  - "type: idea"
+body:
+- type: markdown
+  attributes:
+    value: |
+      Thanks ❤️ for taking time to suggest a future request or an idea.
+
+      Eye Dropper owes many of its improvements to users like you.
+
+- type: textarea
+  attributes:
+    label: Is your feature request related to a problem?
+    description: |
+      Please try to clearly describe what is the problem.
+
+      Example. *I'm always frustrated when [...]*
+  validations:
+    required: false
+
+- type: textarea
+  attributes:
+    label: Describe the solution you'd like
+    description: |
+      What would you like to happen instead? Try to be descriptive so there is better chance I'll understand.
+  validations:
+    required: true
+
+- type: textarea
+  attributes:
+    label: Describe alternatives you've considered
+    description: |
+      Did you considered any alternatives? Tell me about them.
+  validations:
+    required: false
+
+- type: textarea
+  attributes:
+    label: Anything else?
+    description: |
+      Add any other context, screenshots, doodles etc. will help a lot.
+
+      💡 Tip: to attach pictures, screenshots etc just click into this field to highlight it and then drag & drop files in.
+  validations:
+    required: false

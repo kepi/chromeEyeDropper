@@ -1,8 +1,8 @@
 #+TITLE: Eye Dropper browser extension
 
-Eye Dropper is web browser extension which helps you pick and manage palettes of
-colors from web pages or color picker. It currently works in Chromium and Google
-Chrome™.
+*Eye Dropper* is web browser extension which helps you pick and manage palettes
+of colors from web pages or color picker. It currently works in Chromium and
+Google Chrome™.
 
 You can find more info, help and FAQ at [[https://eyedropper.org][homepage]].
 

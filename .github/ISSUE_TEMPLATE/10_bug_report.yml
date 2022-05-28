@@ -1,0 +1,69 @@
+---
+name: 🐞 Bug Report
+description: Something not working? Let me know.
+labels:
+  - "type: bug"
+body:
+- type: textarea
+  attributes:
+    label: Describe the bug
+    description: Please try to clearly describe what isn't working. It might be hard for me to guess correctly, so clear description will help a lot.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Expected Behavior
+    description: A clear and concise description of what have you expected to happen.
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Steps To Reproduce
+    description: |
+      Steps to reproduce the problem you are experiencing.
+
+      Try to be descriptive and include context and information, which might be relevant. Example:
+
+      1. My browser has been on page https://eyedropper.org
+      2. I clicked on **Eye Dropper** icon and Eye Droppers window appeared without a problem
+      3. I clicked on *Pick color from web page** button
+      4. Nothing happened. I tried it multiple times and waiting couple seconds but nothing...
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Screenshots
+    description: |
+      If you have a screenshot or video of the issue, it would help me to understand the problem faster.
+
+      Simply click this area to highlight it and then drag & drop files in.
+  validations:
+    required: false
+- type: dropdown
+  attributes:
+    label: Operating system
+    description: What Operating System do you have?
+    options:
+      - Windows
+      - macOS
+      - Linux
+      - "*BSD"
+      - Chrome OS
+      - Other
+  validations:
+    required: false
+
+- type: input
+  attributes:
+    label: Browser version
+    description: If you know version of your browser, fill it in.
+  validations:
+    required: false
+
+- type: textarea
+  attributes:
+    label: Anything else?
+    description: |
+      Add any other context about the problem which might seem relevant.
+  validations:
+    required: false
