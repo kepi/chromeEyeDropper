@@ -42,8 +42,8 @@
     "webpack-cli": "^4.9.2",
     "webpack-merge": "^5.8.0"
   },
+  "packageManager": "yarn@3.2.1",
   "dependencies": {
-    "color": "^3.2.1"
-  },
-  "packageManager": "yarn@3.2.1"
+    "@ctrl/tinycolor": "^3.4.1"
+  }
 }
