@@ -44,6 +44,7 @@
   },
   "packageManager": "yarn@3.2.1",
   "dependencies": {
-    "@ctrl/tinycolor": "^3.4.1"
+    "@ctrl/tinycolor": "^3.4.1",
+    "simple-color-picker": "^1.0.5"
   }
 }

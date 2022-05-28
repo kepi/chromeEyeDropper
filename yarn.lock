@@ -1008,6 +1008,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/insert-css@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "@types/insert-css@npm:2.0.1"
+  checksum: 7a3600a90340601bc4ba030f29bccc23878371b4559fdc33a6ba542df6a0ee2cc26b0ac04c5c7d775df06cad5566eadbaefb7ca0a9572ae7c7c601891eee5447
+  languageName: node
+  linkType: hard
+
 "@types/istanbul-lib-coverage@npm:*, @types/istanbul-lib-coverage@npm:^2.0.0, @types/istanbul-lib-coverage@npm:^2.0.1":
   version: 2.0.3
   resolution: "@types/istanbul-lib-coverage@npm:2.0.3"
@@ -2750,6 +2757,7 @@ __metadata:
     prettier: ^2.6.2
     replace-in-file-webpack-plugin: ^1.0.6
     rimraf: ^3.0.2
+    simple-color-picker: ^1.0.5
     size-plugin: ^2.0.2
     ts-jest: ^28.0.3
     ts-loader: ^9.3.0
@@ -3295,6 +3303,13 @@ __metadata:
   version: 2.0.4
   resolution: "inherits@npm:2.0.4"
   checksum: 4a48a733847879d6cf6691860a6b1e3f0f4754176e4d71494c41f3475553768b10f84b5ce1d40fbd0e34e6bfbb864ee35858ad4dd2cf31e02fc4a154b724d7f1
+  languageName: node
+  linkType: hard
+
+"insert-css@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "insert-css@npm:2.0.0"
+  checksum: c510411fc2df6fd5106a3bc771417b3ea07ebfefa2c0e360b0901c37d8d3f5de7dc9a78a7c949433ac6875f661a7a6290b71f411b8594284c097fa1fa2a35a35
   languageName: node
   linkType: hard
 
@@ -5235,6 +5250,16 @@ __metadata:
   version: 3.0.7
   resolution: "signal-exit@npm:3.0.7"
   checksum: a2f098f247adc367dffc27845853e9959b9e88b01cb301658cfe4194352d8d2bb32e18467c786a7fe15f1d44b233ea35633d076d5e737870b7139949d1ab6318
+  languageName: node
+  linkType: hard
+
+"simple-color-picker@npm:^1.0.5":
+  version: 1.0.5
+  resolution: "simple-color-picker@npm:1.0.5"
+  dependencies:
+    "@types/insert-css": ^2.0.0
+    insert-css: ^2.0.0
+  checksum: 34d95524084113cef79ec9faca6fb51b4b29cd1f98dec5814a4b720c128c3b81247f096a3cbf9ee70fd4c7d13f179b5cd362bd2a08627cda80089d73487c24d1
   languageName: node
   linkType: hard
 

@@ -1,6 +1,6 @@
 import { EdColor } from './ed-color'
 import { mscConfirm, mscPrompt } from 'medium-style-confirm'
-import type CP from '../public/inc/color-picker/color-picker.js'
+import ColorPicker from 'simple-color-picker'
 
 const NEED_BG_VERSION = 18 // minimum version of bg script we need
 
@@ -556,7 +556,7 @@ function switchTab(tabId) {
 
     // color picker tab
     if (cpicker) {
-        cpicker.destroy()
+        cpicker.remove()
     }
 
     for (let tab_id in tab_ins) {
@@ -650,19 +650,14 @@ function colorSquare(color) {
 }
 
 function loadColorPicker() {
-    let cpicker_script = document.createElement('script')
-    cpicker_script.onload = () => {
-        console.info('Showing cpicker')
-        cpicker_input = document.getElementById('colorpicker-input')
-        cpicker_input.value = bgPage.bg.getColor()
+    console.info('Showing cpicker')
+    cpicker_input = document.getElementById('colorpicker-input')
+    cpicker_input.value = bgPage.bg.getColor()
 
-        showColorPicker()
-    }
-    cpicker_script.src = '/inc/color-picker/color-picker.js'
-    document.head.appendChild(cpicker_script)
+    showColorPicker()
 
     document.getElementById('colorpicker-select').onclick = () => {
-        let color = cpicker.target.value.toLowerCase()
+        let color = cpicker_input.value.toLowerCase()
         colorBox('current', color)
         bgPage.bg.setColor(color, true, 2)
         drawColorHistory()
@@ -671,46 +666,21 @@ function loadColorPicker() {
 
 function showColorPicker() {
     // create new cpicker instance
-    cpicker = new CP(cpicker_input)
-
-    // function to update color in picker and color box on cp change
-    function update(cpicker_color) {
-        colorBox('new', `#${cpicker_color}`)
-        cpicker.target.value = `#${cpicker_color}`
-    }
-
-    // attach to update function
-    cpicker.on('start', update)
-    cpicker.on('drag', update)
-
-    // move color picker panel from 'body' to 'colorpicker' element
-    cpicker.on('enter', () => {
-        document.getElementById('colorpicker').appendChild(cpicker.picker)
+    cpicker = new ColorPicker({
+        el: document.getElementById('colorpicker'),
+        color: cpicker_input.value,
     })
 
-    // we need to update picker also when playing with input field
-    // we need try/catch because when hand editing input field, color can be
-    // invalid and color library can't handle wrong syntax
-    function update_from_input() {
-        try {
-            let color = cpicker.target.value.toLowerCase()
-            colorBox('new', color)
-            cpicker.set(color)
-        } catch (err) {}
-    }
-
-    cpicker.target.onkeyup = update_from_input
-    cpicker.target.oncut = update_from_input
-    cpicker.target.onpaste = update_from_input
-    cpicker.target.oninput = update_from_input
-
-    // display cpicker
-    cpicker.enter()
+    cpicker.onChange(() => {
+        const color = cpicker.getHexString().toLowerCase()
+        cpicker_input.value = color
+        colorBox('new', color)
+    })
 }
 
 function changeColorPicker(color) {
     if (cpicker) {
         cpicker.target.value = color
-        cpicker.set(color)
+        cpicker.setColor(color)
     }
 }
