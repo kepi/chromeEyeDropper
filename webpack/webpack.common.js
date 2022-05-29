@@ -36,6 +36,7 @@ module.exports = {
             patterns: [
                 { from: '.', to: '../', context: 'public/' },
                 { from: 'medium-style-confirm/css/msc-style.css', to: '../inc/msc.css', context: 'node_modules/' },
+                { from: 'hint.css/hint.base.min.css', to: '../inc/hint.css', context: 'node_modules/' },
             ],
         }),
 

@@ -2753,6 +2753,7 @@ __metadata:
     eslint: ^8.16.0
     eslint-config-prettier: ^8.5.0
     eslint-plugin-prettier: ^4.0.0
+    hint.css: ^2.7.0
     jest: ^28.1.0
     medium-style-confirm: ^0.4.6
     prettier: ^2.6.2
@@ -3170,6 +3171,13 @@ __metadata:
   dependencies:
     function-bind: ^1.1.1
   checksum: b9ad53d53be4af90ce5d1c38331e712522417d017d5ef1ebd0507e07c2fbad8686fffb8e12ddecd4c39ca9b9b47431afbb975b8abf7f3c3b82c98e9aad052792
+  languageName: node
+  linkType: hard
+
+"hint.css@npm:^2.7.0":
+  version: 2.7.0
+  resolution: "hint.css@npm:2.7.0"
+  checksum: cbdc33d40bde12070a0215d572e4f6fc48390b0499ea52286e24f643550140e9053027a7586650c6d6018bbe676bfe6734bc135bbdea7a6cbefae31f9ea89b5c
   languageName: node
   linkType: hard
 
