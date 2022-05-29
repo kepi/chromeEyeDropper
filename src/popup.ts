@@ -5,7 +5,16 @@ import ColorPicker from 'simple-color-picker'
 const NEED_BG_VERSION = 18 // minimum version of bg script we need
 
 let bgPage = null
-let boxes = {}
+
+type boxes = {
+    "current": HTMLElement | null
+    "new": HTMLElement | null
+}
+
+let boxes: boxes = {
+    current: null,
+    new: null,
+}
 let tab_ins = {}
 
 // section elements
@@ -21,7 +30,7 @@ let span_palette_name = null
 let badge = null
 
 // cpicker elements
-let cpicker = null
+let cpicker : ColorPicker | null = null
 let cpicker_input = null
 
 ready(init) // call init when ready
@@ -31,7 +40,7 @@ ready(init) // call init when ready
  *
  * @param {function} fn function to call when document is ready
  */
-function ready(fn) {
+function ready(fn: () => void) {
     if (document.readyState != 'loading') {
         fn()
     } else {
@@ -115,7 +124,7 @@ function initTabs() {
  * href attribute, we will create new tab with help of chrome api.
  */
 
-function initExternalLink(n) {
+function initExternalLink(n: HTMLLinkElement) {
     if (n.dataset.url) {
         n.onclick = () => {
             chrome.tabs.create({
@@ -125,7 +134,7 @@ function initExternalLink(n) {
     }
 }
 function initExternalLinks() {
-    for (let n of document.getElementsByClassName('ed-external')) {
+    for (let n of document.getElementsByClassName('ed-external') as HTMLCollectionOf<HTMLLinkElement>) {
         initExternalLink(n)
     }
     console.info('external links initialized')
@@ -137,7 +146,7 @@ function initExternalLinks() {
  *
  * @param {object} backgroundPage remote object for background page
  */
-function gotBgPage(backgroundPage) {
+function gotBgPage(backgroundPage: Window) {
     console.group('popup init phase 2')
     bgPage = backgroundPage
     console.info(`Connected to background page version ${bgPage.bg.version}`)
@@ -174,7 +183,7 @@ function bgPageReady() {
  *
  */
 
-function pickButton(tab, enabled, message = '') {
+function pickButton(tab: chrome.tabs.Tab, enabled: boolean, message = '') {
     let pick_el = document.getElementById('pick')
     if (enabled) {
         pick_el.onclick = () => {
@@ -199,10 +208,7 @@ function pickButton(tab, enabled, message = '') {
  * - local page
  *
  */
-function initPickButton(tab) {
-    let pickEnabled = true
-    let message = ''
-
+function initPickButton(tab: chrome.tabs.Tab) {
     // special chrome pages
     if (tab.url === undefined || tab.url.indexOf('chrome') == 0) {
         pickButton(
@@ -226,7 +232,7 @@ function initPickButton(tab) {
                     false,
                     '<strong>Eye Dropper</strong> can\'t access local pages unless you grant it the permission. Check <a href="#" id="link-help-file-urls" data-url="https://eyedropper.org/help/file-urls">the instructions how to allow it</a>.',
                 )
-                initExternalLink(document.getElementById('link-help-file-urls'))
+                initExternalLink(document.getElementById('link-help-file-urls') as HTMLLinkElement)
             }
         })
     } else {
@@ -270,7 +276,7 @@ function clearPalette() {
     })
 }
 
-function destroyPalette(palette_name) {
+function destroyPalette(palette_name: string) {
     mscConfirm({
         title: `Destroy Palette '${palette_name}'?`,
         subtitle: `Really destroy palette ${palette_name}?`,
@@ -293,7 +299,6 @@ function drawColorHistory() {
     // find element for colors history squares and instructions
     let history_el = document.getElementById('colors-history')
     let instructions_el = document.getElementById('colors-history-instructions')
-    let toolbar_el = document.getElementById('colors-history-toolbar')
 
     const history_tool_noempty_els = document.getElementsByClassName(
         'eb-history-tool-noempty',
@@ -436,14 +441,14 @@ function drawColorPalettes() {
             okText: 'Create Palette',
             cancelText: 'Cancel',
             placeholder: 'palette',
-            onOk: (name) => {
+            onOk: (name: string) => {
                 createColorPalette(name)
             },
         })
     }
 }
 
-function createColorPalette(name) {
+function createColorPalette(name: string) {
     if (name !== null) {
         switchColorPalette(bgPage.bg.createPalette(name).name)
     }
@@ -453,7 +458,7 @@ function switchToDefaultPalette() {
     switchColorPalette(bgPage.bg.defaultPalette)
 }
 
-function switchColorPalette(palette) {
+function switchColorPalette(palette: string) {
     console.info(`Switching to palette ${palette}`)
     bgPage.bg.changePalette(palette)
     console.info('Redrawing history and boxes')
@@ -496,13 +501,6 @@ function exportHistory() {
         csv += '\n'
 
         for (let color of history) {
-            let d = typeof color.t === 'function' ? new Date(color.t()) : new Date(color.t)
-            let datestring = `${d.getFullYear()}-${('0' + (d.getMonth() + 1)).slice(-2)}-${(
-                '0' + d.getDate()
-            ).slice(-2)} ${('0' + d.getHours()).slice(-2)}:${('0' + d.getMinutes()).slice(-2)}:${(
-                '0' + d.getSeconds()
-            ).slice(-2)}`
-
             csv += `"${color.h}"`
 
             color = new EdColor(color.h)
@@ -542,7 +540,7 @@ function exportHistory() {
  * @param {string} tabId id of tab to switch to
  *
  */
-function switchTab(tabId) {
+function switchTab(tabId: string) {
     // on button-about hide history and color boxes
     if (tabId === 'button-about') {
         sec_color_boxes.style.display = 'none'
@@ -573,7 +571,7 @@ function switchTab(tabId) {
     loadTab(tabId)
 }
 
-function loadTab(tabId) {
+function loadTab(tabId: string) {
     console.group('tabSwitch')
     let content_found = false
     const content_pages = document.getElementsByClassName(
@@ -619,9 +617,9 @@ function loadTab(tabId) {
     console.groupEnd()
 }
 
-function colorBox(type, color) {
+function colorBox(type: "new" | "current", color_hex: string) {
     if (boxes[type]) {
-        color = new EdColor(color)
+        const color = new EdColor(color_hex)
 
         let formats = [
             color.toHexString(),
@@ -640,13 +638,12 @@ function colorBox(type, color) {
             }
         }
         boxes[type].innerHTML = html
-
-        boxes[type].style = `background: ${color.toHexString()}`
+        boxes[type].setAttribute("style", `background: ${color.toHexString()}`)
     }
 }
 
-function colorSquare(color) {
-    return `<div class="fl dib dim mr1 br1 mb1 ba b--gray colors-history-square" data-color="${color}" style="background-color: ${color}">&nbsp;</div>`
+function colorSquare(color_hex: string) {
+    return `<div class="fl dib dim mr1 br1 mb1 ba b--gray colors-history-square" data-color="${color_hex}" style="background-color: ${color_hex}">&nbsp;</div>`
 }
 
 function loadColorPicker() {
@@ -662,6 +659,19 @@ function loadColorPicker() {
         bgPage.bg.setColor(color, true, 2)
         drawColorHistory()
     }
+
+    // Listen for changes from input field
+    cpicker_input.addEventListener('input', () => {
+        // no color format can be smaller then 3 chars
+        if (cpicker_input.value.length >= 3) {
+            // try to create new EdColor instance
+            const c = new EdColor(cpicker_input.value)
+            // if it is working, change color in picker
+            if (c) {
+                cpicker.setColor(c.toHexString())
+            }
+        }
+    })
 }
 
 function showColorPicker() {
@@ -671,16 +681,23 @@ function showColorPicker() {
         color: cpicker_input.value,
     })
 
+    // listen on picker changes
     cpicker.onChange(() => {
         const color = cpicker.getHexString().toLowerCase()
-        cpicker_input.value = color
+
+        // do not change input value if color change was caused externally
+        if (cpicker.isChoosing) {
+            cpicker_input.value = color
+        }
+
+        // always change new colorBox to new color
         colorBox('new', color)
     })
 }
 
-function changeColorPicker(color) {
+function changeColorPicker(color_hex: string) {
     if (cpicker) {
-        cpicker.target.value = color
-        cpicker.setColor(color)
+        cpicker_input.value = color_hex
+        cpicker.setColor(color_hex)
     }
 }

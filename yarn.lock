@@ -2754,6 +2754,7 @@ __metadata:
     eslint-config-prettier: ^8.5.0
     eslint-plugin-prettier: ^4.0.0
     jest: ^28.1.0
+    medium-style-confirm: ^0.4.6
     prettier: ^2.6.2
     replace-in-file-webpack-plugin: ^1.0.6
     rimraf: ^3.0.2
@@ -4315,6 +4316,13 @@ __metadata:
   dependencies:
     tmpl: 1.0.x
   checksum: 9a62ec2d9648c5329fdc4bc7d779a7305f32b1e55422a4f14244bc890bb43287fe013eb8d965e92a0cf4c443f3e59265b1fc3125eaedb0c2361e28b1a8de565d
+  languageName: node
+  linkType: hard
+
+"medium-style-confirm@npm:^0.4.6":
+  version: 0.4.6
+  resolution: "medium-style-confirm@npm:0.4.6"
+  checksum: 733cdece0ee7eb6d66e6f7c390c0a51b09b9943f954a576593c340f2eda91350288c26d20f9369c685ee3a957b3591a33f96e4659e714de42debad84f7e1dcbf
   languageName: node
   linkType: hard
 
