@@ -33,7 +33,10 @@ module.exports = {
         // exclude locale files in moment
         new webpack.IgnorePlugin({ resourceRegExp: /^\.\/locale$/, contextRegExp: /moment$/ }),
         new CopyPlugin({
-            patterns: [{ from: '.', to: '../', context: 'public/' }],
+            patterns: [
+                { from: '.', to: '../', context: 'public/' },
+                { from: 'medium-style-confirm/css/msc-style.css', to: '../inc/msc.css', context: 'node_modules/' },
+            ],
         }),
 
         new ReplaceInFileWebpackPlugin([
