@@ -1,7 +1,20 @@
+import { EdColor } from './ed-color'
+import { mscConfirm, mscPrompt } from 'medium-style-confirm'
+import ColorPicker from 'simple-color-picker'
+
 const NEED_BG_VERSION = 18 // minimum version of bg script we need
 
 let bgPage = null
-let boxes = {}
+
+type boxes = {
+    "current": HTMLElement | null
+    "new": HTMLElement | null
+}
+
+let boxes: boxes = {
+    current: null,
+    new: null,
+}
 let tab_ins = {}
 
 // section elements
@@ -17,7 +30,7 @@ let span_palette_name = null
 let badge = null
 
 // cpicker elements
-let cpicker = null
+let cpicker : ColorPicker | null = null
 let cpicker_input = null
 
 ready(init) // call init when ready
@@ -27,7 +40,7 @@ ready(init) // call init when ready
  *
  * @param {function} fn function to call when document is ready
  */
-function ready(fn) {
+function ready(fn: () => void) {
     if (document.readyState != 'loading') {
         fn()
     } else {
@@ -50,24 +63,13 @@ function init() {
         gotBgPage(backgroundPage)
     })
 
-    console.groupEnd('popup init')
+    console.groupEnd()
 
     sec_content = document.getElementById('content')
     sec_color_boxes = document.getElementById('color-boxes')
     sec_color_history = document.getElementById('color-history')
     badge = document.getElementById('plus-badge')
     badge.style.display = 'none'
-}
-
-/**
- * Workaround around wrong output from color library
- *
- * FIXME: fix directly in library later
- *
- */
-function hslFixed(hsl_html) {
-    const parts = hsl_html.split(/[,)]/)
-    return `${parts[0]},${parts[1]}%,${parts[2]}%)`
 }
 
 function initPlus() {
@@ -97,7 +99,9 @@ function initPlus() {
  * Init links on tabs
  */
 function initTabs() {
-    for (let n of document.getElementsByClassName('ed-tab')) {
+    const tabs = document.getElementsByClassName('ed-tab') as HTMLCollectionOf<HTMLElement>
+
+    for (let n of tabs) {
         n.onclick = () => {
             switchTab(n.id)
         }
@@ -120,7 +124,7 @@ function initTabs() {
  * href attribute, we will create new tab with help of chrome api.
  */
 
-function initExternalLink(n) {
+function initExternalLink(n: HTMLLinkElement) {
     if (n.dataset.url) {
         n.onclick = () => {
             chrome.tabs.create({
@@ -130,7 +134,7 @@ function initExternalLink(n) {
     }
 }
 function initExternalLinks() {
-    for (let n of document.getElementsByClassName('ed-external')) {
+    for (let n of document.getElementsByClassName('ed-external') as HTMLCollectionOf<HTMLLinkElement>) {
         initExternalLink(n)
     }
     console.info('external links initialized')
@@ -142,7 +146,7 @@ function initExternalLinks() {
  *
  * @param {object} backgroundPage remote object for background page
  */
-function gotBgPage(backgroundPage) {
+function gotBgPage(backgroundPage: Window) {
     console.group('popup init phase 2')
     bgPage = backgroundPage
     console.info(`Connected to background page version ${bgPage.bg.version}`)
@@ -160,14 +164,14 @@ function gotBgPage(backgroundPage) {
         bgPageReady()
     }
 
-    console.groupEnd('popup init phase 2')
+    console.groupEnd()
 }
 
 function bgPageReady() {
     // init pick button with selected tab
-    chrome.tabs.getSelected(null, (tab) => {
-        initPickButton(tab)
-    })
+    chrome.tabs.query({active: true}, ((tabs: [chrome.tabs.Tab]) => {
+        initPickButton(tabs[0])
+    }))
 
     initColorBoxes()
     initColorHistory()
@@ -179,7 +183,7 @@ function bgPageReady() {
  *
  */
 
-function pickButton(tab, enabled, message = '') {
+function pickButton(tab: chrome.tabs.Tab, enabled: boolean, message = '') {
     let pick_el = document.getElementById('pick')
     if (enabled) {
         pick_el.onclick = () => {
@@ -204,10 +208,7 @@ function pickButton(tab, enabled, message = '') {
  * - local page
  *
  */
-function initPickButton(tab) {
-    let pickEnabled = true
-    let message = ''
-
+function initPickButton(tab: chrome.tabs.Tab) {
     // special chrome pages
     if (tab.url === undefined || tab.url.indexOf('chrome') == 0) {
         pickButton(
@@ -231,7 +232,7 @@ function initPickButton(tab) {
                     false,
                     '<strong>Eye Dropper</strong> can\'t access local pages unless you grant it the permission. Check <a href="#" id="link-help-file-urls" data-url="https://eyedropper.org/help/file-urls">the instructions how to allow it</a>.',
                 )
-                initExternalLink(document.getElementById('link-help-file-urls'))
+                initExternalLink(document.getElementById('link-help-file-urls') as HTMLLinkElement)
             }
         })
     } else {
@@ -275,7 +276,7 @@ function clearPalette() {
     })
 }
 
-function destroyPalette(palette_name) {
+function destroyPalette(palette_name: string) {
     mscConfirm({
         title: `Destroy Palette '${palette_name}'?`,
         subtitle: `Really destroy palette ${palette_name}?`,
@@ -298,9 +299,10 @@ function drawColorHistory() {
     // find element for colors history squares and instructions
     let history_el = document.getElementById('colors-history')
     let instructions_el = document.getElementById('colors-history-instructions')
-    let toolbar_el = document.getElementById('colors-history-toolbar')
 
-    let history_tool_noempty_els = document.getElementsByClassName('eb-history-tool-noempty')
+    const history_tool_noempty_els = document.getElementsByClassName(
+        'eb-history-tool-noempty',
+    ) as HTMLCollectionOf<HTMLElement>
 
     // first load history from palette and assemble html
     let html = ''
@@ -311,7 +313,10 @@ function drawColorHistory() {
     history_el.innerHTML = html
 
     // attach javascript onmouseover and onclick events
-    for (let n of document.getElementsByClassName('colors-history-square')) {
+    const squares = document.getElementsByClassName(
+        'colors-history-square',
+    ) as HTMLCollectionOf<HTMLElement>
+    for (let n of squares) {
         n.onmouseover = () => {
             colorBox('new', n.dataset.color)
         }
@@ -325,12 +330,12 @@ function drawColorHistory() {
 
     if (palette.colors.length > 0) {
         instructions_el.innerHTML = 'Hover over squares to preview.'
-        for (n of history_tool_noempty_els) {
+        for (let n of history_tool_noempty_els) {
             n.style.display = ''
         }
     } else {
         instructions_el.innerHTML = 'History is empty, try to pick some colors first.'
-        for (n of history_tool_noempty_els) {
+        for (let n of history_tool_noempty_els) {
             n.style.display = 'none'
         }
     }
@@ -406,7 +411,8 @@ function drawColorPalettes() {
     sec_color_palette.innerHTML = palettes
 
     // Support for palette click
-    for (let n of document.getElementsByClassName('ed-palette')) {
+    const paletes = document.getElementsByClassName('ed-palette') as HTMLCollectionOf<HTMLElement>
+    for (let n of paletes) {
         n.onclick = () => {
             let palette = n.dataset.palette
             console.info(`Asked to switch to palette ${palette}`)
@@ -417,7 +423,10 @@ function drawColorPalettes() {
     }
 
     // Support for palete destroy click
-    for (let n of document.getElementsByClassName('ed-palette-destroy')) {
+    const palette_destroys = document.getElementsByClassName(
+        'ed-palette-destroy',
+    ) as HTMLCollectionOf<HTMLElement>
+    for (let n of palette_destroys) {
         n.onclick = () => {
             let palette = n.dataset.palette
             console.info(`Asked to destroy palette ${palette}`)
@@ -432,14 +441,14 @@ function drawColorPalettes() {
             okText: 'Create Palette',
             cancelText: 'Cancel',
             placeholder: 'palette',
-            onOk: (name) => {
+            onOk: (name: string) => {
                 createColorPalette(name)
             },
         })
     }
 }
 
-function createColorPalette(name) {
+function createColorPalette(name: string) {
     if (name !== null) {
         switchColorPalette(bgPage.bg.createPalette(name).name)
     }
@@ -449,7 +458,7 @@ function switchToDefaultPalette() {
     switchColorPalette(bgPage.bg.defaultPalette)
 }
 
-function switchColorPalette(palette) {
+function switchColorPalette(palette: string) {
     console.info(`Switching to palette ${palette}`)
     bgPage.bg.changePalette(palette)
     console.info('Redrawing history and boxes')
@@ -474,14 +483,13 @@ function exportHistory() {
             ).slice(-2)}`
 
             csv += `"${color.h}","${datestring}","${bgPage.bg.color_sources[color.s]}"`
-            // FIXME: add name ,"${color.n}"
 
-            color = pusher.color(color.h)
+            color = new EdColor(color.h)
             let formats = [
-                color.hex3(),
-                hslFixed(color.html('hsl')),
-                color.html('rgb'),
-                color.html('keyword'),
+                color.toHex3String(),
+                color.toHslString(),
+                color.toRgbString(),
+                color.toName(),
             ]
             for (let format of formats) {
                 csv += `,"${format}"`
@@ -493,21 +501,14 @@ function exportHistory() {
         csv += '\n'
 
         for (let color of history) {
-            let d = typeof color.t === 'function' ? new Date(color.t()) : new Date(color.t)
-            let datestring = `${d.getFullYear()}-${('0' + (d.getMonth() + 1)).slice(-2)}-${(
-                '0' + d.getDate()
-            ).slice(-2)} ${('0' + d.getHours()).slice(-2)}:${('0' + d.getMinutes()).slice(-2)}:${(
-                '0' + d.getSeconds()
-            ).slice(-2)}`
-
             csv += `"${color.h}"`
 
-            color = pusher.color(color.h)
+            color = new EdColor(color.h)
             let formats = [
-                color.hex3(),
-                hslFixed(color.html('hsl')),
-                color.html('rgb'),
-                color.html('keyword'),
+                color.toHex3String(),
+                color.toHslString(),
+                color.toRgbString(),
+                color.toName(),
             ]
             for (let format of formats) {
                 csv += `,"${format}"`
@@ -520,7 +521,7 @@ function exportHistory() {
 
     console.group('csvExport')
     console.log(csv)
-    console.groupEnd('csvExport')
+    console.groupEnd()
 
     let link = document.createElement('a')
     link.setAttribute('href', data)
@@ -539,7 +540,7 @@ function exportHistory() {
  * @param {string} tabId id of tab to switch to
  *
  */
-function switchTab(tabId) {
+function switchTab(tabId: string) {
     // on button-about hide history and color boxes
     if (tabId === 'button-about') {
         sec_color_boxes.style.display = 'none'
@@ -553,7 +554,7 @@ function switchTab(tabId) {
 
     // color picker tab
     if (cpicker) {
-        cpicker.destroy()
+        cpicker.remove()
     }
 
     for (let tab_id in tab_ins) {
@@ -570,10 +571,13 @@ function switchTab(tabId) {
     loadTab(tabId)
 }
 
-function loadTab(tabId) {
+function loadTab(tabId: string) {
     console.group('tabSwitch')
     let content_found = false
-    for (let n of document.getElementsByClassName('content-page')) {
+    const content_pages = document.getElementsByClassName(
+        'content-page',
+    ) as HTMLCollectionOf<HTMLElement>
+    for (let n of content_pages) {
         console.info(`found tab content ${n.id}`)
         if (n.id === `${tabId}-content`) {
             n.style.display = 'block'
@@ -599,7 +603,7 @@ function loadTab(tabId) {
                     loadColorPicker()
                 }
             } else {
-                console.error(`Error loading ${tab.id} content through AJAX: ${request.status}`)
+                console.error(`Error loading ${tabId} content through AJAX: ${request.status}`)
             }
         }
 
@@ -610,97 +614,90 @@ function loadTab(tabId) {
             showColorPicker()
         }
     }
-    console.groupEnd('tabSwitch')
+    console.groupEnd()
 }
 
-function colorBox(type, color) {
+function colorBox(type: "new" | "current", color_hex: string) {
     if (boxes[type]) {
-        color = pusher.color(color)
+        const color = new EdColor(color_hex)
 
         let formats = [
-            color.hex6(),
-            color.hex3(),
-            color.html('keyword'),
-            hslFixed(color.html('hsl')),
-            color.html('rgb'),
+            color.toHexString(),
+            color.toHex3String(),
+            color.toName(),
+            color.toHslString(),
+            color.toRgbString(),
         ]
 
         let html = ''
         for (let value of formats) {
-            html += `<span class="mr1 bg-white br1 ph1 mb1 dib"><code>${value}</code></span>`
+            if (value) {
+                html += `<span class="mr1 bg-white br1 ph1 mb1 dib"><code>${value}</code></span>`
+            } else {
+                html += `<span class="mr1 br1 ph1 mb1 dib">&nbsp;&nbsp;&nbsp;&nbsp;</span>`
+            }
         }
         boxes[type].innerHTML = html
-
-        boxes[type].style = `background: ${color.hex6()}`
+        boxes[type].setAttribute("style", `background: ${color.toHexString()}`)
     }
 }
 
-function colorSquare(color) {
-    return `<div class="fl dib dim mr1 br1 mb1 ba b--gray colors-history-square" data-color="${color}" style="background-color: ${color}">&nbsp;</div>`
+function colorSquare(color_hex: string) {
+    return `<div class="fl dib dim mr1 br1 mb1 ba b--gray colors-history-square" data-color="${color_hex}" style="background-color: ${color_hex}">&nbsp;</div>`
 }
 
 function loadColorPicker() {
-    let cpicker_script = document.createElement('script')
-    cpicker_script.onload = () => {
-        console.info('Showing cpicker')
-        cpicker_input = document.getElementById('colorpicker-input')
-        cpicker_input.value = bgPage.bg.getColor()
+    console.info('Showing cpicker')
+    cpicker_input = document.getElementById('colorpicker-input')
+    cpicker_input.value = bgPage.bg.getColor()
 
-        showColorPicker()
-    }
-    cpicker_script.src = '/inc/color-picker/color-picker.js'
-    document.head.appendChild(cpicker_script)
+    showColorPicker()
 
     document.getElementById('colorpicker-select').onclick = () => {
-        let color = cpicker.target.value.toLowerCase()
+        let color = cpicker_input.value.toLowerCase()
         colorBox('current', color)
         bgPage.bg.setColor(color, true, 2)
         drawColorHistory()
     }
+
+    // Listen for changes from input field
+    cpicker_input.addEventListener('input', () => {
+        // no color format can be smaller then 3 chars
+        if (cpicker_input.value.length >= 3) {
+            // try to create new EdColor instance
+            const c = new EdColor(cpicker_input.value)
+            // if it is working, change color in picker
+            if (c) {
+                cpicker.setColor(c.toHexString())
+            }
+        }
+    })
 }
 
 function showColorPicker() {
     // create new cpicker instance
-    cpicker = new CP(cpicker_input)
-
-    // function to update color in picker and color box on cp change
-    function update(cpicker_color) {
-        colorBox('new', `#${cpicker_color}`)
-        cpicker.target.value = `#${cpicker_color}`
-    }
-
-    // attach to update function
-    cpicker.on('start', update)
-    cpicker.on('drag', update)
-
-    // move color picker panel from 'body' to 'colorpicker' element
-    cpicker.on('enter', () => {
-        document.getElementById('colorpicker').appendChild(cpicker.picker)
+    cpicker = new ColorPicker({
+        el: document.getElementById('colorpicker'),
+        color: cpicker_input.value,
     })
 
-    // we need to update picker also when playing with input field
-    // we need try/catch because when hand editing input field, color can be
-    // invalid and pusher library can't handle wrong syntax
-    function update_from_input() {
-        try {
-            let color = cpicker.target.value.toLowerCase()
-            colorBox('new', color)
-            cpicker.set(color)
-        } catch (err) {}
-    }
+    // listen on picker changes
+    cpicker.onChange(() => {
+        const color = cpicker.getHexString().toLowerCase()
 
-    cpicker.target.onkeyup = update_from_input
-    cpicker.target.oncut = update_from_input
-    cpicker.target.onpaste = update_from_input
-    cpicker.target.oninput = update_from_input
+        // do not change input value if color change was caused externally
+        if (cpicker.isChoosing) {
+            cpicker_input.value = color
+        }
 
-    // display cpicker
-    cpicker.enter()
+        // always change new colorBox to new color
+        colorBox('new', color)
+    })
 }
 
-function changeColorPicker(color) {
+function changeColorPicker(color_hex: string) {
     if (cpicker) {
-        cpicker.target.value = color
-        cpicker.set(color)
+        cpicker_input.value = color_hex
+        cpicker.setColor(color_hex)
     }
 }

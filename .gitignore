@@ -3,6 +3,12 @@ inc/jPicker/images/Thumbs.db
 .idea/*
 dist
 node_modules
-yarn-error.log
 .log/*
-size-plugin.json
+# yarn
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

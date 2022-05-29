@@ -2,7 +2,6 @@ const webpack = require('webpack')
 const path = require('path')
 const CopyPlugin = require('copy-webpack-plugin')
 const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin')
-const SizePlugin = require('size-plugin')
 const srcDir = '../src/'
 
 module.exports = {
@@ -18,12 +17,6 @@ module.exports = {
         path: path.join(__dirname, '../dist/js'),
         filename: '[name].js',
     },
-    optimization: {
-        splitChunks: {
-            name: 'vendor',
-            chunks: 'initial',
-        },
-    },
     module: {
         rules: [
             {
@@ -37,11 +30,14 @@ module.exports = {
         extensions: ['.ts', '.tsx', '.js'],
     },
     plugins: [
-        new SizePlugin(),
         // exclude locale files in moment
-        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+        new webpack.IgnorePlugin({ resourceRegExp: /^\.\/locale$/, contextRegExp: /moment$/ }),
         new CopyPlugin({
-            patterns: [{ from: '.', to: '../', context: 'public/' }],
+            patterns: [
+                { from: '.', to: '../', context: 'public/' },
+                { from: 'medium-style-confirm/css/msc-style.css', to: '../inc/msc.css', context: 'node_modules/' },
+                { from: 'hint.css/hint.base.min.css', to: '../inc/hint.css', context: 'node_modules/' },
+            ],
         }),
 
         new ReplaceInFileWebpackPlugin([
