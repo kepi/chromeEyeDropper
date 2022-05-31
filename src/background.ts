@@ -232,7 +232,7 @@ var bg = {
     },
     // activate from content script
     activate2: function () {
-        chrome.tabs.query({ active: true }, (tabs: Array<chrome.tabs.Tab>) => {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs: Array<chrome.tabs.Tab>) => {
             bg.useTab(tabs[0])
             bg.activate()
         })

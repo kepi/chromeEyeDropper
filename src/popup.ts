@@ -169,7 +169,7 @@ function gotBgPage(backgroundPage: Window) {
 
 function bgPageReady() {
     // init pick button with selected tab
-    chrome.tabs.query({active: true}, ((tabs: [chrome.tabs.Tab]) => {
+    chrome.tabs.query({active: true, currentWindow: true}, ((tabs: [chrome.tabs.Tab]) => {
         initPickButton(tabs[0])
     }))
 
