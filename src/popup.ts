@@ -634,7 +634,7 @@ function colorBox(type: "new" | "current", color_hex: string) {
             if (value) {
                 html += `<span class="mr1 bg-white br1 ph1 mb1 dib"><code>${value}</code></span>`
             } else {
-                html += `<span class="mr1 br1 ph1 mb1 dib">&nbsp;&nbsp;&nbsp;&nbsp;</span>`
+                html += `<span class="mr1 br1 ph1 mb1 dib" style="min-width: 3em;">&nbsp;</span>`
             }
         }
         boxes[type].innerHTML = html
