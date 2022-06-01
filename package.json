@@ -22,9 +22,9 @@
   },
   "devDependencies": {
     "@types/chrome": "0.0.188",
-    "@types/jest": "^27.5.1",
-    "@typescript-eslint/eslint-plugin": "^5.26.0",
-    "@typescript-eslint/parser": "^5.26.0",
+    "@types/jest": "^27.5.2",
+    "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "@typescript-eslint/parser": "^5.27.0",
     "bestzip": "^2.2.1",
     "copy-webpack-plugin": "^11.0.0",
     "eslint": "^8.16.0",
