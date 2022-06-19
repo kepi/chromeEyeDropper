@@ -1,6 +1,7 @@
 import { EdColor } from './ed-color'
 import { mscConfirm, mscPrompt } from 'medium-style-confirm'
 import ColorPicker from 'simple-color-picker'
+import { copyToClipboard } from './clipboard'
 
 const NEED_BG_VERSION = 18 // minimum version of bg script we need
 
@@ -323,7 +324,7 @@ function drawColorHistory() {
 
         n.onclick = () => {
             colorBox('current', n.dataset.color)
-            bgPage.bg.setColor(n.dataset.color, false)
+            setColor(n.dataset.color, false)
             changeColorPicker(n.dataset.color)
         }
     }
@@ -656,7 +657,7 @@ function loadColorPicker() {
     document.getElementById('colorpicker-select').onclick = () => {
         let color = cpicker_input.value.toLowerCase()
         colorBox('current', color)
-        bgPage.bg.setColor(color, true, 2)
+        setColor(color, true, 2)
         drawColorHistory()
     }
 
@@ -672,6 +673,16 @@ function loadColorPicker() {
             }
         }
     })
+}
+
+function setColor(color: string, history = true, source = 1, url?: string) {
+    // save color to clipboard
+    if (bgPage.bg.settings.autoClipboard) {
+        const color_with_o_wo_grid = bgPage.bg.settings.autoClipboardNoGrid ? color.substring(1) : color
+        copyToClipboard(color_with_o_wo_grid)
+    }
+
+    bgPage.bg.setColor(color, history, source, url)
 }
 
 function showColorPicker() {
