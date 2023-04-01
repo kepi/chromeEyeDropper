@@ -74,24 +74,6 @@ function init() {
     sec_color_history = document.getElementById('color-history')
     badge = document.getElementById('plus-badge')
     badge.style.display = 'none'
-
-    const langs = [
-        ['le français', '🇫🇷 '],
-        ['Deutsch', '🇩🇪 '],
-        ["l'italiano", '🇮🇹 '],
-        ['にほんご', '🇯🇵 '],
-        ['한국어', '🇰🇷'],
-        ['português', '🇵🇹'],
-        ['español', '🇪🇸 '],
-        ['中文', '🇨🇳'],
-        ['עברית', '🇮🇱'],
-        ['हिंदी', '🇮🇳'],
-    ]
-
-    const lang = langs[Math.floor(Math.random() * langs.length)]
-
-    ad = document.getElementById('ad')
-    ad.innerHTML = `<span>Learn ${lang[1]} <cite style="font-weight: bold;">${lang[0]}</cite> without even trying.</span>`
 }
 
 function initPlus() {
