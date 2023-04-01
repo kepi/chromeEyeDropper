@@ -411,7 +411,7 @@ var bg = {
         bg.saveHistory(false)
         chrome.storage.sync.remove('palette.' + name)
     },
-    clearHistory: function (sendResponse: ({ state: string }) => void) {
+    clearHistory: function (sendResponse: (arg: { state: string }) => void) {
         var palette = bg.getPalette()
         console.info('Clearing history for palette ' + palette.name)
         palette.colors = []
