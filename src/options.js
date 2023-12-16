@@ -81,12 +81,28 @@ function init() {
     }
 }
 
+function promo_history() {
+    var history = ""
+    const campaignHistory = bgPage.bg.getCampaignHistory()
+
+    for (const c in campaignHistory) {
+        const campaign = campaignHistory[c]
+        history += `<tr><td><code>${campaign.id}</code></td><td><code>${campaign.url}</code></td><td>${campaign.date}<td/></tr>`
+
+    }
+    if ( history !== "" ) {
+        document.getElementById("promoOnUpdateHistoryBody").innerHTML = history
+    }
+}
+
 function bgPageReady() {
     restore_options()
 
     document.getElementById('saveButton').onclick = () => {
         save_options()
     }
+
+    promo_history()
 }
 
 function gotBgPage(backgroundPage) {

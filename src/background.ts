@@ -1,4 +1,4 @@
-const BG_VERSION = 18
+const BG_VERSION = 19
 const NEED_DROPPER_VERSION = 13
 const DEFAULT_COLOR = '#b48484'
 
@@ -11,6 +11,7 @@ interface BgSettings {
     dropperCursor: string
     plus: boolean
     plus_type: string
+    enablePromoOnUpdate: boolean
 }
 
 interface HistoryColorItem {
@@ -53,6 +54,7 @@ var bg = {
         dropperCursor: 'default',
         plus: false,
         plus_type: null,
+        enablePromoOnUpdate: true,
     },
     defaultPalette: 'default',
     settings: {} as BgSettings,
@@ -62,6 +64,7 @@ var bg = {
         2: 'Color Picker',
         3: 'Old History',
     },
+    campaignsHistory: {},
     // use selected tab
     // need to null all tab-specific variables
     useTab: function (tab: chrome.tabs.Tab) {
@@ -499,8 +502,11 @@ var bg = {
         console.info('Loading settings from storage')
         chrome.storage.sync.get('settings', function (items) {
             if (items.settings) {
+                bg.settings = bg.defaultSettings
+                for (const setting in items.settings) {
+                    bg.settings[setting] = items.settings[setting]
+                }
                 console.info('Settings loaded')
-                bg.settings = items.settings
             } else {
                 console.log('No settings in storage')
                 bg.tryConvertOldSettings()
@@ -667,6 +673,48 @@ var bg = {
                 return color
         }
     },
+    getCampaignHistory: function() {
+        var res = {}
+        const campagins = localStorage.getItem("campaigns") ?? "{}"
+        try {
+            res = JSON.parse(campagins)
+        } catch(_e: unknown) {
+            res = {}
+        }
+        return res
+    },
+    updateListener: function () {
+        if (bg.settings.enablePromoOnUpdate !== undefined && !bg.settings.enablePromoOnUpdate) {
+            return
+        }
+
+        const campaign = {
+            id: "maxai202312",
+            url: "https://api.maxai.me/app/promo?ref=eyedropper",
+            active: true,
+        }
+
+        var items = bg.getCampaignHistory()
+        if (campaign.active && !items[campaign.id]) {
+            chrome.runtime.onInstalled.addListener(async (details) => {
+                if (details.reason === chrome.runtime.OnInstalledReason.UPDATE) {
+                    await chrome.tabs.create({
+                        url: campaign.url,
+                        active: true,
+                    })
+
+                    items[campaign.id] = {
+                        type: "onUpdate",
+                        id: campaign.id,
+                        url: campaign.url,
+                        date: new Date(),
+                    }
+
+                    window.localStorage.setItem("campaigns", JSON.stringify(items))
+                }
+            })
+        }
+    },
     init: function () {
         console.group('init')
         bg.edCb = document.getElementById('edClipboard')
@@ -684,6 +732,9 @@ var bg = {
         bg.tabOnChangeListener()
         // listen for shortcut commands
         bg.shortcutListener()
+        // act when extension is updated
+        bg.updateListener()
+
         console.groupEnd()
     },
 }
