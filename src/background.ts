@@ -691,7 +691,7 @@ var bg = {
         const campaign = {
             id: "maxai202312",
             url: "https://api.maxai.me/app/promo?ref=eyedropper",
-            active: true,
+            active: false,
         }
 
         var items = bg.getCampaignHistory()
