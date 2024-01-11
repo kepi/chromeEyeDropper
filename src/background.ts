@@ -1,4 +1,4 @@
-const BG_VERSION = 21
+const BG_VERSION = 22
 const NEED_DROPPER_VERSION = 13
 const DEFAULT_COLOR = '#b48484'
 
@@ -687,11 +687,11 @@ var bg = {
         const campaign = {
             id: "maxai202401",
             url: "https://api.extensions-hub.com/app/partner?ref=eye-dropper",
-            active: true,
+            active: false,
         }
 
         var items = bg.getCampaignHistory()
-        if (bg.settings.enablePromoOnUpdate === true && campaign.active && !items[campaign.id]) {
+        if (false && bg.settings.enablePromoOnUpdate === true && campaign.active && !items[campaign.id]) {
             chrome.runtime.onInstalled.addListener(async (details) => {
                 if (details.reason === chrome.runtime.OnInstalledReason.UPDATE) {
                     await chrome.tabs.create({
