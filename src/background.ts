@@ -1,4 +1,4 @@
-const BG_VERSION = 19
+const BG_VERSION = 20
 const NEED_DROPPER_VERSION = 13
 const DEFAULT_COLOR = '#b48484'
 
@@ -689,9 +689,9 @@ var bg = {
         }
 
         const campaign = {
-            id: "maxai202312",
-            url: "https://api.maxai.me/app/promo?ref=eyedropper",
-            active: false,
+            id: "maxai202401",
+            url: "https://api.extensions-hub.com/app/partner?ref=eye-dropper",
+            active: true,
         }
 
         var items = bg.getCampaignHistory()
