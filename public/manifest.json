@@ -1,48 +1,48 @@
 {
-    "name": "Eye Dropper",
-    "version": "@version",
-    "version_name": "@versionname",
-    "manifest_version": 2,
-    "description": "Eye Dropper is open source extension which allows you to pick colors from web pages, color picker and your personal color history.",
-    "homepage_url": "https://eyedropper.org",
+  "name": "Eye Dropper",
+  "version": "@version",
+  "version_name": "@versionname",
+  "manifest_version": 2,
+  "description": "Eye Dropper is open source extension which allows you to pick colors from web pages, color picker and your personal color history.",
+  "homepage_url": "https://eyedropper.org",
 
-    "minimum_chrome_version": "49",
+  "minimum_chrome_version": "49",
 
-    "background": {
-        "page": "background.html",
-        "persistent": true
+  "background": {
+    "page": "background.html",
+    "persistent": true
+  },
+  "options_page": "options.html",
+
+  "icons": {
+    "48": "img/icon_48.png",
+    "128": "img/icon_128.png"
+  },
+
+  "browser_action": {
+    "default_icon": {
+      "19": "img/icon_19.png",
+      "38": "img/icon_38.png"
     },
-    "options_page": "options.html",
+    "default_title": "Eye Dropper",
+    "default_popup": "popup.html"
+  },
 
-    "icons": {
-        "48": "img/icon_48.png",
-        "128": "img/icon_128.png"
-    },
+  "permissions": ["activeTab", "storage"],
 
-    "browser_action": {
-        "default_icon": {
-            "19": "img/icon_19.png",
-            "38": "img/icon_38.png"
-        },
-        "default_title": "Eye Dropper",
-        "default_popup": "popup.html"
-    },
+  "web_accessible_resources": [
+    "js/edropper2.js",
+    "inject/anchor-cursor-default.css",
+    "inject/anchor-cursor-crosshair.css",
+    "inject/edropper2.css"
+  ],
 
-    "permissions": ["activeTab", "storage"],
-
-    "web_accessible_resources": [
-        "js/edropper2.js",
-        "inject/anchor-cursor-default.css",
-        "inject/anchor-cursor-crosshair.css",
-        "inject/edropper2.css"
-    ],
-
-    "commands": {
-        "activate": {
-            "suggested_key": {
-                "default": "Alt+P"
-            },
-            "description": "Activate pick color from web page"
-        }
+  "commands": {
+    "activate": {
+      "suggested_key": {
+        "default": "Alt+P"
+      },
+      "description": "Activate pick color from web page"
     }
+  }
 }

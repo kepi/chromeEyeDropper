@@ -1,60 +1,58 @@
 /* History Square */
 
 .colors-history-square {
-    width: 15px;
-    height: 15px;
-    font-size: 1px;
+  width: 15px;
+  height: 15px;
+  font-size: 1px;
 }
-
 
 /* Label on left side of color box */
 
 .ed-color-box-label {
-    position: absolute;
-    left: 50%;
-    margin-left: 5.5rem;
-    top: 2.5rem;
-    width: 5rem;
-    transform: rotate(-90deg);
+  position: absolute;
+  left: 50%;
+  margin-left: 5.5rem;
+  top: 2.5rem;
+  width: 5rem;
+  transform: rotate(-90deg);
 }
 
 .ed-color-box {
-    width: 8rem;
+  width: 8rem;
 }
-
 
 /* Label on left side of color box - new color */
 
 #box-new-label {
-    top: 8.5rem;
+  top: 8.5rem;
 }
 
 #tab-ed-link,
 span.ed-tab-in {
-    display: none;
+  display: none;
 }
 
 #tab-ed-active {
-    display: inline-block;
+  display: inline-block;
 }
 
 .color-picker {
-    position: static;
+  position: static;
 }
 
 .color-picker-control {
-    width: 175px;
-    height: 150px;
-    border: 0px;
-    box-shadow: none;
+  width: 175px;
+  height: 150px;
+  border: 0px;
+  box-shadow: none;
 }
 
 .color-picker-h {
-    width: 19px;
-    border: 0px;
-    box-shadow: none;
+  width: 19px;
+  border: 0px;
+  box-shadow: none;
 }
 
 #colorpicker-input {
-    width: 6em;
+  width: 6em;
 }

@@ -1,253 +1,331 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
-<head>
+  <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Eye Dropper - Options</title>
 
-    <link type="text/css" rel="stylesheet" href="/inc/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="/inc/bootstrap/3.3.6/css/bootstrap.min.css"
+    />
 
     <script src="/js/options.js"></script>
     <style type="text/css">
-        .donate-button {
-            padding: 1rem 2rem;
-            background-color: blue;
-            color: white;
-            border-radius: 5px;
-        }
+      .donate-button {
+        padding: 1rem 2rem;
+        background-color: blue;
+        color: white;
+        border-radius: 5px;
+      }
 
-        .donate-button:hover {
-            color: white;
-        }
+      .donate-button:hover {
+        color: white;
+      }
 
-        body {
-            overflow-x: hidden;
-        }
+      body {
+        overflow-x: hidden;
+      }
 
-        h3 {
-            margin-top: 0em;
-            margin-bottom: 0.7em;
-        }
+      h3 {
+        margin-top: 0em;
+        margin-bottom: 0.7em;
+      }
 
-        section {
-            margin-bottom: 2em;
-        }
+      section {
+        margin-bottom: 2em;
+      }
 
-        #promoOnUpdateHistory {
-            margin-left: 4em;
-            font-size: 0.9em;
-        }
+      #promoOnUpdateHistory {
+        margin-left: 4em;
+        font-size: 0.9em;
+      }
 
-        #promoOnUpdateHistory thead th,
-        #promoOnUpdateHistory tbody td {
-            padding-right: 1em;
-        }
+      #promoOnUpdateHistory thead th,
+      #promoOnUpdateHistory tbody td {
+        padding-right: 1em;
+      }
     </style>
-</head>
+  </head>
 
-<body id="options-body">
+  <body id="options-body">
     <div>
-        <div class="jumbotron">
-            <div class="container">
-                <h1>Eye Dropper</h1>
-                <p>Settings page</p>
-            </div>
+      <div class="jumbotron">
+        <div class="container">
+          <h1>Eye Dropper</h1>
+          <p>Settings page</p>
         </div>
+      </div>
 
-        <div id="options" class="row">
-            <div class="col-sm-6 col-md-6">
-                <div style="padding-left: 60px">
-                    <fieldset>
-                        <legend>Webpage Pick Behaviour</legend>
-                        <div class="checkbox">
-                            <label class=""><input type="checkbox" name="autoClipboard" id="autoClipboard" />
-                                Automaticaly copy picked color to clipboard</label>
-                        </div>
-                        <div class="checkbox">
-                            <label class=""><input type="checkbox" name="autoClipboardNoGrid"
-                                    id="autoClipboardNoGrid" />
-                                Do not copy # character, only RGB color</label>
-                        </div>
-                        <div class="checkbox">
-                            <label class=""><input type="checkbox" name="enableRightClickDeactivate"
-                                    id="enableRightClickDeactivate" />
-                                Disable pick with right mouse click</label>
-                        </div>
-                    </fieldset>
+      <div id="options" class="row">
+        <div class="col-sm-6 col-md-6">
+          <div style="padding-left: 60px">
+            <fieldset>
+              <legend>Webpage Pick Behaviour</legend>
+              <div class="checkbox">
+                <label class=""
+                  ><input
+                    type="checkbox"
+                    name="autoClipboard"
+                    id="autoClipboard"
+                  />
+                  Automaticaly copy picked color to clipboard</label
+                >
+              </div>
+              <div class="checkbox">
+                <label class=""
+                  ><input
+                    type="checkbox"
+                    name="autoClipboardNoGrid"
+                    id="autoClipboardNoGrid"
+                  />
+                  Do not copy # character, only RGB color</label
+                >
+              </div>
+              <div class="checkbox">
+                <label class=""
+                  ><input
+                    type="checkbox"
+                    name="enableRightClickDeactivate"
+                    id="enableRightClickDeactivate"
+                  />
+                  Disable pick with right mouse click</label
+                >
+              </div>
+            </fieldset>
 
-                    <fieldset>
-                        <legend>Webpage Pick Look</legend>
+            <fieldset>
+              <legend>Webpage Pick Look</legend>
 
-                        <div class="controls">
-                            <div class="checkbox">
-                                <label class=""><input type="checkbox" name="enableColorToolbox"
-                                        id="enableColorToolbox" />
-                                    Enable box with color information in right bottom
-                                    corner</label>
-                            </div>
-                        </div>
-
-                        <div class="controls">
-                            <div class="checkbox">
-                                <label class=""><input type="checkbox" name="enableColorTooltip"
-                                        id="enableColorTooltip" />
-                                    Enable color tooltip next to the mouse cursor</label>
-                            </div>
-                        </div>
-
-                        <h5>Dropper cursor</h5>
-                        <p><em>move mouse over icon to see how it looks like</em></p>
-                        <div class="controls">
-                            <div class="checkbox">
-                                <label class="">
-                                    <input type="radio" name="dropperCursor" value="default"
-                                        id="dropperCursordefault" />
-                                    <img src="/img/cursor_default.png" alt="default" style="cursor: default" />
-                                    pointer
-                                </label>
-                            </div>
-                            <div class="checkbox">
-                                <label class="">
-                                    <input type="radio" name="dropperCursor" value="crosshair"
-                                        id="dropperCursorcrosshair" />
-                                    <img src="/img/cursor_crosshair.png" alt="crosshair" style="cursor: crosshair" />
-                                    crosshair
-                                </label>
-                            </div>
-                        </div>
-                    </fieldset>
-
-                    <fieldset>
-                        <legend>Keyboard Shortcuts for Pick Color from Web Page</legend>
-                        <div class="bs-callout bs-callout-info">
-                            <h4>Pickup Color: <kbd>Alt+P</kbd></h4>
-                            <p>
-                                You can change this shortcut at Chrome's
-                                <a href="#" id="shortcutPageLink">Extensions Shortcut</a> page.
-                            </p>
-                        </div>
-
-                        <div class="bs-callout bs-callout-info">
-                            <h4>Cancel Pick: <kbd>Esc</kbd></h4>
-                            <p>
-                                Simply cancel active picking color from web page. No color will
-                                be stored in history.
-                            </p>
-                        </div>
-
-                        <div class="bs-callout bs-callout-info">
-                            <h4>Update Colors: <kbd>U</kbd></h4>
-                            <p>
-                                Eye dropper shows you only color which was present at moment of
-                                color pick active. If any javascript event occures (hover
-                                effect, menu appears) you can refresh its "cache" with this
-                                keyboard shortcut.
-                            </p>
-                        </div>
-                    </fieldset>
-
-                    <fieldset>
-                        <legend>Promo campaign experiments</legend>
-
-                        <p>As life priorities change and your family grows, it becomes increasingly difficult to find
-                            any free time at all. This makes it even harder to dedicate time to improving your hobby
-                            projects. I want to assure you that I am strongly committed to not tracking you, and I
-                            intend to keep <cite>Eye Dropper</cite> completely free forever. Because of these
-                            commitments, I have a limited number of ways to secure funding, and I will be conducting
-                            various experiments to explore these options. While you have the option to opt-out from
-                            participating in these active experiments below, it would be incredibly helpful if you
-                            choose not to do so.</p>
-
-                        <h4>Experiment #1: Allow me to open new tab on extension updates</h4>
-
-                        <p>When <cite>Eye Dropper</cite> updates, it might open one new tab with page of one of our
-                            partners.</p>
-
-                        <ul>
-                            <li><input type="checkbox" name="enablePromoOnUpdate" id="enablePromoOnUpdate" /> Max 1 new
-                                tab per month on this device.</li>
-                            <li>
-                                <span>Transparent history (stored only on this device) of tabs ED already opened:</span>
-                                <table id="promoOnUpdateHistory">
-                                    <thead>
-                                        <tr>
-                                            <th>Campaign</th>
-                                            <th>URL</th>
-                                            <th>Tab opened</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="promoOnUpdateHistoryBody">
-                                        <tr>
-                                            <td colspan="3">
-                                                <cite>No tabs opened yet.</cite>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </li>
-                        </ul>
-
-
-                    </fieldset>
-                    <hr />
-                    <div>
-                        <button id="saveButton" class="btn btn-success">Save settings</button>
-                        <span id="status"></span>
-                    </div>
+              <div class="controls">
+                <div class="checkbox">
+                  <label class=""
+                    ><input
+                      type="checkbox"
+                      name="enableColorToolbox"
+                      id="enableColorToolbox"
+                    />
+                    Enable box with color information in right bottom
+                    corner</label
+                  >
                 </div>
+              </div>
+
+              <div class="controls">
+                <div class="checkbox">
+                  <label class=""
+                    ><input
+                      type="checkbox"
+                      name="enableColorTooltip"
+                      id="enableColorTooltip"
+                    />
+                    Enable color tooltip next to the mouse cursor</label
+                  >
+                </div>
+              </div>
+
+              <h5>Dropper cursor</h5>
+              <p><em>move mouse over icon to see how it looks like</em></p>
+              <div class="controls">
+                <div class="checkbox">
+                  <label class="">
+                    <input
+                      type="radio"
+                      name="dropperCursor"
+                      value="default"
+                      id="dropperCursordefault"
+                    />
+                    <img
+                      src="/img/cursor_default.png"
+                      alt="default"
+                      style="cursor: default"
+                    />
+                    pointer
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label class="">
+                    <input
+                      type="radio"
+                      name="dropperCursor"
+                      value="crosshair"
+                      id="dropperCursorcrosshair"
+                    />
+                    <img
+                      src="/img/cursor_crosshair.png"
+                      alt="crosshair"
+                      style="cursor: crosshair"
+                    />
+                    crosshair
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>Keyboard Shortcuts for Pick Color from Web Page</legend>
+              <div class="bs-callout bs-callout-info">
+                <h4>Pickup Color: <kbd>Alt+P</kbd></h4>
+                <p>
+                  You can change this shortcut at Chrome's
+                  <a href="#" id="shortcutPageLink">Extensions Shortcut</a>
+                  page.
+                </p>
+              </div>
+
+              <div class="bs-callout bs-callout-info">
+                <h4>Cancel Pick: <kbd>Esc</kbd></h4>
+                <p>
+                  Simply cancel active picking color from web page. No color
+                  will be stored in history.
+                </p>
+              </div>
+
+              <div class="bs-callout bs-callout-info">
+                <h4>Update Colors: <kbd>U</kbd></h4>
+                <p>
+                  Eye dropper shows you only color which was present at moment
+                  of color pick active. If any javascript event occures (hover
+                  effect, menu appears) you can refresh its "cache" with this
+                  keyboard shortcut.
+                </p>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>Promo campaign experiments</legend>
+
+              <p>
+                As life priorities change and your family grows, it becomes
+                increasingly difficult to find any free time at all. This makes
+                it even harder to dedicate time to improving your hobby
+                projects. I want to assure you that I am strongly committed to
+                not tracking you, and I intend to keep
+                <cite>Eye Dropper</cite> completely free forever. Because of
+                these commitments, I have a limited number of ways to secure
+                funding, and I will be conducting various experiments to explore
+                these options. While you have the option to opt-out from
+                participating in these active experiments below, it would be
+                incredibly helpful if you choose not to do so.
+              </p>
+
+              <h4>
+                Experiment #1: Allow me to open new tab on extension updates
+              </h4>
+
+              <p>
+                When <cite>Eye Dropper</cite> updates, it might open one new tab
+                with page of one of our partners.
+              </p>
+
+              <ul>
+                <li>
+                  <input
+                    type="checkbox"
+                    name="enablePromoOnUpdate"
+                    id="enablePromoOnUpdate"
+                  />
+                  Max 1 new tab per month on this device.
+                </li>
+                <li>
+                  <span
+                    >Transparent history (stored only on this device) of tabs ED
+                    already opened:</span
+                  >
+                  <table id="promoOnUpdateHistory">
+                    <thead>
+                      <tr>
+                        <th>Campaign</th>
+                        <th>URL</th>
+                        <th>Tab opened</th>
+                      </tr>
+                    </thead>
+                    <tbody id="promoOnUpdateHistoryBody">
+                      <tr>
+                        <td colspan="3">
+                          <cite>No tabs opened yet.</cite>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </li>
+              </ul>
+            </fieldset>
+            <hr />
+            <div>
+              <button id="saveButton" class="btn btn-success">
+                Save settings
+              </button>
+              <span id="status"></span>
             </div>
-
-            <section id="donation" class="col-lg-offset-1 col-sm-3 col-md-3">
-                <section>
-                    <h3>Like the Eye Dropper?</h3>
-                    <p class="alert alert-success">
-                        Give us 5 stars on
-                        <a href="https://chrome.google.com/webstore/detail/hmdcmlfkchdmnmnmheododdhjedfccka/reviews">Chrome
-                            Webstore</a>. Thanks!
-                    </p>
-                </section>
-
-                <section>
-                    <h3>Found a bug? Have a wish?</h3>
-                    <p><a
-                            href="https://github.com/kepi/chromeEyeDropper/issues/new?assignees=&labels=type%3A+bug&template=10_bug_report.yml">🐞
-                            report a bug</a></p>
-                    <p><a
-                            href="https://github.com/kepi/chromeEyeDropper/issues/new?assignees=&labels=type%3A+idea&template=20_feature_request.yml">💡
-                            submit an Idea or Feature Request</a></p>
-                </section>
-
-                <h3>Want to support future development?</h3>
-
-                <section>
-                    <p>Became a backer or send one-time donation:</p>
-                    <p>
-                        <a href="https://opencollective.com/eyedropper/contribute" target="_blank">
-                            <img src="https://opencollective.com/eyedropper/contribute/button@2x.png?color=blue"
-                                width="400" />
-                        </a>
-                    </p>
-                    <p>Or send some good old crypto:</p>
-                    <ul>
-                        <li>
-                            <strong>Bitcon</strong> to
-                            <code>19HekXcETbG8VWdywbEkKxzxp4fFm5YCUc</code>
-                        </li>
-                        <li>
-                            <strong>Nano</strong> to
-                            <code>nano_361bejwriittx6uix8iz7jx7df1m49i3buwfp5ghnfebckr7ozqxp7rh4hi8</code>
-                        </li>
-                        <li>
-                            <strong>Ethereum</strong> to
-                            <code>0x94b48b162f78747092121004F68C65dB069c60D4</code>
-                        </li>
-                    </ul>
-                </section>
-            </section>
+          </div>
         </div>
-    </div>
-</body>
 
+        <section id="donation" class="col-lg-offset-1 col-sm-3 col-md-3">
+          <section>
+            <h3>Like the Eye Dropper?</h3>
+            <p class="alert alert-success">
+              Give us 5 stars on
+              <a
+                href="https://chrome.google.com/webstore/detail/hmdcmlfkchdmnmnmheododdhjedfccka/reviews"
+                >Chrome Webstore</a
+              >. Thanks!
+            </p>
+          </section>
+
+          <section>
+            <h3>Found a bug? Have a wish?</h3>
+            <p>
+              <a
+                href="https://github.com/kepi/chromeEyeDropper/issues/new?assignees=&labels=type%3A+bug&template=10_bug_report.yml"
+                >🐞 report a bug</a
+              >
+            </p>
+            <p>
+              <a
+                href="https://github.com/kepi/chromeEyeDropper/issues/new?assignees=&labels=type%3A+idea&template=20_feature_request.yml"
+                >💡 submit an Idea or Feature Request</a
+              >
+            </p>
+          </section>
+
+          <h3>Want to support future development?</h3>
+
+          <section>
+            <p>Became a backer or send one-time donation:</p>
+            <p>
+              <a
+                href="https://opencollective.com/eyedropper/contribute"
+                target="_blank"
+              >
+                <img
+                  src="https://opencollective.com/eyedropper/contribute/button@2x.png?color=blue"
+                  width="400"
+                />
+              </a>
+            </p>
+            <p>Or send some good old crypto:</p>
+            <ul>
+              <li>
+                <strong>Bitcon</strong> to
+                <code>19HekXcETbG8VWdywbEkKxzxp4fFm5YCUc</code>
+              </li>
+              <li>
+                <strong>Nano</strong> to
+                <code
+                  >nano_361bejwriittx6uix8iz7jx7df1m49i3buwfp5ghnfebckr7ozqxp7rh4hi8</code
+                >
+              </li>
+              <li>
+                <strong>Ethereum</strong> to
+                <code>0x94b48b162f78747092121004F68C65dB069c60D4</code>
+              </li>
+            </ul>
+          </section>
+        </section>
+      </div>
+    </div>
+  </body>
 </html>

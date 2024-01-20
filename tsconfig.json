@@ -9,9 +9,6 @@
     "rootDir": "src",
     "outDir": "dist/js",
     "noEmitOnError": true,
-    "typeRoots": [
-      "node_modules/@types",
-      "./src/typings"
-    ]
+    "typeRoots": ["node_modules/@types", "./src/typings"]
   }
 }

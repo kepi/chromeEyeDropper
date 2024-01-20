@@ -2,7 +2,7 @@
 name: 💡 Idea or Feature Request
 description: Do you have an idea for this project?
 labels:
-  - 'type: idea'
+  - "type: idea"
 body:
   - type: markdown
     attributes:

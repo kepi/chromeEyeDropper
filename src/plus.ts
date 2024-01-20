@@ -9,63 +9,66 @@ let sec_plus_unlocked = undefined
 ready(init)
 
 function ready(fn) {
-    if (document.readyState != 'loading') {
-        fn()
-    } else {
-        document.addEventListener('DOMContentLoaded', fn)
-    }
+  if (document.readyState != "loading") {
+    fn()
+  } else {
+    document.addEventListener("DOMContentLoaded", fn)
+  }
 }
 
 function init() {
-    sec_plus_locked = document.getElementsByClassName('plus-locked')
-    sec_plus_unlocked = document.getElementsByClassName('plus-unlocked')
+  sec_plus_locked = document.getElementsByClassName("plus-locked")
+  sec_plus_unlocked = document.getElementsByClassName("plus-unlocked")
 
-    chrome.runtime.getBackgroundPage((bg_page) => {
-        bgPage = bg_page
+  chrome.runtime.getBackgroundPage((bg_page) => {
+    bgPage = bg_page
 
-        if (bgPage.bg.version === undefined || bgPage.bg.version < NEED_BG_VERSION) {
-            console.warn(
-                `Background page reload. Current version: ${bgPage.bg.version}, need version: ${NEED_BG_VERSION}`,
-            )
-            chrome.runtime.sendMessage({
-                type: 'reload-background',
-            })
-            setTimeout(bgPageLoaded, 1000)
-        } else {
-            bgPageLoaded()
-        }
-    })
+    if (
+      bgPage.bg.version === undefined ||
+      bgPage.bg.version < NEED_BG_VERSION
+    ) {
+      console.warn(
+        `Background page reload. Current version: ${bgPage.bg.version}, need version: ${NEED_BG_VERSION}`
+      )
+      chrome.runtime.sendMessage({
+        type: "reload-background",
+      })
+      setTimeout(bgPageLoaded, 1000)
+    } else {
+      bgPageLoaded()
+    }
+  })
 
-    unlockButtons()
+  unlockButtons()
 }
 
 function showHideBlocks() {
-    const plus = bgPage.bg.plus()
+  const plus = bgPage.bg.plus()
 
-    for (let locked of sec_plus_locked) {
-        locked.style.display = plus ? 'none' : 'block'
-    }
-    for (let unlocked of sec_plus_unlocked) {
-        unlocked.style.display = plus ? 'block' : 'none'
-    }
+  for (let locked of sec_plus_locked) {
+    locked.style.display = plus ? "none" : "block"
+  }
+  for (let unlocked of sec_plus_unlocked) {
+    unlocked.style.display = plus ? "block" : "none"
+  }
 }
 
 function bgPageLoaded() {
-    showHideBlocks()
+  showHideBlocks()
 }
 
 function unlockButtons() {
-    document.getElementById('unlock-new').onclick = () => {
-        unlockPlus('new')
-    }
+  document.getElementById("unlock-new").onclick = () => {
+    unlockPlus("new")
+  }
 }
 
 function lockPlus() {
-    bgPage.bg.lockPlus()
-    showHideBlocks()
+  bgPage.bg.lockPlus()
+  showHideBlocks()
 }
 
 function unlockPlus(type) {
-    bgPage.bg.unlockPlus(type)
-    showHideBlocks()
+  bgPage.bg.unlockPlus(type)
+  showHideBlocks()
 }

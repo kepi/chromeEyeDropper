@@ -1,4 +1,4 @@
-import Rect from '../rect'
+import Rect from "../rect"
 
 const dw = 1680
 const dh = 930
@@ -23,54 +23,54 @@ const rCt = new Rect(20, 50, 70, 100)
 
 // FIXME: add horizontal merge tests
 
-test('rA right', () => {
-    expect(rA.right).toBe(dw)
+test("rA right", () => {
+  expect(rA.right).toBe(dw)
 })
 
-test('rC bottom', () => {
-    expect(rC.bottom).toBe(90)
+test("rC bottom", () => {
+  expect(rC.bottom).toBe(90)
 })
 
-test('rB should not be contained in rA', () => {
-    expect(rA.contains(rB)).toBe(false)
+test("rB should not be contained in rA", () => {
+  expect(rA.contains(rB)).toBe(false)
 })
 
-test('merge of rA and rB equal to rAB', () => {
-    expect(rA.merge(rB)).toStrictEqual(rAB)
+test("merge of rA and rB equal to rAB", () => {
+  expect(rA.merge(rB)).toStrictEqual(rAB)
 })
 
-test('cannot merge rA and rD', () => {
-    expect(rA.merge(rD)).toBeNull()
+test("cannot merge rA and rD", () => {
+  expect(rA.merge(rD)).toBeNull()
 })
 
-test('can merge rA with rE and then with rD', () => {
-    const m = rA.merge(rE)
-    expect(m).toStrictEqual(rAE)
-    expect(m.merge(rD)).toStrictEqual(rAED)
+test("can merge rA with rE and then with rD", () => {
+  const m = rA.merge(rE)
+  expect(m).toStrictEqual(rAE)
+  expect(m.merge(rD)).toStrictEqual(rAED)
 })
 
-test('transposed rC', () => {
-    expect(rC.transposed()).toStrictEqual(rCt)
+test("transposed rC", () => {
+  expect(rC.transposed()).toStrictEqual(rCt)
 })
 
-test('double transposed rC should be rC', () => {
-    expect(rC.transposed().transposed()).toStrictEqual(rC)
+test("double transposed rC should be rC", () => {
+  expect(rC.transposed().transposed()).toStrictEqual(rC)
 })
 
-test('can merge rA with rX', () => {
-    expect(rA.merge(rX)).toStrictEqual(rAX)
+test("can merge rA with rX", () => {
+  expect(rA.merge(rX)).toStrictEqual(rAX)
 })
 
-test('cannot merge rA with rY', () => {
-    expect(rA.merge(rY)).toBeNull()
+test("cannot merge rA with rY", () => {
+  expect(rA.merge(rY)).toBeNull()
 })
 
-test('can merge rA with rX and then rY', () => {
-    const m = rA.merge(rX)
-    expect(m).toStrictEqual(rAX)
-    expect(m.merge(rY)).toStrictEqual(rAXY)
+test("can merge rA with rX and then rY", () => {
+  const m = rA.merge(rX)
+  expect(m).toStrictEqual(rAX)
+  expect(m.merge(rY)).toStrictEqual(rAXY)
 })
 
-test('cannot merge horizontally and vertically different', () => {
-    expect(rC.merge(rX)).toBeNull()
+test("cannot merge horizontally and vertically different", () => {
+  expect(rC.merge(rX)).toBeNull()
 })

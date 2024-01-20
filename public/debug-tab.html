@@ -1,42 +1,48 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-    <head>
-        <script type="text/javascript" src="/js/debug_tab.js"></script>
-        <style type="text/css">
-            body {
-                border: 0px;
-                margin: 0px;
-                background-image: linear-gradient(
-                        to bottom,
-                        transparent 50%,
-                        rgba(0, 0, 0, 0.3) 50%
-                    ),
-                    linear-gradient(to right, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.3) 50%);
-                background-size: 50px 50px, 50px 50px;
-            }
+  <head>
+    <script type="text/javascript" src="/js/debug_tab.js"></script>
+    <style type="text/css">
+      body {
+        border: 0px;
+        margin: 0px;
+        background-image: linear-gradient(
+            to bottom,
+            transparent 50%,
+            rgba(0, 0, 0, 0.3) 50%
+          ),
+          linear-gradient(
+            to right,
+            rgba(0, 0, 0, 0.1) 50%,
+            rgba(0, 0, 0, 0.3) 50%
+          );
+        background-size:
+          50px 50px,
+          50px 50px;
+      }
 
-            body,
-            html {
-                height: 100%;
-            }
+      body,
+      html {
+        height: 100%;
+      }
 
-            #container {
-            }
+      #container {
+      }
 
-            #debugImage {
-                position: absolute;
-                max-height: 98%;
+      #debugImage {
+        position: absolute;
+        max-height: 98%;
 
-                top: 1%;
-                left: 10px;
-                border: 4px solid red;
-            }
-        </style>
-    </head>
+        top: 1%;
+        left: 10px;
+        border: 4px solid red;
+      }
+    </style>
+  </head>
 
-    <body>
-        <div id="container">
-            <img id="debugImage" />
-        </div>
-    </body>
+  <body>
+    <div id="container">
+      <img id="debugImage" />
+    </div>
+  </body>
 </html>

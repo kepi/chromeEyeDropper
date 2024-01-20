@@ -1,202 +1,220 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <title>Eye Dropper PLUS</title>
+    <title>Eye Dropper PLUS</title>
 
-        <script type="text/javascript" src="/js/plus.js"></script>
+    <script type="text/javascript" src="/js/plus.js"></script>
 
-        <link rel="stylesheet" href="/inc/tachyons.min.css" />
+    <link rel="stylesheet" href="/inc/tachyons.min.css" />
 
-        <style type="text/css">
-            ul {
-                list-style: none;
-                padding: 0px;
-                margin: 0px;
-                padding-left: 2rem;
-            }
+    <style type="text/css">
+      ul {
+        list-style: none;
+        padding: 0px;
+        margin: 0px;
+        padding-left: 2rem;
+      }
 
-            li {
-                position: relative;
-            }
+      li {
+        position: relative;
+      }
 
-            li:before {
-                background-image: url('/img/square-o.svg');
-                content: '';
-                height: 1rem;
-                width: 1rem;
-                background-repeat: no-repeat;
-                background-size: cover;
-                position: absolute;
-                left: -1.5rem;
-                top: 0.1rem;
-            }
+      li:before {
+        background-image: url("/img/square-o.svg");
+        content: "";
+        height: 1rem;
+        width: 1rem;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: absolute;
+        left: -1.5rem;
+        top: 0.1rem;
+      }
 
-            li.done:before {
-                background-image: url('/img/check-square-o.svg');
-            }
-        </style>
-    </head>
-    <body>
-        <section class="bg-black-10 cf">
-            <header class="center w-50-l w-75-m w-100-ns">
-                <h1 class="f1 helvetica">Eye Dropper <span class="small-caps">Plus</span></h1>
+      li.done:before {
+        background-image: url("/img/check-square-o.svg");
+      }
+    </style>
+  </head>
+  <body>
+    <section class="bg-black-10 cf">
+      <header class="center w-50-l w-75-m w-100-ns">
+        <h1 class="f1 helvetica">
+          Eye Dropper <span class="small-caps">Plus</span>
+        </h1>
 
-                <section class="w-100 br1 mv3 pv1 f5 lh-copy">
-                    <p>
-                        <span class="small-caps">Plus</span> is little experiment of mine. There are
-                        some new futures not available in "basic version". You can unlock them
-                        either using few bucks or for free.
-                    </p>
+        <section class="w-100 br1 mv3 pv1 f5 lh-copy">
+          <p>
+            <span class="small-caps">Plus</span> is little experiment of mine.
+            There are some new futures not available in "basic version". You can
+            unlock them either using few bucks or for free.
+          </p>
 
-                    <p>
-                        If enough people use money option, I'll be able to spend more time working
-                        on new features, fixes and polishing.
-                    </p>
-                </section>
-            </header>
+          <p>
+            If enough people use money option, I'll be able to spend more time
+            working on new features, fixes and polishing.
+          </p>
         </section>
+      </header>
+    </section>
 
-        <section class="bg-washed-green cf">
-            <section class="center w-75 pa2">
-                <h2><span class="small-caps">Plus</span> Features</h2>
-            </section>
+    <section class="bg-washed-green cf">
+      <section class="center w-75 pa2">
+        <h2><span class="small-caps">Plus</span> Features</h2>
+      </section>
+    </section>
+
+    <section>
+      <section class="center w-75-l w-100-m flex">
+        <section class="fl w-third lh-copy pa2">
+          <h3>Color Palettes</h3>
+          <ul>
+            <li class="done">
+              Create separate palettes for different projects
+            </li>
+            <li>TODO: Export all colors and palettes to one CSV</li>
+            <li>TODO: Possibility to rename palettes</li>
+            <li>TODO: Trash Colors Undo</li>
+            <li>TODO: Palette Destroy Undo</li>
+          </ul>
         </section>
-
-        <section>
-            <section class="center w-75-l w-100-m flex">
-                <section class="fl w-third lh-copy pa2">
-                    <h3>Color Palettes</h3>
-                    <ul>
-                        <li class="done">Create separate palettes for different projects</li>
-                        <li>TODO: Export all colors and palettes to one CSV</li>
-                        <li>TODO: Possibility to rename palettes</li>
-                        <li>TODO: Trash Colors Undo</li>
-                        <li>TODO: Palette Destroy Undo</li>
-                    </ul>
-                </section>
-                <section class="fl w-third lh-copy pa2">
-                    <h3>Color Features</h3>
-                    <ul>
-                        <li class="done">Date and time when color was picked</li>
-                        <li class="done">
-                            Source of picking - Web Page, Color Picker, Conversion (from old
-                            history)
-                        </li>
-                        <li>TODO: Possibility to add color to favorites</li>
-                    </ul>
-                </section>
-                <section class="fl w-third lh-copy pa2">
-                    <h3>Pick from Web Page</h3>
-                    <ul>
-                        <li>TODO: Pick multpile colors at once</li>
-                        <li>TODO: New picker cursor with magnifier</li>
-                    </ul>
-                </section>
-            </section>
-            <section class="center w-75-l w-100-m flex">
-                <p>and more later&hellip;</p>
-            </section>
+        <section class="fl w-third lh-copy pa2">
+          <h3>Color Features</h3>
+          <ul>
+            <li class="done">Date and time when color was picked</li>
+            <li class="done">
+              Source of picking - Web Page, Color Picker, Conversion (from old
+              history)
+            </li>
+            <li>TODO: Possibility to add color to favorites</li>
+          </ul>
         </section>
-
-        <section>
-            <section class="bg-washed-green cf">
-                <section class="center w-75 pa2">
-                    <h2 class="plus-locked">Unlock <span class="small-caps">Plus</span></h2>
-                    <h2 class="plus-unlocked"><span class="small-caps">Plus</span> Unlocked</h2>
-                </section>
-            </section>
-            <section class="bg-washed-blue cf plus-locked">
-                <section class="center w-75 pa2">
-                    <h3>1. Donate if you can</h3>
-                </section>
-            </section>
-
-            <section class="center w-75-l w-100-m w-100-ns lh-copy pl4">
-                <p class="mw6 plus-locked">
-                    If you want to support the development of
-                    <strong>Eye Dropper</strong>, please consider
-                    <strong>becoming a backer</strong> or send one time <em>donation</em> to our
-                    <a href="https://opencollective.com/eyedropper">Open Collective</a>.
-                </p>
-                <p class="plus-unlocked">
-                    You have <span class="small-caps">Plus</span> already unlocked, but feel free to
-                    became a backer (if you are already not one) or send one-time donation any time.
-                </p>
-
-                <p>
-                    <a href="https://opencollective.com/eyedropper/contribute" target="_blank">
-                        <img
-                            src="https://opencollective.com/eyedropper/contribute/button@2x.png?color=blue"
-                            width="400"
-                        />
-                    </a>
-                </p>
-                <p>or send some good old crypto:</p>
-                <ul>
-                    <li>
-                        <strong>Bitcon</strong> to <code>19HekXcETbG8VWdywbEkKxzxp4fFm5YCUc</code>
-                    </li>
-                    <li>
-                        <strong>Nano</strong> to
-                        <code
-                            >nano_361bejwriittx6uix8iz7jx7df1m49i3buwfp5ghnfebckr7ozqxp7rh4hi8</code
-                        >
-                    </li>
-                    <li>
-                        <strong>Ethereum</strong> to
-                        <code>0x94b48b162f78747092121004F68C65dB069c60D4</code>
-                    </li>
-                </ul>
-
-                <h4 class="plus-locked">Can't donate?</h4>
-                <h4 class="plus-unlocked">Unlocked for free?</h4>
-                <p class="plus-locked">
-                    It's totally OK if you can't spare money now. Maybe some day in the future or
-                    maybe not, you can still unlock for free below.
-                </p>
-                <p class="plus-unlocked">
-                    It's totally OK if you can't spare money now. Maybe some day in the future or
-                    maybe not.
-                </p>
-                <p>If you want to help Eye Dropper in other way, please consider to:</p>
-                <ul>
-                    <li>
-                        Give it <em>Five Stars</em> at
-                        <a
-                            href="https://chrome.google.com/webstore/detail/eye-dropper/hmdcmlfkchdmnmnmheododdhjedfccka"
-                            target="_blank"
-                            >Chrome Web Store</a
-                        >.
-                    </li>
-                    <li>
-                        <a href="https://github.com/kepi/chromeEyeDropper/issues" target="_blank"
-                            >Report</a
-                        >
-                        bugs and send your ideas for improvements.
-                    </li>
-                </ul>
-            </section>
-
-            <section class="bg-washed-blue cf plus-locked">
-                <section class="center w-75 pa2">
-                    <h3>2. Click on Unlock</h3>
-                </section>
-            </section>
-            <section class="center w-75-l w-100-m w-100-ns lh-copy pl4 plus-locked">
-                <p class="mw6">
-                    Just use following link to
-                    <a href="#" id="unlock-new">Unlock <span class="small-caps">Plus</span></a
-                    >.
-                </p>
-                <p class="mw6">
-                    <cite
-                        >Btw. you can unlock they Eye Dropper in as many browsers as you want.</cite
-                    >
-                </p>
-            </section>
+        <section class="fl w-third lh-copy pa2">
+          <h3>Pick from Web Page</h3>
+          <ul>
+            <li>TODO: Pick multpile colors at once</li>
+            <li>TODO: New picker cursor with magnifier</li>
+          </ul>
         </section>
-    </body>
+      </section>
+      <section class="center w-75-l w-100-m flex">
+        <p>and more later&hellip;</p>
+      </section>
+    </section>
+
+    <section>
+      <section class="bg-washed-green cf">
+        <section class="center w-75 pa2">
+          <h2 class="plus-locked">
+            Unlock <span class="small-caps">Plus</span>
+          </h2>
+          <h2 class="plus-unlocked">
+            <span class="small-caps">Plus</span> Unlocked
+          </h2>
+        </section>
+      </section>
+      <section class="bg-washed-blue cf plus-locked">
+        <section class="center w-75 pa2">
+          <h3>1. Donate if you can</h3>
+        </section>
+      </section>
+
+      <section class="center w-75-l w-100-m w-100-ns lh-copy pl4">
+        <p class="mw6 plus-locked">
+          If you want to support the development of
+          <strong>Eye Dropper</strong>, please consider
+          <strong>becoming a backer</strong> or send one time
+          <em>donation</em> to our
+          <a href="https://opencollective.com/eyedropper">Open Collective</a>.
+        </p>
+        <p class="plus-unlocked">
+          You have <span class="small-caps">Plus</span> already unlocked, but
+          feel free to became a backer (if you are already not one) or send
+          one-time donation any time.
+        </p>
+
+        <p>
+          <a
+            href="https://opencollective.com/eyedropper/contribute"
+            target="_blank"
+          >
+            <img
+              src="https://opencollective.com/eyedropper/contribute/button@2x.png?color=blue"
+              width="400"
+            />
+          </a>
+        </p>
+        <p>or send some good old crypto:</p>
+        <ul>
+          <li>
+            <strong>Bitcon</strong> to
+            <code>19HekXcETbG8VWdywbEkKxzxp4fFm5YCUc</code>
+          </li>
+          <li>
+            <strong>Nano</strong> to
+            <code
+              >nano_361bejwriittx6uix8iz7jx7df1m49i3buwfp5ghnfebckr7ozqxp7rh4hi8</code
+            >
+          </li>
+          <li>
+            <strong>Ethereum</strong> to
+            <code>0x94b48b162f78747092121004F68C65dB069c60D4</code>
+          </li>
+        </ul>
+
+        <h4 class="plus-locked">Can't donate?</h4>
+        <h4 class="plus-unlocked">Unlocked for free?</h4>
+        <p class="plus-locked">
+          It's totally OK if you can't spare money now. Maybe some day in the
+          future or maybe not, you can still unlock for free below.
+        </p>
+        <p class="plus-unlocked">
+          It's totally OK if you can't spare money now. Maybe some day in the
+          future or maybe not.
+        </p>
+        <p>If you want to help Eye Dropper in other way, please consider to:</p>
+        <ul>
+          <li>
+            Give it <em>Five Stars</em> at
+            <a
+              href="https://chrome.google.com/webstore/detail/eye-dropper/hmdcmlfkchdmnmnmheododdhjedfccka"
+              target="_blank"
+              >Chrome Web Store</a
+            >.
+          </li>
+          <li>
+            <a
+              href="https://github.com/kepi/chromeEyeDropper/issues"
+              target="_blank"
+              >Report</a
+            >
+            bugs and send your ideas for improvements.
+          </li>
+        </ul>
+      </section>
+
+      <section class="bg-washed-blue cf plus-locked">
+        <section class="center w-75 pa2">
+          <h3>2. Click on Unlock</h3>
+        </section>
+      </section>
+      <section class="center w-75-l w-100-m w-100-ns lh-copy pl4 plus-locked">
+        <p class="mw6">
+          Just use following link to
+          <a href="#" id="unlock-new"
+            >Unlock <span class="small-caps">Plus</span></a
+          >.
+        </p>
+        <p class="mw6">
+          <cite
+            >Btw. you can unlock they Eye Dropper in as many browsers as you
+            want.</cite
+          >
+        </p>
+      </section>
+    </section>
+  </body>
 </html>
