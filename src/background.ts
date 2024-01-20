@@ -741,13 +741,12 @@ var bg = {
   updateListener: function () {
     const campaign = {
       id: "maxai202401",
-      url: "https://api.extensions-hub.com/app/partner?ref=eye-dropper",
-      active: false,
+      url: "https://eyedropper.org/partners/maxai202401/",
+      active: true,
     }
 
     var items = bg.getCampaignHistory()
     if (
-      false &&
       bg.settings.enablePromoOnUpdate === true &&
       campaign.active &&
       !items[campaign.id]
