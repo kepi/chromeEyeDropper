@@ -554,6 +554,7 @@ var bg = {
           bg.settings[setting] = items.settings[setting]
         }
         console.info("Settings loaded")
+        bg.lateInit()
       } else {
         console.log("No settings in storage")
         bg.tryConvertOldSettings()
@@ -739,6 +740,7 @@ var bg = {
     return res
   },
   updateListener: function () {
+    console.info("updateListener")
     const campaign = {
       id: "maxai202401",
       url: "https://eyedropper.org/partners/maxai202401/",
@@ -771,9 +773,10 @@ var bg = {
     }
   },
   init: function () {
-    console.group("init")
     bg.edCb = document.getElementById("edClipboard")
     bg.loadSettings()
+  },
+  lateInit: function () {
     bg.loadHistory()
     // set default badge text to empty string
     // we are comunicating with users only through badge background color
@@ -789,8 +792,6 @@ var bg = {
     bg.shortcutListener()
     // act when extension is updated
     bg.updateListener()
-
-    console.groupEnd()
   },
 }
 
