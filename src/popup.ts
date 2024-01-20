@@ -3,7 +3,7 @@ import { mscConfirm, mscPrompt } from "medium-style-confirm"
 import ColorPicker from "simple-color-picker"
 import { copyToClipboard } from "./clipboard"
 
-const NEED_BG_VERSION = 18 // minimum version of bg script we need
+const NEED_BG_VERSION = 23 // minimum version of bg script we need
 
 let bgPage = null
 
@@ -36,6 +36,9 @@ let ad = null
 // cpicker elements
 let cpicker: ColorPicker | null = null
 let cpicker_input = null
+
+// editing palette
+let editing_palette = false
 
 ready(init) // call init when ready
 
@@ -311,6 +314,28 @@ function destroyPalette(palette_name: string) {
   })
 }
 
+function editPalette() {
+  // switch editing mode
+  editing_palette = !editing_palette
+
+  // change dit icon
+  let el_colors_palette_edit_svg = document.getElementById(
+    "colors-palette-edit-svg"
+  )
+  el_colors_palette_edit_svg.style.fill = editing_palette ? "#d5008f" : "gray"
+
+  // set background of color history
+  let history_el = document.getElementById("colors-history")
+  const editing_classes = ["bw2", "pa2", "pb1"]
+  if (editing_palette) {
+    history_el.classList.add(...editing_classes)
+  } else {
+    history_el.classList.remove(...editing_classes)
+  }
+
+  drawColorHistory()
+}
+
 function drawColorHistory() {
   console.info("Drawing color history")
   // find element for colors history squares and instructions
@@ -325,7 +350,11 @@ function drawColorHistory() {
   let html = ""
   let palette = bgPage.bg.getPalette()
   for (let color of palette.colors) {
-    html += colorSquare(color.h)
+    if (color.d && editing_palette) {
+      html += colorSquareDeleted(color.h)
+    } else if (!color.d) {
+      html += colorSquare(color.h)
+    }
   }
   history_el.innerHTML = html
 
@@ -342,11 +371,19 @@ function drawColorHistory() {
       colorBox("current", n.dataset.color)
       setColor(n.dataset.color, false)
       changeColorPicker(n.dataset.color)
+      if (editing_palette) {
+        bgPage.bg.toggleDeleteColor(n.dataset.color)
+        setTimeout(() => {
+          drawColorHistory()
+        }, 500)
+      }
     }
   }
 
   if (palette.colors.length > 0) {
-    instructions_el.innerHTML = "Hover over squares to preview."
+    instructions_el.innerHTML = editing_palette
+      ? "Click on colors you want to <b>DELETE</b>"
+      : "Hover over squares to preview…"
     for (let n of history_tool_noempty_els) {
       n.style.display = ""
     }
@@ -359,11 +396,14 @@ function drawColorHistory() {
   }
 
   history_el.onmouseenter = () => {
-    instructions_el.innerHTML =
-      "Click on square to select and copy to clipboard."
+    instructions_el.innerHTML = editing_palette
+      ? "Click on square to <b>DELETE</b> color and copy it to clipboard."
+      : "Click on square to select and copy to clipboard."
   }
   history_el.onmouseleave = () => {
-    instructions_el.innerHTML = "Hover over squares to preview.."
+    instructions_el.innerHTML = editing_palette
+      ? "Click on colors you want to <b>DELETE</b>"
+      : "Hover over squares to preview…"
   }
 }
 
@@ -382,6 +422,11 @@ function initColorHistory() {
 
   // color palette switching
   drawColorPaletteSwitching()
+
+  // edit palette
+  document.getElementById("colors-palette-edit").onclick = () => {
+    editPalette()
+  }
 }
 
 function drawColorPaletteSwitching() {
@@ -670,6 +715,10 @@ function colorBox(type: "new" | "current", color_hex: string) {
 
 function colorSquare(color_hex: string) {
   return `<div class="fl dib dim mr1 br1 mb1 ba b--gray colors-history-square" data-color="${color_hex}" style="background-color: ${color_hex}">&nbsp;</div>`
+}
+
+function colorSquareDeleted(color_hex: string) {
+  return `<div class="fl dib dim mr1 br1 mb1 ba b--red colors-history-square" data-color="${color_hex}" style="background-color: ${color_hex}">&nbsp;</div>`
 }
 
 function loadColorPicker() {

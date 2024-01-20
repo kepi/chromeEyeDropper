@@ -1,4 +1,4 @@
-const BG_VERSION = 22
+const BG_VERSION = 23
 const NEED_DROPPER_VERSION = 13
 const DEFAULT_COLOR = "#b48484"
 
@@ -20,6 +20,7 @@ interface HistoryColorItem {
   s: number
   t: number
   f: number
+  d?: number
 }
 
 interface Palette {
@@ -240,6 +241,33 @@ var bg = {
         "Color " + color + " already in palette " + bg.getPaletteName()
       )
     }
+  },
+  // delete color in palette
+  toggleDeleteColor: function (color: string) {
+    console.group("deleteColor")
+    console.info(
+      "Toggle deletting color",
+      color,
+      "in palette ",
+      bg.getPaletteName()
+    )
+    bg.markDeletedInHistory(color)
+    console.groupEnd()
+  },
+  markDeletedInHistory(color: string) {
+    console.info("Toggle mark deleted in history")
+    const palette = bg.getPalette()
+    const ts = Date.now()
+    for (let item of palette.colors) {
+      if (item.h === color) {
+        if (item.d) {
+          delete item.d
+        } else {
+          item.d = ts
+        }
+      }
+    }
+    bg.saveHistory(true)
   },
   // activate from content script
   activate2: function () {
@@ -547,6 +575,7 @@ var bg = {
    * s = source
    * t = timestamp when taken
    * f = favorite
+   * d = timestamp when deleted
    */
   historyColorItem: function (
     color: string,

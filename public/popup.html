@@ -114,7 +114,7 @@
                 </a>
                 <a
                   class="link dib w1 hint--top hint--no-animate hint--rounded eb-history-tool-noempty"
-                  aria-label="Trash Colors in this Palette!"
+                  aria-label="Trash All! Colors in this Palette!"
                   href="#"
                   id="colors-history-clear"
                 >
@@ -140,6 +140,21 @@
                     <use xlink:href="/img/icons.svg#fa-floppy-o" />
                   </svg>
                 </a>
+                <a
+                  class="link dib w1 hint--top hint--no-animate hint--rounded eb-history-tool-noempty"
+                  aria-label="Edit Colors in this Palette"
+                  href="#"
+                  id="colors-palette-edit"
+                >
+                  <svg
+                    id="colors-palette-edit-svg"
+                    class="dim"
+                    viewBox="0 0 1792 1792"
+                    style="fill: gray; width: 14px"
+                  >
+                    <use xlink:href="/img/icons.svg#fa-pencil" />
+                  </svg>
+                </a>
               </div>
             </div>
 
@@ -149,7 +164,7 @@
               style="display: none"
             ></section>
 
-            <section id="colors-history" class="cf mt2"></section>
+            <section id="colors-history" class="cf mt2 b--red ba bw0"></section>
 
             <p class="i black-80" id="colors-history-instructions">
               History is empty, try to pick some color first.
