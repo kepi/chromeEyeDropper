@@ -65,7 +65,6 @@ var bg = {
     2: "Color Picker",
     3: "Old History",
   },
-  campaignsHistory: {},
   // use selected tab
   // need to null all tab-specific variables
   useTab: function (tab: chrome.tabs.Tab) {
@@ -747,11 +746,29 @@ var bg = {
       active: true,
     }
 
-    var items = bg.getCampaignHistory()
+    type CampaignHistoryItems = {
+      [key: string]: {
+        type: "onUpdate",
+        id: string,
+        url: string,
+        date: Date,
+      }
+    }
+    const items: CampaignHistoryItems = bg.getCampaignHistory()
+    const noOptOut = bg.settings.enablePromoOnUpdate
+    const alreadyOpened = items && items.hasOwnProperty(campaign.id)
+
+    console.info({
+      "campaign": campaign.id,
+      "campaign active": campaign.active,
+      "opt-out": !noOptOut,
+      "already opened": alreadyOpened,
+    })
+
     if (
-      bg.settings.enablePromoOnUpdate === true &&
+      noOptOut &&
       campaign.active &&
-      !items[campaign.id]
+      !alreadyOpened
     ) {
       chrome.runtime.onInstalled.addListener(async (details) => {
         if (details.reason === chrome.runtime.OnInstalledReason.UPDATE) {
