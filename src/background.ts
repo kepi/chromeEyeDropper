@@ -176,21 +176,6 @@ var bg = {
         }
       })
     })
-
-    /**
-     * When Eye Dropper is just installed, we want to display nice
-     * page to user with some instructions
-     */
-    chrome.runtime.onInstalled.addListener(
-      (object: chrome.runtime.InstalledDetails) => {
-        if (object.reason === "install") {
-          chrome.tabs.create({
-            url: "https://eyedropper.org/installed",
-            selected: true,
-          })
-        }
-      }
-    )
   },
   setBadgeColor: function (color: string) {
     console.info("Setting badge color to " + color)
@@ -738,11 +723,26 @@ var bg = {
     }
     return res
   },
-  updateListener: function () {
-    console.info("updateListener")
+  onInstalledListener: function () {
+    console.info("onInstalledListener")
     chrome.runtime.onInstalled.addListener(async (details) => {
+      /**
+       * When Eye Dropper is just installed, we want to display nice
+       * page to user with some instructions.
+       */
+      if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
+        console.info("Extension has been installed.")
+        chrome.tabs.create({
+          url: "https://eyedropper.org/installed",
+          selected: true,
+        })
+      }
+      /**
+       * When Eye Dropper is updated, we want to display update page
+       * when there are some news to communicate.
+       */
       if (details.reason === chrome.runtime.OnInstalledReason.UPDATE) {
-        console.info("got UPDATE reason")
+        console.info("Extension has been updated.")
         // we just store info that extension was updated to local storage
         window.localStorage.setItem("extensionUpdated", new Date().toString())
       }
@@ -812,11 +812,11 @@ var bg = {
     }
   },
   init: function () {
+    bg.onInstalledListener()
     bg.edCb = document.getElementById("edClipboard")
     bg.loadSettings()
   },
   lateInit: function () {
-    bg.updateListener()
     bg.loadHistory()
     // set default badge text to empty string
     // we are comunicating with users only through badge background color
