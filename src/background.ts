@@ -740,6 +740,29 @@ var bg = {
   },
   updateListener: function () {
     console.info("updateListener")
+    chrome.runtime.onInstalled.addListener(async (details) => {
+      if (details.reason === chrome.runtime.OnInstalledReason.UPDATE) {
+        console.info("got UPDATE reason")
+        // we just store info that extension was updated to local storage
+        window.localStorage.setItem("extensionUpdated", new Date().toString())
+      }
+    })
+  },
+  handleUpdatedExtension: async function () {
+    console.info("handleUpdatedExtension")
+
+    // we check the local storage if we have info about extension update
+    const updatedOn = window.localStorage.getItem("extensionUpdated")
+    const updated = updatedOn !== null
+
+    if (!updated) {
+      console.info("no update")
+      return
+    } else {
+      console.info(`extension has been updated on ${updatedOn}`)
+    }
+
+    // current campaign
     const campaign = {
       id: "maxai202401",
       url: "https://eyedropper.org/partners/maxai202401/",
@@ -748,45 +771,44 @@ var bg = {
 
     type CampaignHistoryItems = {
       [key: string]: {
-        type: "onUpdate",
-        id: string,
-        url: string,
-        date: Date,
+        type: "onUpdate"
+        id: string
+        url: string
+        date: Date
       }
     }
+
     const items: CampaignHistoryItems = bg.getCampaignHistory()
     const noOptOut = bg.settings.enablePromoOnUpdate
     const alreadyOpened = items && items.hasOwnProperty(campaign.id)
 
     console.info({
-      "campaign": campaign.id,
+      campaign: campaign.id,
       "campaign active": campaign.active,
       "opt-out": !noOptOut,
       "already opened": alreadyOpened,
     })
 
-    if (
-      noOptOut &&
-      campaign.active &&
-      !alreadyOpened
-    ) {
-      chrome.runtime.onInstalled.addListener(async (details) => {
-        if (details.reason === chrome.runtime.OnInstalledReason.UPDATE) {
-          await chrome.tabs.create({
-            url: campaign.url,
-            active: true,
-          })
+    // if we should open new tab
+    if (noOptOut && campaign.active && !alreadyOpened) {
+      // remove extension updated flag
+      window.localStorage.removeItem("extensionUpdated")
 
-          items[campaign.id] = {
-            type: "onUpdate",
-            id: campaign.id,
-            url: campaign.url,
-            date: new Date(),
-          }
-
-          window.localStorage.setItem("campaigns", JSON.stringify(items))
-        }
+      // open the tab
+      await chrome.tabs.create({
+        url: campaign.url,
+        active: true,
       })
+
+      // update info about campaign history
+      items[campaign.id] = {
+        type: "onUpdate",
+        id: campaign.id,
+        url: campaign.url,
+        date: new Date(),
+      }
+
+      window.localStorage.setItem("campaigns", JSON.stringify(items))
     }
   },
   init: function () {
@@ -794,6 +816,7 @@ var bg = {
     bg.loadSettings()
   },
   lateInit: function () {
+    bg.updateListener()
     bg.loadHistory()
     // set default badge text to empty string
     // we are comunicating with users only through badge background color
@@ -808,7 +831,7 @@ var bg = {
     // listen for shortcut commands
     bg.shortcutListener()
     // act when extension is updated
-    bg.updateListener()
+    bg.handleUpdatedExtension()
   },
 }
 
