@@ -1,3 +1,5 @@
+import { expect, test } from "vitest"
+
 import Rect from "../rect"
 
 const dw = 1680
