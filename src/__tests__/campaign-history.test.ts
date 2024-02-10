@@ -49,6 +49,16 @@ describe("Campaign history", () => {
       { desc: "new opened", data: newAlreadyOpened, expected: true },
       { desc: "new not opened", data: newNotOpened, expected: false },
       { desc: "old not opened", data: oldNotOpened, expected: false },
+      {
+        desc: "manual not opened",
+        data: [december, december, december],
+        expected: false,
+      },
+      {
+        desc: "manual opened",
+        data: [december, december, january, december],
+        expected: true,
+      },
     ])("$desc", ({ data, expected }) => {
       setData(data)
       expect(bg.wasCampaignOpened(campaign)).toBe(expected)
