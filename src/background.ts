@@ -29,6 +29,21 @@ interface Palette {
   colors: Array<string>
 }
 
+type CampaignHistoryItem = {
+  type: "onUpdate"
+  id: string
+  url: string
+  date: Date
+}
+
+type CampaignHistoryItems = CampaignHistoryItem[]
+
+type Campaign = {
+  id: string
+  url: string
+  active: boolean
+}
+
 // base bg object
 var bg = {
   tab: null as chrome.tabs.Tab,
@@ -713,16 +728,6 @@ var bg = {
         return color
     }
   },
-  getCampaignHistory: function () {
-    var res = {}
-    const campagins = localStorage.getItem("campaigns") ?? "{}"
-    try {
-      res = JSON.parse(campagins)
-    } catch (_e: unknown) {
-      res = {}
-    }
-    return res
-  },
   onInstalledListener: function () {
     console.info("onInstalledListener")
     chrome.runtime.onInstalled.addListener(async (details) => {
@@ -748,6 +753,34 @@ var bg = {
       }
     })
   },
+  getCampaignHistory: function () {
+    const campagins = localStorage.getItem("campaigns") ?? "[]"
+    try {
+      const res = JSON.parse(campagins)
+      // convert old object style to new array style
+      if (typeof res === "object") {
+        return Object.values(res)
+      } else {
+        return res
+      }
+    } catch (_e: unknown) {
+      return []
+    }
+  },
+  wasCampaignOpened: function (campaign: Campaign) {
+    const items: CampaignHistoryItems = bg.getCampaignHistory()
+    return items.some((c) => c.id === campaign.id)
+  },
+  addCampaignToHistory: function (campaign: Campaign) {
+    const items: CampaignHistoryItems = bg.getCampaignHistory()
+    items.push({
+      type: "onUpdate",
+      id: campaign.id,
+      url: campaign.url,
+      date: new Date(),
+    })
+    window.localStorage.setItem("campaigns", JSON.stringify(items))
+  },
   handleUpdatedExtension: async function () {
     console.info("handleUpdatedExtension")
 
@@ -763,24 +796,14 @@ var bg = {
     }
 
     // current campaign
-    const campaign = {
+    const campaign: Campaign = {
       id: "maxai202401",
       url: "https://eyedropper.org/partners/maxai202401/",
       active: false,
     }
 
-    type CampaignHistoryItems = {
-      [key: string]: {
-        type: "onUpdate"
-        id: string
-        url: string
-        date: Date
-      }
-    }
-
-    const items: CampaignHistoryItems = bg.getCampaignHistory()
     const noOptOut = bg.settings.enablePromoOnUpdate
-    const alreadyOpened = items && items.hasOwnProperty(campaign.id)
+    const alreadyOpened = bg.wasCampaignOpened(campaign)
 
     console.info({
       campaign: campaign.id,
@@ -794,21 +817,14 @@ var bg = {
       // remove extension updated flag
       window.localStorage.removeItem("extensionUpdated")
 
-      // open the tab
+      // update info about campaign history
+      bg.addCampaignToHistory(campaign)
+
+      // open the tab with onUpdate campaign
       await chrome.tabs.create({
         url: campaign.url,
         active: true,
       })
-
-      // update info about campaign history
-      items[campaign.id] = {
-        type: "onUpdate",
-        id: campaign.id,
-        url: campaign.url,
-        date: new Date(),
-      }
-
-      window.localStorage.setItem("campaigns", JSON.stringify(items))
     }
   },
   init: function () {
