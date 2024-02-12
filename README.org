@@ -6,6 +6,43 @@ Google Chrome™.
 
 You can find more info, help and FAQ at [[https://eyedropper.org][homepage]].
 
+* Features
+
+Open the extension to bring up a pop-up menu. 
+Click "Pick color from web page" and then click anywhere on the page to store the color in your palette.
+
+You can also click the "Color Picker" tab to view a color picker. 
+You can view the hex values for any color and add any color to your palette.
+
+* Development Setup
+
+1. Clone the repository from GitHub ~git clone <repository-url>~
+
+2. Make sure you have node and yarn installed. If you do not have yarn, you can install it from npm using: ~npm install --global yarn~
+
+3. Install all dependencies ~yarn install~
+
+4. Run the build command ~npm run build:dev~. There should be a new file in the repo labeled "dist".
+
+5. Go to Google Chrome: Extensions > Manage Extensions. Click the switch labeled "Developer mode". Click the "Load unpacked" button that appears.
+
+6. Select the "dist" folder inside your local repository. The extension will now be added to your extensions list.
+
+The dist folder will contain the ~manifest.json~ file, which will contain important information about the extension.
+Notably, it lists ~popup.html~ (located in the ~public~ directory) as the default popup browser action.
+This is where the main structure of the extension popup is defined.
+
+Other HTML pages, such as the page for the extension settings can be found in the ~public~ directory (options.html).
+
+JavaScript and TypeScript scripts are located in the ~src~ directory. 
+This includes the script background.js, which stores state information for the extension in a background page that is loaded when the extension is initialized.
+
+** Testing
+
+Tests are defined in ~src/__tests__~
+
+Run tests by installing dependencies and using: ~npm run test~
+
 * Bugs and ideas
 You can report bugs and ideas at [[https://github.com/kepi/chromeEyeDropper/issues][project's issues tracker]].
 
