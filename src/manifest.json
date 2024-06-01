@@ -18,5 +18,23 @@
   "background": {
     "{{chrome}}.service_worker": "src/background.ts",
     "{{firefox}}.scripts": ["src/background.ts"]
+  },
+
+  "permissions": ["activeTab", "storage", "scripting"],
+
+  "{{chrome}}.web_accessible_resources": [
+    {
+      "resources": ["src/injects/edropper.js", "inject/edropper.css"],
+      "matches": ["*://*/*"]
+    }
+  ],
+
+  "commands": {
+    "pick-from-webpage": {
+      "suggested_key": {
+        "default": "Alt+P"
+      },
+      "description": "Pick color from web page"
+    }
   }
 }

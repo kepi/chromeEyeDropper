@@ -20,6 +20,7 @@ export default defineConfig({
     webExtension({
       manifest: generateManifest,
       watchFilePaths: ["package.json", "manifest.json"],
+      additionalInputs: ["src/injects/edropper.ts"],
     }),
   ],
 })

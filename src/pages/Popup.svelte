@@ -1,6 +1,7 @@
 <script lang="ts">
   import Palette from "../lib/Palette.svelte"
   import ColorBox from "../lib/ColorBox.svelte"
+  import PickFromWebpageButton from "../lib/PickFromWebpageButton.svelte"
   import { random } from "@ctrl/tinycolor"
   import { selectedColor, newColor } from "../store"
 
@@ -11,11 +12,7 @@
   <div class="flex flex-nowrap p-2">
     <div class="flex-grow min-w-72">
       <div class="p-4">
-        <button
-          class="rounded-lg bg-green-500 px-6 py-3 font-semibold text-white shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
-        >
-          Pick color from webpage
-        </button>
+        <PickFromWebpageButton />
       </div>
       <Palette />
     </div>
