@@ -1,15 +1,36 @@
 <script lang="ts">
-  console.log("Hello from the popup!");
+  import Palette from "../lib/Palette.svelte"
+  import ColorBox from "../lib/ColorBox.svelte"
+  import { random } from "@ctrl/tinycolor"
+  import { selectedColor, newColor } from "../store"
+
+  console.log("Hello from the popup!")
 </script>
 
-<div>
-  <img src="/icon-with-shadow.svg" alt="" />
-  <h1>vite-plugin-web-extension</h1>
-  <p>
-    Template: <code>svelte-ts</code>
-  </p>
+<div class="container max-w-2xl">
+  <div class="flex flex-nowrap p-2">
+    <div class="flex-grow min-w-72">
+      <div class="p-4">
+        <button
+          class="rounded-lg bg-green-500 px-6 py-3 font-semibold text-white shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
+        >
+          Pick color from webpage
+        </button>
+      </div>
+      <Palette />
+    </div>
+    <div>
+      <ColorBox label="Selected" store={selectedColor} />{" "}
+      <ColorBox label="New" store={newColor} />
+    </div>
+  </div>
+  <div
+    class="flex p-2 align-middle"
+    style="background: linear-gradient(to right, {$selectedColor} 0%, {$newColor} 100%)"
+  >
+    <code class="rounded bg-white px-1 font-mono text-xs text-nowrap">
+      linear-gradient(to right, {$selectedColor} 0%, {$newColor} 100%)
+    </code>
+  </div>
+  <div class="bg-gray-100 p-2">Plus</div>
 </div>
-
-<style>
-
-</style>
