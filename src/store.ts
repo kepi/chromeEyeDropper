@@ -1,13 +1,11 @@
 import browser, { type Runtime } from "webextension-polyfill"
 import { writable } from "svelte/store"
 import { random } from "@ctrl/tinycolor"
+import storage from "./storage"
 
 async function getSelectedColor() {
-  const gettingItem = browser.storage.sync.get("selectedColor")
-  return gettingItem.then(
-    (val) => val.selectedColor,
-    () => random().toHexString(),
-  )
+  const color = await storage.getItem("selectedColor")
+  return color ?? random().toHexString()
 }
 
 export const selectedColor = writable(await getSelectedColor())

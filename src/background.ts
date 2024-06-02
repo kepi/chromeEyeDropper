@@ -1,4 +1,5 @@
 import browser, { type Runtime } from "webextension-polyfill"
+import storage from "./storage"
 
 const BG_VERSION = 25
 const NEED_DROPPER_VERSION = 14
@@ -8,13 +9,8 @@ console.log(`bg version ${BG_VERSION}`)
 async function pickFromWeb(tabId?: number) {
   console.log("picking from webpage")
 
-  if (!tabId) {
-    tabId = await getTabId()
-  }
-
-  if (tabId == undefined) {
-    return
-  }
+  tabId ??= await getTabId()
+  if (tabId == null) return
 
   await injectDrop(tabId)
 
@@ -35,12 +31,10 @@ async function pickFromWeb(tabId?: number) {
 }
 
 async function sendMessage(message: unknown, tabId?: number) {
-  if (!tabId) {
-    tabId = await getTabId()
-  }
-  if (tabId) {
-    return browser.tabs.sendMessage(tabId, message)
-  }
+  tabId ??= await getTabId()
+  if (tabId == null) return
+
+  return browser.tabs.sendMessage(tabId, message)
 }
 
 async function needInject(tabId: number) {
@@ -105,9 +99,7 @@ async function setBadgeColor(color: string) {
 
 async function setColor(color: string) {
   console.log(`Setting color to ${color}`)
-  await browser.storage.sync.set({
-    selectedColor: color,
-  })
+  await storage.setItem("selectedColor", color)
   await setBadgeColor(color)
 }
 
@@ -147,10 +139,20 @@ function onInstalledHandler(details: Runtime.OnInstalledDetailsType) {
   console.log("Extension installed:", details)
 }
 
-async function init() {
+async function initBadge() {
+  console.log("init badge")
   await browser.action.setBadgeText({
     text: " ",
   })
+  const color = await storage.getItem("selectedColor")
+  console.log("badge color", color)
+  if (color) {
+    setBadgeColor(color)
+  }
+}
+
+async function init() {
+  initBadge()
 }
 
 browser.commands.onCommand.addListener(commandHandler)

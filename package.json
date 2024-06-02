@@ -28,6 +28,7 @@
     "webextension-polyfill": "^0.10.0"
   },
   "dependencies": {
-    "@ctrl/tinycolor": "^4.1.0"
+    "@ctrl/tinycolor": "^4.1.0",
+    "@webext-core/storage": "^1.2.0"
   }
 }
