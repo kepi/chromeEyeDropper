@@ -24,7 +24,7 @@
 
   "{{chrome}}.web_accessible_resources": [
     {
-      "resources": ["src/injects/edropper.js", "inject/edropper.css"],
+      "resources": ["src/injects/edropper.js"],
       "matches": ["*://*/*"]
     }
   ],
