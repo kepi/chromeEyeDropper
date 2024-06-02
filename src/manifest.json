@@ -36,5 +36,10 @@
       },
       "description": "Pick color from web page"
     }
+  },
+  "{{firefox}}.browser_specific_settings": {
+    "gecko": {
+      "id": "eyedropper.org"
+    }
   }
 }
