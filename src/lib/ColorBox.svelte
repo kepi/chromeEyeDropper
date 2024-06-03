@@ -2,19 +2,14 @@
   import { TinyColor } from "@ctrl/tinycolor"
   import ColorBoxValue from "./ColorBoxValue.svelte"
 
+  export let color
   export let label
-  export let store
 
-  let color
-
-  store.subscribe((value) => {
-    color = value
-  })
+  // TODO handle null color
 
   $: tinyColor = new TinyColor(color)
   $: colorName = tinyColor.toName()
 
-  // short hex - render only if exact match
   $: hex = tinyColor.toHexString()
   $: hslString = tinyColor.toHslString()
   $: hsvString = tinyColor.toHsvString()

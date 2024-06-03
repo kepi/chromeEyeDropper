@@ -1,5 +1,6 @@
 import browser, { type Runtime } from "webextension-polyfill"
-import storage from "./storage"
+import { checkStorage } from "./storage"
+import { paletteGetColor, paletteSetColor } from "./palette"
 
 const BG_VERSION = 25
 const NEED_DROPPER_VERSION = 14
@@ -99,8 +100,8 @@ async function setBadgeColor(color: string) {
 
 async function setColor(color: string) {
   console.log(`Setting color to ${color}`)
-  await storage.setItem("selectedColor", color)
-  await setBadgeColor(color)
+  paletteSetColor(color, "ed")
+  setBadgeColor(color)
 }
 
 async function messageHandler(message: Message, sender: Runtime.MessageSender) {
@@ -137,6 +138,7 @@ function commandHandler(command: string) {
 
 function onInstalledHandler(details: Runtime.OnInstalledDetailsType) {
   console.log("Extension installed:", details)
+  checkStorage()
 }
 
 async function initBadge() {
@@ -144,7 +146,7 @@ async function initBadge() {
   await browser.action.setBadgeText({
     text: " ",
   })
-  const color = await storage.getItem("selectedColor")
+  const color = await paletteGetColor()
   console.log("badge color", color)
   if (color) {
     setBadgeColor(color)

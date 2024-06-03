@@ -17,8 +17,8 @@
       <Palette />
     </div>
     <div>
-      <ColorBox label="Selected" store={selectedColor} />{" "}
-      <ColorBox label="New" store={newColor} />
+      <ColorBox label="Selected" color={$selectedColor} />{" "}
+      <ColorBox label="New" color={$newColor} />
     </div>
   </div>
   <div
