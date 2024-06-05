@@ -23,9 +23,7 @@ class Settings {
 
   async get(_target: any, prop: keyof SettingsProps) {
     const value = await storage.getItem(prop)
-    if (value === null) {
-      return this.defaults[prop]
-    }
+    return value ?? this.defaults[prop]
   }
 
   async set(_target: any, prop: keyof SettingsProps, value: any) {
