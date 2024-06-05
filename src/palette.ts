@@ -13,7 +13,7 @@
 
 import storage from "./storage"
 
-type StorePaletteColorSource =
+export type StorePaletteColorSource =
   /** eye dropper */
   | "ed"
   /** color picker */
@@ -21,7 +21,7 @@ type StorePaletteColorSource =
   /** old history */
   | "old"
 
-interface StorePaletteColor {
+export interface StorePaletteColor {
   /** color in hex format including # character. i.e. #ffffff */
   h: string
   /** from where was the color taken? */
@@ -100,6 +100,27 @@ export const paletteSetColor = async (
       storage.setItem(`p${paletteId}c`, colors)
     }
   }
+}
+
+export const paletteCreate = async (
+  id: number,
+  name: string,
+  colors: StorePaletteColor[],
+  time?: number,
+) => {
+  const alreadyExists = await storage.getItem(`p${id}c`)
+  if (alreadyExists) {
+    return false
+  }
+
+  await storage.setItem(`p${id}m`, {
+    i: id,
+    n: name,
+    t: time ?? Date.now(),
+  })
+
+  await storage.setItem(`p${id}c`, colors)
+  return true
 }
 
 /**
