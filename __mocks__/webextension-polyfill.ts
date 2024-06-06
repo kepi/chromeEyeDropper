@@ -1,1 +1,5 @@
-export { fakeBrowser as default } from "@webext-core/fake-browser"
+import { fakeBrowser } from "@webext-core/fake-browser"
+
+fakeBrowser.action.setBadgeBackgroundColor = async (_details) => {}
+
+export default fakeBrowser
