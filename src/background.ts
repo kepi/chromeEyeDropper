@@ -91,17 +91,9 @@ async function capture() {
   )
 }
 
-async function setBadgeColor(color: string) {
-  console.info(`Setting badge color to ${color}`)
-  await browser.action.setBadgeBackgroundColor({
-    color,
-  })
-}
-
 async function setColor(color: string) {
   console.log(`Setting color to ${color}`)
   paletteSetColor(color, "ed")
-  setBadgeColor(color)
 }
 
 async function messageHandler(message: Message, sender: Runtime.MessageSender) {
@@ -149,7 +141,9 @@ async function initBadge() {
   const color = await paletteGetColor()
   console.log("badge color", color)
   if (color) {
-    setBadgeColor(color)
+    await browser.action.setBadgeBackgroundColor({
+      color,
+    })
   }
 }
 

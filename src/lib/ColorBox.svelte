@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { TinyColor } from "@ctrl/tinycolor"
+  import { random, TinyColor } from "@ctrl/tinycolor"
   import ColorBoxValue from "./ColorBoxValue.svelte"
 
   export let color

@@ -74,20 +74,25 @@ export const paletteSetActive = async (paletteId: number) => {
 /**
  * Sets active color of palette
  *
+ * @remarks
+ * When we specify source, color will be added to list of palette colors.
+ *
+ * When we don't specify source, it will be only set in badge/active color.
+ *
  * @param color - hex color (i.e. #ffffff)
  * @param source - where we took the color
- * @param add - also add color to palette colors
  */
-export const paletteSetColor = async (
-  color: string,
-  source: StorePaletteColorSource,
-  add: boolean = true,
-) => {
+export const paletteSetColor = async (color: string, source?: StorePaletteColorSource) => {
   // set active color
   storage.setItem("c", color)
 
+  // set badge color
+  await browser.action.setBadgeBackgroundColor({
+    color,
+  })
+
   // add to palette colors
-  if (add) {
+  if (source) {
     const paletteId = await paletteGetActive()
     if (paletteId === undefined) return
 
@@ -225,9 +230,12 @@ export const paletteCreate = async (
 
 /**
  * Gets active color
+ *
+ * @remarks
+ * When there is no active color, default #75bb75 is returned.
  */
 export async function paletteGetColor() {
-  return storage.getItem("c")
+  return (await storage.getItem("c")) ?? "#75bb75"
 }
 
 /**
