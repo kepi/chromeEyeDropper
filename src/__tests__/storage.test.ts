@@ -1,8 +1,8 @@
-import storage, { checkStorage } from "../storage"
+import { checkStorage } from "../storage"
 
 import browser from "webextension-polyfill"
 import { fakeBrowser } from "@webext-core/fake-browser"
-import { localExtStorage, syncExtStorage } from "@webext-core/storage"
+import { syncExtStorage } from "@webext-core/storage"
 import { describe, beforeEach, it, expect } from "vitest"
 
 import { storeV24TwoPalettes, storeV24, storeV13 } from "./storage.previous"
@@ -20,7 +20,7 @@ describe("emptyStore", () => {
 
 describe("unknownStore", () => {
   const data = {
-    hocus: "pokus",
+    hocus: "pocus",
   }
 
   beforeEach(async () => {

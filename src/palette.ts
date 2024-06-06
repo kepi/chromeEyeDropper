@@ -11,6 +11,7 @@
  * things under the hood, if necessary.
  */
 
+import browser from "webextension-polyfill"
 import storage from "./storage"
 
 export type StorePaletteColorSource =
@@ -97,30 +98,129 @@ export const paletteSetColor = async (
       // push to colors in correct format with metadata
       colors.push(color2StorePaletteColor(color, source))
       // save to storage
-      storage.setItem(`p${paletteId}c`, colors)
+      paletteSetColors(paletteId, colors)
     }
   }
 }
 
+/**
+ * Set colors of palette
+ *
+ * @remarks
+ * This is only method which should be used to set colors of some palette. It
+ * checks for missing default palette and may do more things in future.
+ *
+ * @param paletteId - id of palette
+ * @param colors - colors to set
+ */
+export const paletteSetColors = async (paletteId: number, colors: StorePaletteColor[]) => {
+  // default palette
+  if (paletteId === 0) {
+    // get metadata
+    const paletteMeta = await storage.getItem(`p${paletteId}m`)
+
+    // create palette and set colors if default doesn't exist
+    if (!paletteMeta) {
+      paletteCreate(paletteId, "default", colors)
+      return
+    }
+  }
+
+  // set colors to current palette
+  storage.setItem(`p${paletteId}c`, colors)
+}
+
+/**
+ * Find first missing number
+ *
+ * Find first missing number in number array and return it.
+ *
+ * @param array
+ */
+export const findFirstMissingNumber = (arr: number[]) => {
+  arr.sort((a, b) => a - b)
+
+  // if default palette isn't defined, add it
+  if (arr[0] !== 0) {
+    arr.unshift(0)
+  }
+
+  // we need to go to array + 1, hence <= as we need next available id, so i.e.
+  // in array [0] we need to go to second position to get 1
+  for (let i = 0; i <= arr.length; i++) {
+    if (arr[i] !== i) {
+      return i
+    }
+  }
+
+  // this should never happen
+  return -1
+}
+
+/**
+ * Find first available Id
+ *
+ * Finds first available id in existing palettes and returns it.
+ *
+ */
+export const paletteFindFirstAvailableId = async () => {
+  const syncStorage = await browser.storage.sync.get()
+  // this will count all existing palettes but default one (0) and add 1
+  const existingPaletteIds = Object.keys(syncStorage)
+    .filter((key) => /^p[0-9]+m$/.test(key))
+    .map((key) => Number(key.match(/^p([0-9]+)m$/)![1]))
+
+  return findFirstMissingNumber(existingPaletteIds)
+}
+
+/**
+ * Create Palette
+ *
+ * Create palette and returns its id.
+ *
+ * @remarks
+ * When paletteId is null, it will be autoincremented automatically.
+ *
+ * While it is preferred, palettes don't have to have ids in continuous number
+ * sequence.
+ *
+ * When palette with specified number already exists, it silently returns this
+ * id and do nothing. If creating failed, it returns -1.
+ *
+ * @param paletteId - id of palette to create
+ * @param name - name of palette to create
+ * @param colors - colors to set
+ * @param time - time of creation - timestamp
+ */
+
 export const paletteCreate = async (
-  id: number,
+  paletteId: number | null,
   name: string,
   colors: StorePaletteColor[],
   time?: number,
 ) => {
-  const alreadyExists = await storage.getItem(`p${id}c`)
-  if (alreadyExists) {
-    return false
+  // get next paletteId
+  if (paletteId === null) {
+    paletteId = await paletteFindFirstAvailableId()
   }
 
-  await storage.setItem(`p${id}m`, {
-    i: id,
+  if (paletteId < 0) {
+    return -1
+  }
+
+  const alreadyExists = await storage.getItem(`p${paletteId}c`)
+  if (alreadyExists) {
+    return paletteId
+  }
+
+  await storage.setItem(`p${paletteId}m`, {
+    i: paletteId,
     n: name,
     t: time ?? Date.now(),
   })
 
-  await storage.setItem(`p${id}c`, colors)
-  return true
+  await storage.setItem(`p${paletteId}c`, colors)
+  return paletteId
 }
 
 /**
@@ -160,8 +260,8 @@ export const paletteGetColorsHexes = async (paletteId?: number) => {
 /**
  * Returns color with metadata in format to be stored.
  *
- * @param color: hex color (i.e. #ffffff)
- * @param source: from where we took the color
+ * @param color - hex color (i.e. #ffffff)
+ * @param source - from where we took the color
  */
 
 const color2StorePaletteColor = (color: string, source: StorePaletteColorSource) => {
