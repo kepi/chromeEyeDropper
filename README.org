@@ -1,0 +1,99 @@
+#+TITLE: Eye Dropper browser extension
+
+*Eye Dropper* is web browser extension which helps you pick and manage palettes
+of colors from web pages or color picker. It currently works in Chromium and
+Google Chrome™.
+
+You can find more info, help and FAQ at [[https://eyedropper.org][homepage]].
+
+* Features
+
+Open the extension to bring up a pop-up menu.
+Click "Pick color from web page" and then click anywhere on the page to store the color in your palette.
+
+You can also click the "Color Picker" tab to view a color picker.
+You can view the hex values for any color and add any color to your palette.
+
+* Development Setup
+
+1. Clone the repository from GitHub ~git clone <repository-url>~
+
+2. Make sure you have node and yarn installed. If you do not have yarn, you can install it from npm using: ~npm install --global yarn~
+
+3. Install all dependencies ~yarn install~
+
+4. Run the build command ~npm run build:dev~. There should be a new file in the repo labeled "dist".
+
+5. Go to Google Chrome: Extensions > Manage Extensions. Click the switch labeled "Developer mode". Click the "Load unpacked" button that appears.
+
+6. Select the "dist" folder inside your local repository. The extension will now be added to your extensions list.
+
+The dist folder will contain the ~manifest.json~ file, which will contain important information about the extension.
+Notably, it lists ~popup.html~ (located in the ~public~ directory) as the default popup browser action.
+This is where the main structure of the extension popup is defined.
+
+Other HTML pages, such as the page for the extension settings can be found in the ~public~ directory (options.html).
+
+JavaScript and TypeScript scripts are located in the ~src~ directory.
+This includes the script background.js, which stores state information for the extension in a background page that is loaded when the extension is initialized.
+
+** Testing
+
+Tests are defined in ~src/__tests__~
+
+Run tests by installing dependencies and using: ~npm run test~
+
+* Bugs and ideas
+You can report bugs and ideas at [[https://github.com/kepi/chromeEyeDropper/issues][project's issues tracker]].
+
+* License
+This extension is released under [[http://github.com/kepi/chromeEyeDropper/blob/master/LICENSE][MIT License]].
+
+* TODO v0.6 [4/13]
+** DONE Basic popup
+:LOGBOOK:
+- State "DONE"       from "DONE"       [2024-06-06 Čt 21:21]
+- State "DONE"       from "TODO"       [2024-06-06 Čt 21:21]
+:END:
+
+** DONE Picking from web
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2024-06-06 Čt 21:21]
+:END:
+
+** DONE Tests
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2024-06-06 Čt 21:21]
+:END:
+
+** DONE setBadgeBackgroundColor mock
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2024-06-06 Čt 21:52]
+:END:
+
+** TODO Settings page
+
+** TODO Fix theme from DaisyUI
+- maybe just remove it for now and fix it later
+
+** TODO Links
+i.e. link to chrome's extension
+
+** TODO Palette management in popup
+- [ ] create new palette
+- [ ] switch palette
+- [ ] clear palette
+- [ ] delete palette
+
+** TODO Color Picker
+
+** TODO Popup banner
+- from MaxAI.me
+
+** TODO Maybe - On installed page
+- maybe need to add something from MaxAI.me? revisit
+** TODO Publish
+
+** TODO About page
+** TODO Multi picks in row?
+** TODO Closest color?

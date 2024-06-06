@@ -85,6 +85,7 @@ export const paletteSetActive = async (paletteId: number) => {
 export const paletteSetColor = async (color: string, source?: StorePaletteColorSource) => {
   // set active color
   storage.setItem("c", color)
+  // selectedColor.set(color)
 
   // set badge color
   await browser.action.setBadgeBackgroundColor({

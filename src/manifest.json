@@ -9,6 +9,8 @@
     "128": "icon/128.png"
   },
 
+  "options_page": "src/options.html",
+
   "{{chrome}}.action": {
     "default_popup": "src/popup.html"
   },

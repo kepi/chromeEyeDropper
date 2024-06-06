@@ -1,4 +1,4 @@
-import storage from "./storage"
+import storage, { type Schema } from "./storage"
 
 export interface SettingsProps {
   autoClipboard: boolean
@@ -10,25 +10,29 @@ export interface SettingsProps {
   enablePromoOnUpdate: boolean
 }
 
-class Settings {
-  defaults: SettingsProps = {
-    autoClipboard: false,
-    autoClipboardNoGrid: false,
-    enableColorToolbox: true,
-    enableColorTooltip: true,
-    enableRightClickDeactivate: true,
-    dropperCursor: "default",
-    enablePromoOnUpdate: true,
-  }
-
-  async get(_target: any, prop: keyof SettingsProps) {
-    const value = await storage.getItem(prop)
-    return value ?? this.defaults[prop]
-  }
-
-  async set(_target: any, prop: keyof SettingsProps, value: any) {
-    await storage.setItem(prop, String(value))
-  }
+const defaults: SettingsProps = {
+  autoClipboard: false,
+  autoClipboardNoGrid: false,
+  enableColorToolbox: true,
+  enableColorTooltip: true,
+  enableRightClickDeactivate: true,
+  dropperCursor: "default",
+  enablePromoOnUpdate: true,
 }
 
-export default Settings
+const settings = async <K extends keyof SettingsProps>(prop: K, value?: SettingsProps[K]) => {
+  // getting
+  if (value === undefined) {
+    const val: SettingsProps[K] = (await storage.getItem(prop)) ?? defaults[prop]
+    console.log("Setting", prop, "is", val)
+    if (val === "false") {
+      console.log("stringy false")
+    }
+    return val
+  }
+
+  // setting
+  await storage.setItem(prop as keyof Schema, value as Schema[K])
+}
+
+export default settings

@@ -41,7 +41,7 @@ type StoreBasic = {
   p: number
 }
 
-type Schema = StoreBasic & SettingsProps & StorePalettes
+export type Schema = StoreBasic & SettingsProps & StorePalettes
 
 const extensionStorage = defineExtensionStorage<Schema>(browser.storage.sync)
 
