@@ -49,7 +49,7 @@ You can report bugs and ideas at [[https://github.com/kepi/chromeEyeDropper/issu
 * License
 This extension is released under [[http://github.com/kepi/chromeEyeDropper/blob/master/LICENSE][MIT License]].
 
-* TODO v0.6 [5/16]
+* TODO v0.6 [7/16]
 ** DONE Basic popup
 :LOGBOOK:
 - State "DONE"       from "DONE"       [2024-06-06 Čt 21:21]
@@ -81,7 +81,10 @@ This extension is released under [[http://github.com/kepi/chromeEyeDropper/blob/
 - State "DONE"       from "TODO"       [2024-06-10 Po 21:07]
 :END:
 
-** TODO Links
+** DONE Links
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2024-06-10 Po 22:14]
+:END:
 i.e. link to chrome's extension settings on options page
 
 ** TODO Palette management in popup
