@@ -1,8 +1,10 @@
 import storage, { type Schema } from "./storage"
 
+export type AutoClipboardType = "#rgbhex" | "rgbhex"
+
 export interface SettingsProps {
   autoClipboard: boolean
-  autoClipboardNoGrid: boolean
+  autoClipboardType: AutoClipboardType
   enableColorToolbox: boolean
   enableColorTooltip: boolean
   enableRightClickDeactivate: boolean
@@ -10,9 +12,9 @@ export interface SettingsProps {
   enablePromoOnUpdate: boolean
 }
 
-const defaults: SettingsProps = {
+export const defaults: SettingsProps = {
   autoClipboard: false,
-  autoClipboardNoGrid: false,
+  autoClipboardType: "#rgbhex",
   enableColorToolbox: true,
   enableColorTooltip: true,
   enableRightClickDeactivate: true,

@@ -68,18 +68,17 @@ export const checkStorage = async () => {
       return true
     }
 
+    // V24 - let's convert it to new version
     if (unknData.history?.v) {
       const data = unknData as V24Data
 
-      // let's convert data to new Schema
-      //
       // settings and basic info
       const convertedData: Schema = {
         v: data.history.v,
         c: data.history.lc,
         p: 0, // we will set selected palette in next steps
         autoClipboard: data.settings.autoClipboard,
-        autoClipboardNoGrid: data.settings.autoClipboardNoGrid,
+        autoClipboardType: data.settings.autoClipboardNoGrid ? "rgbhex" : "#rgbhex",
         enableColorToolbox: data.settings.enableColorToolbox,
         enableColorTooltip: data.settings.enableColorTooltip,
         enableRightClickDeactivate: data.settings.enableRightClickDeactivate,

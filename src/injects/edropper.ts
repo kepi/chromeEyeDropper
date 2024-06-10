@@ -22,8 +22,6 @@ var page = {
     enableColorToolbox: true,
     enableColorTooltip: true,
     enableRightClickDeactivate: true,
-    autoClipboard: false,
-    autoClipboardNoGrid: false,
   },
 
   canvas: null,
