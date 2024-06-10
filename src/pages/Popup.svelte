@@ -25,7 +25,7 @@
     class="flex p-2 align-middle"
     style="background: linear-gradient(to right, {$selectedColor} 0%, {$newColor} 100%)"
   >
-    <code class="rounded bg-white px-1 font-mono text-xs text-nowrap">
+    <code class="rounded bg-white text-black px-1 font-mono text-xs text-nowrap">
       linear-gradient(to right, {$selectedColor} 0%, {$newColor} 100%)
     </code>
   </div>

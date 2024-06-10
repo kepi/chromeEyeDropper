@@ -9,16 +9,18 @@ export default {
     logs: false,
     themes: [
       {
-        mytheme: {
+        light: {
+          ...require("daisyui/src/theming/themes")["light"],
           primary: "#75ba75",
           secondary: "#f5945c",
           accent: "#be95be",
           neutral: "#2a323c",
-          "base-100": "#1d232a",
           info: "#6dbfb8",
           success: "#ffffff",
           warning: "#ffbe00",
           error: "#ff5861",
+          // use later for dark theme
+          //          "base-100": "#1d232a",
         },
       },
     ],
