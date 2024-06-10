@@ -30,6 +30,7 @@ import {
   type StorePalettes,
   type StorePaletteColor,
   type StorePaletteColorSource,
+  color2StorePaletteColor,
 } from "./palette"
 
 type StoreBasic = {
@@ -65,6 +66,22 @@ export const checkStorage = async () => {
     // empty storage - nothing to do
     const isEmpty = Object.keys(unknData).length === 0 && unknData.constructor === Object
     if (isEmpty) {
+      const defaultColors: string[] = [
+        "#f5945c",
+        "#fec76f",
+        "#b3be62",
+        "#75ba75",
+        "#6dbfb8",
+        "#71a3c1",
+        "#be95be",
+      ]
+      const paletteColors: StorePaletteColor[] = defaultColors.map((color) =>
+        color2StorePaletteColor(color, "def"),
+      )
+
+      // create palette in new store
+      paletteCreate(0, "default", paletteColors)
+
       return true
     }
 

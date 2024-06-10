@@ -21,6 +21,8 @@ export type StorePaletteColorSource =
   | "cp"
   /** old history */
   | "old"
+  /**  default */
+  | "def"
 
 export interface StorePaletteColor {
   /** color in hex format including # character. i.e. #ffffff */
@@ -273,7 +275,7 @@ export const paletteGetColorsHexes = async (paletteId?: number) => {
  * @param source - from where we took the color
  */
 
-const color2StorePaletteColor = (color: string, source: StorePaletteColorSource) => {
+export const color2StorePaletteColor = (color: string, source: StorePaletteColorSource) => {
   return {
     h: color,
     s: source,
