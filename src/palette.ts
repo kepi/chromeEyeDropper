@@ -13,6 +13,9 @@
 
 import browser from "webextension-polyfill"
 import storage from "./storage"
+import { settingsGet } from "./settings"
+import { copyToClipboard } from "./clipboard"
+import { colorToString } from "./color"
 
 export type StorePaletteColorSource =
   /** eye dropper */
@@ -74,6 +77,45 @@ export const paletteSetActive = async (paletteId: number) => {
 }
 
 /**
+ * Copy passed color to clipboard
+ *
+ * @remarks
+ * It will copy to clipboard based on settings. First it checks, if
+ * clipboard is enabled and then it will select format in which color should
+ * be copied in.
+ *
+ *  @param color - hex color (i.e. #ffffff)
+ */
+export const palletteColorToClipboard = async (color: string) => {
+  // copy to clipboard if wanted
+  if (await settingsGet("autoClipboard")) {
+    console.log("copying to clipboard")
+    copyToClipboard(colorToString(color, await settingsGet("autoClipboardType")))
+  }
+}
+
+/**
+ * Run hooks which should be run after setting color
+ *
+ * @remarks
+ * As we are setting color from at least two places (Svelte store and this
+ * palette), we need common function to do things after setting color, like
+ * change badge and hopefully copy to clipboard at some point.
+ *
+ * We can't use copy to clipboard here at the moment, as we don't have always
+ * document ready and looks like at least Firefox doesn't have
+ * browser.offscreen for now.
+ *
+ * @param color - hex color (i.e. #ffffff)
+ */
+export const paletteSetColorAfterHooks = async (color: string) => {
+  // set badge color
+  await browser.action.setBadgeBackgroundColor({
+    color,
+  })
+}
+
+/**
  * Sets active color of palette
  *
  * @remarks
@@ -87,12 +129,9 @@ export const paletteSetActive = async (paletteId: number) => {
 export const paletteSetColor = async (color: string, source?: StorePaletteColorSource) => {
   // set active color
   storage.setItem("c", color)
-  // selectedColor.set(color)
 
-  // set badge color
-  await browser.action.setBadgeBackgroundColor({
-    color,
-  })
+  // run hooks which should be run after setting color
+  paletteSetColorAfterHooks(color)
 
   // add to palette colors
   if (source) {

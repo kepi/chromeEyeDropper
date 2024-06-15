@@ -1,10 +1,9 @@
 import storage, { type Schema } from "./storage"
-
-export type AutoClipboardType = "#rgbhex" | "rgbhex"
+import type { ColorStringFormat } from "./color"
 
 export interface SettingsProps {
   autoClipboard: boolean
-  autoClipboardType: AutoClipboardType
+  autoClipboardType: ColorStringFormat
   enableColorToolbox: boolean
   enableColorTooltip: boolean
   enableRightClickDeactivate: boolean
@@ -14,7 +13,7 @@ export interface SettingsProps {
 
 export const defaults: SettingsProps = {
   autoClipboard: false,
-  autoClipboardType: "#rgbhex",
+  autoClipboardType: "hex6",
   enableColorToolbox: true,
   enableColorTooltip: true,
   enableRightClickDeactivate: true,
@@ -22,19 +21,15 @@ export const defaults: SettingsProps = {
   enablePromoOnUpdate: true,
 }
 
-const settings = async <K extends keyof SettingsProps>(prop: K, value?: SettingsProps[K]) => {
-  // getting
-  if (value === undefined) {
-    const val: SettingsProps[K] = (await storage.getItem(prop)) ?? defaults[prop]
-    console.log("Setting", prop, "is", val)
-    if (val === "false") {
-      console.log("stringy false")
-    }
-    return val
-  }
-
-  // setting
-  await storage.setItem(prop as keyof Schema, value as Schema[K])
+export const settingsGet = async <K extends keyof SettingsProps>(prop: K) => {
+  const val: SettingsProps[K] = (await storage.getItem(prop)) ?? defaults[prop]
+  console.log("Setting", prop, "is", val)
+  return val
 }
 
-export default settings
+export const settingsSet = async <K extends keyof SettingsProps>(
+  prop: K,
+  value: SettingsProps[K],
+) => {
+  await storage.setItem(prop as keyof Schema, value as Schema[K])
+}

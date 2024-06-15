@@ -49,7 +49,7 @@ You can report bugs and ideas at [[https://github.com/kepi/chromeEyeDropper/issu
 * License
 This extension is released under [[http://github.com/kepi/chromeEyeDropper/blob/master/LICENSE][MIT License]].
 
-* TODO v0.6 [7/16]
+* TODO v0.6 [8/16]
 ** DONE Basic popup
 :LOGBOOK:
 - State "DONE"       from "DONE"       [2024-06-06 Čt 21:21]
@@ -87,6 +87,14 @@ This extension is released under [[http://github.com/kepi/chromeEyeDropper/blob/
 :END:
 i.e. link to chrome's extension settings on options page
 
+** DONE Copy to clipboard
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2024-06-15 So 13:35]
+:END:
+this might be implemented maybe directly in palette so it is on single place.
+But it will need to work from svelte too, so somehow get it working in store
+too.
+
 ** TODO Palette management in popup
 - [ ] create new palette
 - [ ] switch palette
@@ -100,6 +108,12 @@ i.e. link to chrome's extension settings on options page
 
 ** TODO Maybe - On installed page
 - maybe need to add something from MaxAI.me? revisit
+
+
+
+** TODO Handle clipboard error on first color init in popup
+in store it is initialized on start without document
+
 ** TODO Publish
 
 ** TODO About page

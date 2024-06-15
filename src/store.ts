@@ -1,15 +1,20 @@
 import { writable } from "svelte/store"
-import { paletteGetColor, paletteGetColorsHexes } from "./palette"
+import {
+  paletteGetColor,
+  paletteGetColorsHexes,
+  paletteSetColorAfterHooks,
+  palletteColorToClipboard,
+} from "./palette"
 import syncedWritable from "./syncedWritable"
-import browser from "webextension-polyfill"
 import { defaults } from "./settings"
 
 /** use for setting selected color and badge */
 export const selectedColor = await syncedWritable("c", "#75bb75")
 selectedColor.subscribe((color) => {
-  browser.action.setBadgeBackgroundColor({
-    color,
-  })
+  paletteSetColorAfterHooks(color)
+
+  // copy to clipboard
+  palletteColorToClipboard(color)
 })
 
 // FIXME
@@ -19,7 +24,6 @@ selectedColor.subscribe((color) => {
 // this should be problem at the moment, but if we will use
 // palettes and selected colors on more pages, it needs to be
 // addressed similar to settings bellow
-//export const selectedColor = writable(await paletteGetColor())
 export const newColor = writable(await paletteGetColor())
 export const colors = writable(await paletteGetColorsHexes())
 

@@ -14,6 +14,7 @@
   import cursorDefault from "/img/cursor_default.png"
   import cursorCrosshair from "/img/cursor_crosshair.png"
   import Link from "../Link.svelte"
+  import { colorToString } from "../color"
 </script>
 
 <div class="navbar bg-base-100">
@@ -72,7 +73,7 @@
           <input
             type="radio"
             name="autoClipboardType"
-            value="#rgbhex"
+            value="hex6"
             bind:group={$autoClipboardType}
             disabled={!$autoClipboard}
             class="radio radio-primary mr-3"
@@ -85,7 +86,7 @@
           <input
             type="radio"
             name="autoClipboardType"
-            value="rgbhex"
+            value="nhex6"
             bind:group={$autoClipboardType}
             disabled={!$autoClipboard}
             class="radio radio-primary mr-3"
