@@ -2,10 +2,8 @@
   import Palette from "../lib/Palette.svelte"
   import ColorBox from "../lib/ColorBox.svelte"
   import PickFromWebpageButton from "../lib/PickFromWebpageButton.svelte"
-  import { random } from "@ctrl/tinycolor"
   import { selectedColor, newColor } from "../store"
-
-  console.log("Hello from the popup!")
+  import Link from "../Link.svelte"
 </script>
 
 <div class="container max-w-2xl">
@@ -29,5 +27,13 @@
       linear-gradient(to right, {$selectedColor} 0%, {$newColor} 100%)
     </code>
   </div>
-  <div class="bg-gray-100 p-2">Plus</div>
+  <div class="bg-gray-100 p-2 flex gap-4 justify-between">
+    <div class="font-bold">Eye Dropper</div>
+    <div class="flex gap-2">
+      <Link href="https://eyedropper.org">hp</Link>
+      <Link href="https://github.com/kepi/chromeEyeDropper/issues">bugs</Link>
+      <Link href="/src/popup.html">popup</Link>
+      <Link href="/src/options.html">options</Link>
+    </div>
+  </div>
 </div>

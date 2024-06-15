@@ -109,7 +109,8 @@ too.
 ** TODO Maybe - On installed page
 - maybe need to add something from MaxAI.me? revisit
 
-
+** TODO Display error about picking from chrome pages
+- maybe just disable button and in hover explain why
 
 ** TODO Handle clipboard error on first color init in popup
 in store it is initialized on start without document

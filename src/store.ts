@@ -1,12 +1,13 @@
-import { writable } from "svelte/store"
+import { derived, writable } from "svelte/store"
 import {
   paletteGetColor,
-  paletteGetColorsHexes,
   paletteSetColorAfterHooks,
   palletteColorToClipboard,
+  type StorePalettes,
 } from "./palette"
 import syncedWritable from "./syncedWritable"
 import { defaults } from "./settings"
+import syncedDerived from "./syncedDerived"
 
 /** use for setting selected color and badge */
 export const selectedColor = await syncedWritable("c", "#75bb75")
@@ -17,15 +18,16 @@ selectedColor.subscribe((color) => {
   palletteColorToClipboard(color)
 })
 
-// FIXME
-// colors and newColor are initialized only once and not synced through
-// tabs etc.
-//
-// this should be problem at the moment, but if we will use
-// palettes and selected colors on more pages, it needs to be
-// addressed similar to settings bellow
 export const newColor = writable(await paletteGetColor())
-export const colors = writable(await paletteGetColorsHexes())
+
+export const paletteId = await syncedWritable("p", 0)
+
+export const paletteColorsKey = derived(
+  paletteId,
+  ($paletteId) => `p${$paletteId}c` as keyof StorePalettes,
+)
+
+export const paletteColors = syncedDerived(paletteColorsKey, [])
 
 // Settings
 export const autoClipboard = await syncedWritable("autoClipboard", defaults["autoClipboard"])
