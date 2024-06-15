@@ -16,11 +16,14 @@
   $: rgbString = tinyColor.toRgbString()
 </script>
 
-<div class="relative mb-2 shadow-lg">
-  <div class="absolute bottom-2 left-0 origin-bottom-left -rotate-90 transform text-xs">
+<div class="mb-2 flex">
+  <div class="text-xs w-4 [writing-mode:vertical-lr] text-center rotate-180 font-mono">
     {label}
   </div>
-  <div class="flex w-36 flex-wrap gap-2 rounded p-2 text-xs" style="background-color: {hex}">
+  <div
+    class="shadow-lg flex w-36 flex-wrap gap-2 rounded p-2 text-xs"
+    style="background-color: {hex}"
+  >
     <ColorBoxValue value={hex} />
 
     {#if colorName}

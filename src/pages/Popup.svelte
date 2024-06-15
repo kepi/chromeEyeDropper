@@ -9,9 +9,9 @@
 </script>
 
 <div class="container max-w-2xl">
-  <div class="flex flex-nowrap p-2">
-    <div class="flex-grow min-w-72">
-      <div class="p-4">
+  <div class="flex flex-nowrap p-2 gap-4">
+    <div class="flex-grow min-w-72 pl-2">
+      <div class="py-4">
         <PickFromWebpageButton />
       </div>
       <Palette />
