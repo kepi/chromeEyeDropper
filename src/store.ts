@@ -1,5 +1,7 @@
-import { derived, writable } from "svelte/store"
+import { TinyColor } from "@ctrl/tinycolor"
+import { derived, writable, type Readable } from "svelte/store"
 import {
+  type StorePaletteColor,
   paletteGetColor,
   paletteSetColorAfterHooks,
   palletteColorToClipboard,
@@ -27,7 +29,7 @@ export const paletteColorsKey = derived(
   ($paletteId) => `p${$paletteId}c` as keyof StorePalettes,
 )
 
-export const paletteColors = syncedDerived(paletteColorsKey, [])
+export const paletteColors = syncedDerived(paletteColorsKey, []) as Readable<StorePaletteColor[]>
 
 // Settings
 export const autoClipboard = await syncedWritable("autoClipboard", defaults["autoClipboard"])
@@ -52,3 +54,22 @@ export const enablePromoOnUpdate = await syncedWritable(
   "enablePromoOnUpdate",
   defaults["enablePromoOnUpdate"],
 )
+
+type SortBy = "default" | "ascending" | "descending"
+export const sortBy = writable<SortBy>("default")
+
+export const sortedColors = derived([sortBy, paletteColors], ([$sortBy, $paletteColors]) => {
+  if ($sortBy === "default") return $paletteColors
+
+  const colors = $paletteColors.sort((a, b) => {
+    const tA = new TinyColor(a.h)
+    const tB = new TinyColor(b.h)
+
+    if ($sortBy === "ascending") {
+      return tA.toHsv().h < tB.toHsv().h ? -1 : 1
+    } else {
+      return tA.toHsv().h > tB.toHsv().h ? -1 : 1
+    }
+  })
+  return colors
+})
