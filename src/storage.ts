@@ -21,6 +21,8 @@
  *
  **/
 
+const STORAGE_VERSION = 26
+
 import browser from "webextension-polyfill"
 import { defineExtensionStorage, localExtStorage } from "@webext-core/storage"
 import type { SettingsProps } from "./settings"
@@ -67,6 +69,7 @@ export const checkStorage = async () => {
     const isEmpty = Object.keys(unknData).length === 0 && unknData.constructor === Object
     if (isEmpty) {
       // create palette in new store
+      browser.storage.sync.set({ v: STORAGE_VERSION, p: 0 })
       paletteCreate(0, "default", paletteDefaultColors())
 
       return true
