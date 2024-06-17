@@ -321,3 +321,25 @@ export const color2StorePaletteColor = (color: string, source: StorePaletteColor
     t: Date.now(),
   }
 }
+
+export const paletteWipe = async (paletteId?: number, defaultColors: boolean = false) => {
+  paletteId ??= await paletteGetActive()
+
+  paletteSetColors(paletteId, defaultColors ? paletteDefaultColors() : [])
+}
+
+export const paletteDefaultColors = () => {
+  const defaultColors: string[] = [
+    "#f5945c",
+    "#fec76f",
+    "#b3be62",
+    "#75ba75",
+    "#6dbfb8",
+    "#71a3c1",
+    "#be95be",
+  ]
+  const paletteColors: StorePaletteColor[] = defaultColors.map((color) =>
+    color2StorePaletteColor(color, "def"),
+  )
+  return paletteColors
+}
