@@ -6,6 +6,8 @@ import {
   paletteSetColorAfterHooks,
   palletteColorToClipboard,
   type StorePalettes,
+  type StorePaletteSortBy,
+  type StorePaletteMeta,
 } from "./palette"
 import syncedWritable from "./syncedWritable"
 import { defaults } from "./settings"
@@ -29,7 +31,14 @@ export const paletteColorsKey = derived(
   ($paletteId) => `p${$paletteId}c` as keyof StorePalettes,
 )
 
+export const paletteMetaKey = derived(
+  paletteId,
+  ($paletteId) => `p${$paletteId}m` as keyof StorePalettes,
+)
+
 export const paletteColors = syncedDerived(paletteColorsKey, []) as Readable<StorePaletteColor[]>
+export const paletteMeta = syncedDerived(paletteMetaKey, []) as Readable<StorePaletteMeta>
+export const sortBy = derived(paletteMeta, ($paletteMeta) => $paletteMeta.s)
 
 // Settings
 export const autoClipboard = await syncedWritable("autoClipboard", defaults["autoClipboard"])
@@ -55,21 +64,22 @@ export const enablePromoOnUpdate = await syncedWritable(
   defaults["enablePromoOnUpdate"],
 )
 
-type SortBy = "default" | "ascending" | "descending"
-export const sortBy = writable<SortBy>("default")
+export const sortedColors = derived(
+  [paletteMeta, paletteColors],
+  ([$paletteMeta, $paletteColors]) => {
+    const sortBy = $paletteMeta.s
+    if (sortBy === "def") return $paletteColors
 
-export const sortedColors = derived([sortBy, paletteColors], ([$sortBy, $paletteColors]) => {
-  if ($sortBy === "default") return $paletteColors
+    const colors = $paletteColors.sort((a, b) => {
+      const tA = new TinyColor(a.h)
+      const tB = new TinyColor(b.h)
 
-  const colors = $paletteColors.sort((a, b) => {
-    const tA = new TinyColor(a.h)
-    const tB = new TinyColor(b.h)
-
-    if ($sortBy === "ascending") {
-      return tA.toHsv().h < tB.toHsv().h ? -1 : 1
-    } else {
-      return tA.toHsv().h > tB.toHsv().h ? -1 : 1
-    }
-  })
-  return colors
-})
+      if (sortBy === "asc") {
+        return tA.toHsv().h < tB.toHsv().h ? -1 : 1
+      } else {
+        return tA.toHsv().h > tB.toHsv().h ? -1 : 1
+      }
+    })
+    return colors
+  },
+)

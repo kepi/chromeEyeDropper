@@ -27,6 +27,8 @@ export type StorePaletteColorSource =
   /**  default */
   | "def"
 
+export type StorePaletteSortBy = "def" | "asc" | "desc"
+
 export interface StorePaletteColor {
   /** color in hex format including # character. i.e. #ffffff */
   h: string
@@ -38,13 +40,15 @@ export interface StorePaletteColor {
   d?: number
 }
 
-interface StorePaletteMeta {
+export interface StorePaletteMeta {
   /** palette id */
   i: number
   /** name of palette - used for display only */
   n: string
   /** created at (timestamp) */
   t: number
+  /** sorted by */
+  s: StorePaletteSortBy
 }
 
 export type StorePalettes = {
@@ -264,6 +268,7 @@ export const paletteCreate = async (
     i: paletteId,
     n: name,
     t: time ?? Date.now(),
+    s: "def",
   })
 
   await storage.setItem(`p${paletteId}c`, colors)
@@ -342,4 +347,23 @@ export const paletteDefaultColors = () => {
     color2StorePaletteColor(color, "def"),
   )
   return paletteColors
+}
+
+export const paletteSort = async (paletteId?: number, sortBy?: StorePaletteSortBy) => {
+  paletteId ??= await paletteGetActive()
+
+  const paletteMetaKey = `p${paletteId}m` as keyof StorePalettes
+
+  const meta = (await storage.getItem(paletteMetaKey)) as StorePaletteMeta
+
+  if (sortBy) {
+    meta.s = sortBy
+  } else {
+    sortBy = meta.s
+    if (sortBy === "def") meta.s = "asc"
+    else if (sortBy === "asc") meta.s = "desc"
+    else meta.s = "def"
+  }
+
+  storage.setItem(paletteMetaKey, meta)
 }

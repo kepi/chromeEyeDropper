@@ -1,7 +1,7 @@
 <script lang="ts">
   import Square from "./Square.svelte"
   import { sortBy, paletteColors, sortedColors, paletteId } from "../store"
-  import { paletteWipe } from "../palette"
+  import { paletteWipe, paletteSort } from "../palette"
   import storage from "../storage"
   import syncedWritable from "../syncedWritable"
 
@@ -22,9 +22,8 @@
   }
 
   const sort = (_event) => {
-    if ($sortBy === "default") sortBy.set("ascending")
-    else if ($sortBy === "ascending") sortBy.set("descending")
-    else sortBy.set("default")
+    console.log($paletteId)
+    paletteSort($paletteId)
   }
 
   let showTipClick = false
@@ -34,9 +33,9 @@
   <div>
     Palette: default (palettes | <a on:click={sort}
       >sort <span>
-        {#if $sortBy === "ascending"}
+        {#if $sortBy === "asc"}
           ↑
-        {:else if $sortBy === "descending"}
+        {:else if $sortBy === "desc"}
           ↓
         {/if}
       </span></a
