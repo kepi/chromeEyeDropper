@@ -2,7 +2,7 @@ import storage, { type Schema } from "./storage"
 import browser from "webextension-polyfill"
 import { writable, get } from "svelte/store"
 
-export default async function storedWritable<K extends keyof Schema>(
+export default async function syncedWritable<K extends keyof Schema>(
   key: K,
   initialValue: Schema[K],
 ) {

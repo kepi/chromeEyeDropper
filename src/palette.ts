@@ -27,7 +27,13 @@ export type StorePaletteColorSource =
   /**  default */
   | "def"
 
-export type StorePaletteSortBy = "def" | "asc" | "desc"
+export type StorePaletteSortBy =
+  /**  default - no sorting */
+  | "def"
+  /**  ascending sort by hue */
+  | "asc"
+  /**  descending sort by hue */
+  | "desc"
 
 export interface StorePaletteColor {
   /** color in hex format including # character. i.e. #ffffff */
@@ -71,13 +77,30 @@ export const paletteGetActive = async () => {
   return p ?? 0
 }
 
+export const noColor = () => {
+  return "#fec76f"
+}
+
 /**
  * Sets palette as active
  *
  * @paletteId - id of palette to be set as active
  */
 export const paletteSetActive = async (paletteId: number) => {
+  // set active palette
   storage.setItem("p", paletteId)
+
+  // also set latest color to last palette color
+  const colors = await storage.getItem(`p${paletteId}c`)
+  if (colors && colors.length > 0) {
+    const lastColor = colors.at(-1)
+    if (lastColor) {
+      storage.setItem("c", lastColor.h)
+      return
+    }
+  }
+
+  storage.setItem("c", noColor())
 }
 
 /**
@@ -333,6 +356,10 @@ export const paletteWipe = async (paletteId?: number, defaultColors: boolean = f
   paletteSetColors(paletteId, defaultColors ? paletteDefaultColors() : [])
 }
 
+/**
+ * Returns default colors in format used in Palette colors.
+ **/
+
 export const paletteDefaultColors = () => {
   const defaultColors: string[] = [
     "#f5945c",
@@ -348,6 +375,17 @@ export const paletteDefaultColors = () => {
   )
   return paletteColors
 }
+
+/**
+ * Sort current or specified palette
+ *
+ * @remarks
+ * If palette is not defined, current one is used. If sortBy is not specified,
+ * it will be sorted by next available method so it can used be for toggling sort by.
+ *
+ * @param paletteId - id of palette to sort
+ * @param sortBy - what to sort palette by (def, asc, desc)
+ **/
 
 export const paletteSort = async (paletteId?: number, sortBy?: StorePaletteSortBy) => {
   paletteId ??= await paletteGetActive()
@@ -366,4 +404,74 @@ export const paletteSort = async (paletteId?: number, sortBy?: StorePaletteSortB
   }
 
   storage.setItem(paletteMetaKey, meta)
+}
+
+// TODO implement sorting
+// export const sortedColors = derived(
+//   [paletteMeta, paletteColors],
+//   ([$paletteMeta, $paletteColors]) => {
+//     const sortBy = $paletteMeta?.s
+
+//     if (sortBy === undefined || sortBy === "def") return $paletteColors
+
+//     const colors = $paletteColors.sort((a, b) => {
+//       const tA = new TinyColor(a.h)
+//       const tB = new TinyColor(b.h)
+
+//       if (sortBy === "asc") {
+//         return tA.toHsv().h < tB.toHsv().h ? -1 : 1
+//       } else {
+//         return tA.toHsv().h > tB.toHsv().h ? -1 : 1
+//       }
+//     })
+//     return colors
+//   },
+// )
+
+export type Palette = {
+  id: number
+  name: string
+  createdAt: number
+  sortBy: StorePaletteSortBy
+  colors: StorePaletteColor[]
+}
+
+// TODO sort colors!
+export const getPalette = async (paletteId?: number) => {
+  paletteId ??= await paletteGetActive()
+
+  const colorsKey = `p${paletteId}c` as keyof StorePalettes
+  const metaKey = `p${paletteId}m` as keyof StorePalettes
+
+  const meta = (await storage.getItem(metaKey)) as StorePaletteMeta
+  const colors = await storage.getItem(colorsKey)
+
+  return { id: meta.i, name: meta.n, createdAt: meta.t, sortBy: meta.s, colors } as Palette
+}
+
+export const palettesIds = async () => {
+  const data = await browser.storage.sync.get()
+
+  const palettes: number[] = []
+
+  Object.keys(data).forEach(async (key) => {
+    const match = key.match(/^p([0-9]+)m$/)
+    if (match) {
+      const paletteId = Number(match[1])
+      palettes.push(paletteId)
+    }
+  })
+
+  return palettes
+}
+
+export const paletteDelete = async (paletteId: number) => {
+  storage.removeItem(`p${paletteId}m`)
+  storage.removeItem(`p${paletteId}c`)
+}
+
+export const paletteGetName = async (paletteId?: number) => {
+  paletteId ??= await paletteGetActive()
+
+  return storage.getItem(`p${paletteId}m`).then((meta) => meta?.n)
 }

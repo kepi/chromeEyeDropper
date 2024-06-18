@@ -2,10 +2,7 @@ import browser, { type Runtime } from "webextension-polyfill"
 import { checkStorage } from "./storage"
 import { paletteGetColor, paletteSetColor } from "./palette"
 
-const BG_VERSION = 25
 const NEED_DROPPER_VERSION = 14
-
-console.log(`bg version ${BG_VERSION}`)
 
 async function pickFromWeb(tabId?: number) {
   console.log("picking from webpage")

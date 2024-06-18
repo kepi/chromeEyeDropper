@@ -23,7 +23,6 @@ export const defaults: SettingsProps = {
 
 export const settingsGet = async <K extends keyof SettingsProps>(prop: K) => {
   const val: SettingsProps[K] = (await storage.getItem(prop)) ?? defaults[prop]
-  console.log("Setting", prop, "is", val)
   return val
 }
 

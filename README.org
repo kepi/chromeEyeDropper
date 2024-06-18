@@ -96,9 +96,9 @@ But it will need to work from svelte too, so somehow get it working in store
 too.
 
 ** TODO Palette management in popup
-- [ ] create new palette
-- [ ] switch palette
-- [ ] clear palette
+- [X] switch palette
+- [X] create new palette
+- [X] clear palette
 - [ ] delete palette
 
 ** TODO Color Picker
