@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@ctrl/tinycolor": "^4.1.0",
-    "@webext-core/storage": "^1.2.0"
+    "@webext-core/storage": "^1.2.0",
+    "ts-pattern": "^5.2.0"
   }
 }
