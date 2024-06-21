@@ -4,7 +4,7 @@
 
   export let deleteAction
   export let paletteId: number
-  export let toggle
+  export let toggle: boolean
 
   async function switchPalette(paletteId) {
     paletteSetActive(paletteId)

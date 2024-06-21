@@ -4,10 +4,10 @@
   import pStore from "../allPalettesStore"
   import PaletteDialog from "./PaletteDialog.svelte"
   import PaletteDelete from "./PaletteDelete.svelte"
+  import PaletteWipe from "./PaletteWipe.svelte"
   import PaletteLine from "./PaletteLine.svelte"
   import Square from "./Square.svelte"
   import {
-    paletteWipe,
     paletteSort,
     paletteSetActive,
     paletteCreate,
@@ -28,16 +28,6 @@
   // Wiping
   const wipeAsk = (_event) => {
     showWipe = !showWipe
-  }
-
-  const wipeClean = (_event) => {
-    paletteWipe($pStore.active.id)
-    showWipe = false
-  }
-
-  const wipeDefault = (_event) => {
-    paletteWipe($pStore.active.id, true)
-    showWipe = false
   }
 
   // Sorting
@@ -126,27 +116,8 @@
       </PaletteDialog>
     {:else if showWipe}
       <PaletteDialog bind:toggle={showWipe}>
-        <div class="bg-slate-200 p-4 rounded prose prose-sm relative">
-          <h4>Wipe your palette clean?</h4>
-          <p>
-            There is no comming back! All colors in your current palette <b>will be deleted</b>.
-          </p>
-          <p>
-            <b>You can't restore them after wipe!</b>
-          </p>
-          <div class="gap-2 flex flex-wrap">
-            <button class="btn btn-sm btn-secondary" on:click={wipeClean}>wipe clean</button>
-            <button class="btn btn-sm btn-secondary" on:click={wipeDefault}
-              >wipe and add default colors</button
-            >
-          </div>
-          <div class="flex gap-2 items-center mt-2">
-            <p>I changed my mind,</p>
-            <button class="btn btn-sm btn-primary" on:click={wipeAsk}>leave my colors alone.</button
-            >
-          </div>
-        </div></PaletteDialog
-      >
+        <PaletteWipe bind:toggle={showWipe} />
+      </PaletteDialog>
     {:else if $pStore.active?.colors.length === 0}
       <div class="p-4 rounded prose prose-sm">
         <h4>Your palette is clean</h4>
