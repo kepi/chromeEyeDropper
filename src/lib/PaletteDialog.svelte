@@ -1,7 +1,7 @@
 <script lang="ts">
   export let toggle
 
-  const close = (_event) => {
+  const close = () => {
     toggle = !toggle
   }
 </script>

@@ -18,6 +18,9 @@ importers:
         specifier: ^5.2.0
         version: 5.2.0
     devDependencies:
+      '@sonderbase/svelte-sortablejs':
+        specifier: ^2.0.2
+        version: 2.0.2(svelte@3.59.2)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^2.0.3
         version: 2.5.3(svelte@3.59.2)(vite@4.5.3(@types/node@20.13.0)(sass@1.77.4))
@@ -528,6 +531,11 @@ packages:
   '@sindresorhus/is@5.6.0':
     resolution: {integrity: sha512-TV7t8GKYaJWsn00tFDqBw8+Uqmr8A0fRU1tvTQhyZzGv0sJCGRQL3JGMI3ucuKo3XIZdUP+Lx7/gh2t3lewy7g==}
     engines: {node: '>=14.16'}
+
+  '@sonderbase/svelte-sortablejs@2.0.2':
+    resolution: {integrity: sha512-ChPbN3Fx8vfpWutmgDfJ/DXXRu2mdWJbWT9ERJDjkl6hkOhn57PG6gttJgqSA5vWB4nV9XuYr2Uy40Z3EovQPw==}
+    peerDependencies:
+      svelte: ^4.0.0
 
   '@sveltejs/vite-plugin-svelte-inspector@1.0.4':
     resolution: {integrity: sha512-zjiuZ3yydBtwpF3bj0kQNV0YXe+iKE545QGZVTaylW3eAzFr+pJ/cwK8lZEaRp4JtaJXhD5DyWAV4AxLh6DgaQ==}
@@ -1856,6 +1864,9 @@ packages:
     resolution: {integrity: sha512-R5ocFmKZQFfSTstfOtHjJuAwbpGyf9qjQa1egyhvXSbM7emjrtLXtGdZsDJDABC85YBfVvrOiGWKSYXPKdvP1g==}
     hasBin: true
 
+  sortablejs@1.15.2:
+    resolution: {integrity: sha512-FJF5jgdfvoKn1MAKSdGs33bIqLi3LmsgVTliuX6iITj834F+JRQZN90Z93yql8h0K2t0RwDPBmxwlbZfDcxNZA==}
+
   source-map-js@1.2.0:
     resolution: {integrity: sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==}
     engines: {node: '>=0.10.0'}
@@ -2571,6 +2582,11 @@ snapshots:
   '@sinclair/typebox@0.27.8': {}
 
   '@sindresorhus/is@5.6.0': {}
+
+  '@sonderbase/svelte-sortablejs@2.0.2(svelte@3.59.2)':
+    dependencies:
+      sortablejs: 1.15.2
+      svelte: 3.59.2
 
   '@sveltejs/vite-plugin-svelte-inspector@1.0.4(@sveltejs/vite-plugin-svelte@2.5.3(svelte@3.59.2)(vite@4.5.3(@types/node@20.13.0)(sass@1.77.4)))(svelte@3.59.2)(vite@4.5.3(@types/node@20.13.0)(sass@1.77.4))':
     dependencies:
@@ -3860,6 +3876,8 @@ snapshots:
       minimist: 1.2.8
       sander: 0.5.1
       sourcemap-codec: 1.4.8
+
+  sortablejs@1.15.2: {}
 
   source-map-js@1.2.0: {}
 

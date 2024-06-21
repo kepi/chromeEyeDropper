@@ -1,7 +1,6 @@
 <script lang="ts">
   import pStore from "../allPalettesStore"
   import PaletteDialog from "./PaletteDialog.svelte"
-  import { paletteDelete } from "../palette"
 
   export let paletteId: number
   export let show: number

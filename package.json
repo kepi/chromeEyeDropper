@@ -10,6 +10,7 @@
     "test": "vitest"
   },
   "devDependencies": {
+    "@sonderbase/svelte-sortablejs": "^2.0.2",
     "@sveltejs/vite-plugin-svelte": "^2.0.3",
     "@tailwindcss/typography": "^0.5.13",
     "@tsconfig/svelte": "^3.0.0",

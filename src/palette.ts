@@ -30,12 +30,14 @@ export type StorePaletteColorSource =
   | "def"
 
 export type StorePaletteSortBy =
-  /**  default - no sorting */
-  | "def"
+  /**  sorted by timestamp from oldest to most recent */
+  | "t:asc"
+  /**  sorted by timestamp from most recent to oldest */
+  | "t:desc"
   /**  ascending sort by hue */
-  | "asc"
+  | "h:asc"
   /**  descending sort by hue */
-  | "desc"
+  | "h:desc"
 
 export interface StorePaletteColor {
   /** color in hex format including # character. i.e. #ffffff */
@@ -171,8 +173,13 @@ export const paletteSetColor = async (color: string, source?: StorePaletteColorS
 
     // if color isn't already in palette
     if (!colors.some((c) => c.h === color)) {
+      // convert hex to store color
+      // order - simply length of array so it is last
+      const pColor = color2StorePaletteColor(color, source)
+
       // push to colors in correct format with metadata
-      colors.push(color2StorePaletteColor(color, source))
+      colors.push(pColor)
+
       // save to storage
       paletteSetColors(paletteId, colors)
     }
@@ -293,7 +300,7 @@ export const paletteCreate = async (
     i: paletteId,
     n: name,
     t: time ?? Date.now(),
-    s: "def",
+    s: "t:asc",
   })
 
   await storage.setItem(`p${paletteId}c`, colors)
@@ -348,7 +355,7 @@ export const color2StorePaletteColor = (color: string, source: StorePaletteColor
     h: color,
     s: source,
     t: Date.now(),
-  }
+  } as StorePaletteColor
 }
 
 type WipeOptions = {
@@ -372,7 +379,7 @@ export const paletteWipe = async (paletteId?: number, options: WipeOptions = {})
  **/
 export const paletteRandomColors = () => {
   const paletteColors: StorePaletteColor[] = random({ count: 12 })
-    .sort(tinySorterAsc)
+    .sort((a, b) => orderer(tinySorter(a, b)))
     .map((color) => color2StorePaletteColor(color.toHexString(), "def"))
   return paletteColors
 }
@@ -411,17 +418,10 @@ export const paletteSort = async (paletteId?: number, sortBy?: StorePaletteSortB
   paletteId ??= await paletteGetActive()
 
   const paletteMetaKey = `p${paletteId}m` as keyof StorePalettes
-
   const meta = (await storage.getItem(paletteMetaKey)) as StorePaletteMeta
 
-  if (sortBy) {
-    meta.s = sortBy
-  } else {
-    sortBy = meta.s
-    if (sortBy === "def") meta.s = "asc"
-    else if (sortBy === "asc") meta.s = "desc"
-    else meta.s = "def"
-  }
+  // default is t:asc
+  meta.s = sortBy ?? "t:asc"
 
   storage.setItem(paletteMetaKey, meta)
 }
@@ -432,32 +432,53 @@ export type Palette = {
   createdAt: number
   sortBy: StorePaletteSortBy
   colors: StorePaletteColor[]
+  unsorted: StorePaletteColor[]
+  deleted: StorePaletteColor[]
 }
 
-const tinySorterAsc = (a: TinyColor, b: TinyColor) => {
-  return a.toHsv().h < b.toHsv().h ? -1 : 1
+const tinySorter = (a: TinyColor, b: TinyColor) => {
+  return a.toHsv().h < b.toHsv().h
 }
-const tinySorterDesc = (a: TinyColor, b: TinyColor) => {
-  return a.toHsv().h > b.toHsv().h ? -1 : 1
+
+const orderer = (value: boolean, order?: string) => {
+  if (order === "desc") {
+    return value ? -1 : 1
+  } else {
+    return value ? 1 : -1
+  }
 }
 
 export const sortColors = (colors: StorePaletteColor[], sortBy: StorePaletteSortBy) => {
-  if (sortBy === undefined || sortBy === "def") return colors
+  if (sortBy === undefined || sortBy === "t:asc") return colors
+  const [by, order] = sortBy.split(":")
+
+  if (by === "m") {
+    if (order === "asc") {
+      return colors
+    } else {
+      return colors.reverse()
+    }
+  }
 
   const sorted = colors.sort((a, b) => {
-    const tA = new TinyColor(a.h)
-    const tB = new TinyColor(b.h)
+    // order by HUE
+    if (by === "h") {
+      const tA = new TinyColor(a.h)
+      const tB = new TinyColor(b.h)
 
-    if (sortBy === "asc") {
-      return tinySorterAsc(tA, tB)
+      return orderer(tinySorter(tA, tB), order)
+
+      // order by Timestamp
+    } else if (by === "t") {
+      return orderer(a.t > b.t, order)
     } else {
-      return tinySorterDesc(tA, tB)
+      // unknown order by...
+      return 1
     }
   })
   return sorted
 }
 
-// TODO sort colors!
 export const getPalette = async (paletteId?: number) => {
   paletteId ??= await paletteGetActive()
 
@@ -465,10 +486,21 @@ export const getPalette = async (paletteId?: number) => {
   const metaKey = `p${paletteId}m` as keyof StorePalettes
 
   const meta = (await storage.getItem(metaKey)) as StorePaletteMeta
-  const unsorted = (await storage.getItem(colorsKey)) as StorePaletteColor[]
+  const stored = (await storage.getItem(colorsKey)) as StorePaletteColor[]
+
+  const unsorted = stored.filter((c) => c.d === undefined)
+  const deleted = stored.filter((c) => c.d !== undefined)
   const colors = sortColors(unsorted, meta.s)
 
-  return { id: meta.i, name: meta.n, createdAt: meta.t, sortBy: meta.s, colors } as Palette
+  return {
+    id: meta.i,
+    name: meta.n,
+    createdAt: meta.t,
+    sortBy: meta.s,
+    colors,
+    unsorted,
+    deleted,
+  } as Palette
 }
 
 export const palettesIds = async () => {

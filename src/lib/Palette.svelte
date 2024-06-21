@@ -1,10 +1,10 @@
 <script lang="ts">
   import { derived } from "svelte/store"
-  import paletteStore from "../paletteStore"
   import pStore from "../allPalettesStore"
   import PaletteDialog from "./PaletteDialog.svelte"
   import PaletteWipe from "./PaletteWipe.svelte"
   import PalettePalettes from "./PalettePalettes.svelte"
+  import PaletteEdit from "./PaletteEdit.svelte"
   import Square from "./Square.svelte"
   import { paletteSort } from "../palette"
   import storage from "../storage"
@@ -14,6 +14,7 @@
   let toggles = {
     wipe: false,
     palettes: false,
+    edit: false,
   }
 
   type Toggles = typeof toggles
@@ -40,7 +41,13 @@
           {/if}
         </span></a
       >
-      | edit | export |
+      |
+      <a
+        on:click={() => {
+          toggle("edit")
+        }}>edit</a
+      >
+      | export |
       <a
         on:click={() => {
           toggle("wipe")
@@ -49,11 +56,13 @@
     {/if}
   </div>
 
-  <div class="my-4 max-w-96">
+  <div class="my-4 max-w-md">
     {#if toggles.palettes}
       <PalettePalettes bind:toggle={toggles.palettes} />
     {:else if toggles.wipe}
       <PaletteWipe bind:toggle={toggles.wipe} />
+    {:else if toggles.edit}
+      <PaletteEdit bind:toggle={toggles.edit} />
     {:else if $pStore.active?.colors.length === 0}
       <div class="p-4 rounded prose prose-sm">
         <h4>Your palette is clean</h4>

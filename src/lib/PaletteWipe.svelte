@@ -18,6 +18,11 @@
     paletteWipe($pStore.active.id, { colors: "default" })
     toggle = false
   }
+
+  const wipeRandom = () => {
+    paletteWipe($pStore.active.id, { colors: "random" })
+    toggle = false
+  }
 </script>
 
 <PaletteDialog bind:toggle>
@@ -33,6 +38,9 @@
       <button class="btn btn-sm btn-secondary" on:click={wipeClean}>wipe clean</button>
       <button class="btn btn-sm btn-secondary" on:click={wipeDefault}
         >wipe and add default colors</button
+      >
+      <button class="btn btn-sm btn-secondary" on:click={wipeRandom}
+        >wipe and add some random colors</button
       >
     </div>
     <div class="flex gap-2 items-center mt-2">

@@ -108,7 +108,7 @@ export const checkStorage = async () => {
           const palette = data[key as keyof V24Data] as V24Palette
 
           // convert colors for palette
-          const palette_colors = palette.c.map((c) => {
+          const palette_colors = palette.c.map((c, idx) => {
             const getSource = (source: number): StorePaletteColorSource => {
               switch (source) {
                 case 0:
@@ -127,6 +127,7 @@ export const checkStorage = async () => {
               s: getSource(c.s),
               t: typeof c.t === "number" ? c.t : 0,
               d: c.d,
+              o: idx,
             }
             return newColor
           })

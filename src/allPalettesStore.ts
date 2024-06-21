@@ -7,6 +7,7 @@ import {
   type Palette,
   paletteCreate,
   paletteDelete,
+  paletteSetColors,
 } from "./palette"
 import { writable } from "svelte/store"
 import type Browser from "webextension-polyfill"
@@ -21,8 +22,10 @@ function createAllPalettesStore() {
       id: -1,
       name: "loading palettes...",
       createdAt: Date.now(),
-      sortBy: "def",
+      sortBy: "t:asc",
       colors: [],
+      unsorted: [],
+      deleted: [],
     },
   })
 
@@ -100,6 +103,41 @@ function createAllPalettesStore() {
     paletteDelete(id)
   }
 
+  function manualSort(
+    active: Palette,
+    fromTrash: boolean,
+    toTrash: boolean,
+    oldIndex: number,
+    newIndex: number,
+  ) {
+    if (fromTrash) {
+      oldIndex += active.unsorted.length
+    }
+
+    if (toTrash) {
+      newIndex += active.unsorted.length
+    }
+
+    const colors = active.unsorted.concat(active.deleted)
+
+    const movedColor = colors[oldIndex]
+
+    // handle deleted flag
+    if (toTrash) {
+      if (movedColor.d === undefined) {
+        movedColor.d = Date.now()
+      }
+    } else {
+      movedColor.d = undefined
+    }
+
+    colors.splice(oldIndex, 1)
+    colors.splice(newIndex, 0, movedColor)
+
+    // colors.map((c) => console.log(c.h))
+    paletteSetColors(active.id, colors)
+  }
+
   function setActive(id: number) {
     update((st) => ({
       ...st,
@@ -133,6 +171,7 @@ function createAllPalettesStore() {
     destroyPalette,
     switchPalette,
     createPalette,
+    manualSort,
   }
 }
 

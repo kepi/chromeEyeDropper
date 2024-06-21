@@ -6,7 +6,7 @@
   export let paletteId: number
   export let toggle: boolean
 
-  async function switchPalette(paletteId) {
+  async function switchPalette(paletteId: number) {
     paletteSetActive(paletteId)
     toggle = !toggle
   }
