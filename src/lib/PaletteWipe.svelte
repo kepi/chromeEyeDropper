@@ -15,7 +15,7 @@
   }
 
   const wipeDefault = () => {
-    paletteWipe($pStore.active.id, true)
+    paletteWipe($pStore.active.id, { colors: "default" })
     toggle = false
   }
 </script>

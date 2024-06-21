@@ -16,7 +16,8 @@ import storage from "./storage"
 import { settingsGet } from "./settings"
 import { copyToClipboard } from "./clipboard"
 import { colorToString } from "./color"
-import { TinyColor } from "@ctrl/tinycolor"
+import { random, TinyColor } from "@ctrl/tinycolor"
+import { match } from "ts-pattern"
 
 export type StorePaletteColorSource =
   /** eye dropper */
@@ -342,7 +343,6 @@ export const paletteGetColorsHexes = async (paletteId?: number) => {
  * @param color - hex color (i.e. #ffffff)
  * @param source - from where we took the color
  */
-
 export const color2StorePaletteColor = (color: string, source: StorePaletteColorSource) => {
   return {
     h: color,
@@ -351,12 +351,31 @@ export const color2StorePaletteColor = (color: string, source: StorePaletteColor
   }
 }
 
-export const paletteWipe = async (paletteId?: number, defaultColors: boolean = false) => {
-  paletteId ??= await paletteGetActive()
-
-  paletteSetColors(paletteId, defaultColors ? paletteDefaultColors() : [])
+type WipeOptions = {
+  colors?: "default" | "random"
 }
 
+export const paletteWipe = async (paletteId?: number, options: WipeOptions = {}) => {
+  paletteId ??= await paletteGetActive()
+
+  const colors: StorePaletteColor[] = match(options.colors)
+    .with("default", () => paletteDefaultColors())
+    .with("random", () => paletteRandomColors())
+    .with(undefined, () => [])
+    .exhaustive()
+
+  paletteSetColors(paletteId, colors)
+}
+
+/**
+ * Returns random colors in format used in Palette colors.
+ **/
+export const paletteRandomColors = () => {
+  const paletteColors: StorePaletteColor[] = random({ count: 12 })
+    .sort(tinySorterAsc)
+    .map((color) => color2StorePaletteColor(color.toHexString(), "def"))
+  return paletteColors
+}
 /**
  * Returns default colors in format used in Palette colors.
  **/
@@ -415,6 +434,13 @@ export type Palette = {
   colors: StorePaletteColor[]
 }
 
+const tinySorterAsc = (a: TinyColor, b: TinyColor) => {
+  return a.toHsv().h < b.toHsv().h ? -1 : 1
+}
+const tinySorterDesc = (a: TinyColor, b: TinyColor) => {
+  return a.toHsv().h > b.toHsv().h ? -1 : 1
+}
+
 export const sortColors = (colors: StorePaletteColor[], sortBy: StorePaletteSortBy) => {
   if (sortBy === undefined || sortBy === "def") return colors
 
@@ -423,9 +449,9 @@ export const sortColors = (colors: StorePaletteColor[], sortBy: StorePaletteSort
     const tB = new TinyColor(b.h)
 
     if (sortBy === "asc") {
-      return tA.toHsv().h < tB.toHsv().h ? -1 : 1
+      return tinySorterAsc(tA, tB)
     } else {
-      return tA.toHsv().h > tB.toHsv().h ? -1 : 1
+      return tinySorterDesc(tA, tB)
     }
   })
   return sorted
