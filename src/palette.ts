@@ -30,6 +30,10 @@ export type StorePaletteColorSource =
   | "def"
 
 export type StorePaletteSortBy =
+  //* sorted by manually selected order */
+  | "m:asc"
+  //* sorted by manually selected order in reverse */
+  | "m:desc"
   /**  sorted by timestamp from oldest to most recent */
   | "t:asc"
   /**  sorted by timestamp from most recent to oldest */
@@ -38,6 +42,22 @@ export type StorePaletteSortBy =
   | "h:asc"
   /**  descending sort by hue */
   | "h:desc"
+
+type StorePaletteSortByObj = {
+  [K in StorePaletteSortBy]: {
+    icon: string
+    text: string
+  }
+}
+
+export const storePaletteSortBy: StorePaletteSortByObj = {
+  "m:asc": { icon: "↑", text: "manual order" },
+  "m:desc": { icon: "↓", text: "reverse manual order" },
+  "t:asc": { icon: "⌚↑", text: "oldest picked color first" },
+  "t:desc": { icon: "⌚↓", text: "most recent color first" },
+  "h:asc": { icon: "💡↑", text: "color hue" },
+  "h:desc": { icon: "💡↓", text: "color hue in descending order" },
+}
 
 export interface StorePaletteColor {
   /** color in hex format including # character. i.e. #ffffff */
@@ -300,7 +320,7 @@ export const paletteCreate = async (
     i: paletteId,
     n: name,
     t: time ?? Date.now(),
-    s: "t:asc",
+    s: "m:asc",
   })
 
   await storage.setItem(`p${paletteId}c`, colors)
@@ -420,10 +440,22 @@ export const paletteSort = async (paletteId?: number, sortBy?: StorePaletteSortB
   const paletteMetaKey = `p${paletteId}m` as keyof StorePalettes
   const meta = (await storage.getItem(paletteMetaKey)) as StorePaletteMeta
 
-  // default is t:asc
-  meta.s = sortBy ?? "t:asc"
+  meta.s =
+    sortBy ??
+    match(meta.s)
+      .with("m:asc", () => "m:desc" as StorePaletteSortBy)
+      .with("m:desc", () => "t:asc" as StorePaletteSortBy)
+      .with("t:asc", () => "t:desc" as StorePaletteSortBy)
+      .with("t:desc", () => "h:asc" as StorePaletteSortBy)
+      .with("h:asc", () => "h:desc" as StorePaletteSortBy)
+      .with("h:desc", () => "m:asc" as StorePaletteSortBy)
+      .exhaustive()
 
   storage.setItem(paletteMetaKey, meta)
+}
+
+export const paletteSortByIcon = (sortBy: StorePaletteSortBy) => {
+  return storePaletteSortBy[sortBy].icon
 }
 
 export type Palette = {
@@ -449,7 +481,7 @@ const orderer = (value: boolean, order?: string) => {
 }
 
 export const sortColors = (colors: StorePaletteColor[], sortBy: StorePaletteSortBy) => {
-  if (sortBy === undefined || sortBy === "t:asc") return colors
+  if (sortBy === undefined || sortBy === "m:asc") return colors
   const [by, order] = sortBy.split(":")
 
   if (by === "m") {

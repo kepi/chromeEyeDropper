@@ -5,16 +5,19 @@
   import PaletteWipe from "./PaletteWipe.svelte"
   import PalettePalettes from "./PalettePalettes.svelte"
   import PaletteEdit from "./PaletteEdit.svelte"
+  import PaletteSort from "./PaletteSort.svelte"
   import Square from "./Square.svelte"
-  import { paletteSort } from "../palette"
+  import { paletteSortByIcon } from "../palette"
   import storage from "../storage"
   import syncedWritable from "../syncedWritable"
+  import { match } from "ts-pattern"
 
   let showTipClick = false
   let toggles = {
     wipe: false,
     palettes: false,
     edit: false,
+    sort: false,
   }
 
   type Toggles = typeof toggles
@@ -32,14 +35,8 @@
         }}>palettes</a
       >
       |
-      <a on:click={() => paletteSort($pStore.active.id)}
-        >sort <span>
-          {#if $pStore.active.sortBy === "asc"}
-            ↑
-          {:else if $pStore.active.sortBy === "desc"}
-            ↓
-          {/if}
-        </span></a
+      <a on:click={() => toggle("sort")}
+        >sort <span>{paletteSortByIcon($pStore.active.sortBy)} </span></a
       >
       |
       <a
@@ -61,6 +58,8 @@
       <PalettePalettes bind:toggle={toggles.palettes} />
     {:else if toggles.wipe}
       <PaletteWipe bind:toggle={toggles.wipe} />
+    {:else if toggles.sort}
+      <PaletteSort bind:toggle={toggles.sort} />
     {:else if toggles.edit}
       <PaletteEdit bind:toggle={toggles.edit} />
     {:else if $pStore.active?.colors.length === 0}
