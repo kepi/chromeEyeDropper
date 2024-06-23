@@ -535,6 +535,35 @@ export const getPalette = async (paletteId?: number) => {
   } as Palette
 }
 
+export const getPalettesForExport = async () => {
+  const ids = await palettesIds()
+  const palettes = ids.map((id) => getPaletteForExport(id))
+  return Promise.all(palettes)
+}
+
+export const getPaletteForExport = async (paletteId: number) => {
+  const colorsKey = `p${paletteId}c` as keyof StorePalettes
+  const metaKey = `p${paletteId}m` as keyof StorePalettes
+
+  const meta = (await storage.getItem(metaKey)) as StorePaletteMeta
+  const stored = (await storage.getItem(colorsKey)) as StorePaletteColor[]
+
+  const unsorted = stored.filter((c) => c.d === undefined)
+  const colors = unsorted.map((c) => ({
+    hex: c.h,
+    source: c.s,
+    captured: new Date(c.t),
+  }))
+
+  return {
+    id: meta.i,
+    name: meta.n,
+    createdAt: meta.t,
+    sortBy: meta.s,
+    colors,
+  }
+}
+
 export const palettesIds = async () => {
   const data = await browser.storage.sync.get()
 
