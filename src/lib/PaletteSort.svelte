@@ -1,12 +1,19 @@
 <script lang="ts">
   import PaletteDialog from "./PaletteDialog.svelte"
-  import { storePaletteSortBy, paletteSort, paletteSortByIcon } from "../palette"
+  import {
+    storePaletteSortBy,
+    paletteSort,
+    paletteSortByIcon,
+    type StorePaletteSortBy,
+  } from "../palette"
 
   export let toggle: boolean
 
   const dialogToggle = () => {
     toggle = !toggle
   }
+
+  const sortByKeys = Object.keys(storePaletteSortBy) as StorePaletteSortBy[]
 </script>
 
 <PaletteDialog bind:toggle>
@@ -14,15 +21,18 @@
     <h4>Sort your palette by</h4>
 
     <ul>
-      {#each Object.keys(storePaletteSortBy) as sortBy}
+      {#each sortByKeys as sortBy}
         <li>
-          <a
+          <button
             class="cursor-pointer hover:text-primary"
             on:click={() => {
               paletteSort(undefined, sortBy)
               dialogToggle()
-            }}>{paletteSortByIcon(sortBy)} {storePaletteSortBy[sortBy].text}</a
+            }}
           >
+            {paletteSortByIcon(sortBy)}
+            {storePaletteSortBy[sortBy].text}
+          </button>
         </li>
       {/each}
     </ul>

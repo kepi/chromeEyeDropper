@@ -1,9 +1,7 @@
-import browser, { type Runtime } from "webextension-polyfill"
-import shortcut from "../vendor/shortcut"
+import browser from "webextension-polyfill"
 import scrollStop from "../vendor/scrollStop"
 import Overlay from "../overlay"
 import Rect from "../rect"
-import { copyToClipboard } from "../clipboard"
 import { palletteColorToClipboard } from "../palette"
 
 var EDROPPER_VERSION = 14
@@ -17,7 +15,7 @@ var page = {
   xOffset: 0,
   yOffset: 0,
 
-  overlay: null as Overlay,
+  overlay: {} as Overlay,
 
   options: {
     cursor: "default",
@@ -26,9 +24,9 @@ var page = {
     enableRightClickDeactivate: true,
   },
 
-  canvas: null,
-  canvasData: null,
-  canvasContext: null,
+  canvas: {} as HTMLCanvasElement,
+  canvasData: {} as ImageData["data"],
+  canvasContext: {} as CanvasRenderingContext2D | null,
   canvasBorders: 20,
   imageData: null,
   resetCanvas: true,
@@ -37,6 +35,8 @@ var page = {
 
   screenshoting: false,
   dropperActivated: false,
+
+  shortcutsUnsubscribe: () => {},
 
   // function to set defaults - used during init and later for reset
   defaults: function () {
@@ -180,21 +180,22 @@ var page = {
   onScrollStart: function () {
     if (!page.dropperActivated) return
   },
+  shortcutsHandler: function (event: KeyboardEvent) {
+    if (event.code === "Escape") {
+      page.dropperDeactivate()
+    } else if (event.code === "KeyU") {
+      page.screenChanged(true)
+    }
+  },
   // keyboard shortcuts
   // enable with argument as true, disable with false
   shortcuts: function (start: boolean) {
     // enable shortcuts
     if (start == true) {
-      shortcut.add("Esc", function (_evt: KeyboardEvent) {
-        page.dropperDeactivate()
-      })
-      shortcut.add("U", function (_evt: KeyboardEvent) {
-        page.screenChanged(true)
-      })
+      addEventListener("keyup", page.shortcutsHandler)
       // disable shortcuts
     } else {
-      shortcut.remove("U")
-      shortcut.remove("Esc")
+      removeEventListener("keyup", page.shortcutsHandler)
     }
   },
   // right click
@@ -224,6 +225,7 @@ var page = {
     const y = e.pageY
 
     const color = page.pickColor(x, y)
+    if (!color) return
     console.log(`dropper: move: ${x},${y}. Color: ${color.rgbhex}`)
 
     page.overlay.tooltip({
@@ -291,7 +293,7 @@ var page = {
       )
 
       page.canvasContext = page.canvas.getContext("2d")
-      page.canvasContext.scale(1 / scale, 1 / scale)
+      page.canvasContext?.scale(1 / scale, 1 / scale)
       page.rects = []
       page.resetCanvas = false
     }
@@ -433,10 +435,11 @@ var page = {
       page.onWindowResize()
     }
 
-    // FIXME: implement device pixel ration changes same as scrollstop
-    // with some timeout so it works ok during zoom change i.e.
+    // TODO: would be probably better to call onWindowResize within some time range so we don't
+    // spam this when user is i.e actively zooming in
     const mqString = `(resolution: ${window.devicePixelRatio}dppx)`
-    matchMedia(mqString).addListener(page.onWindowResize)
+    const mqList = matchMedia(mqString)
+    mqList.addEventListener("change", page.onWindowResize)
   },
 }
 page.init()

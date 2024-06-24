@@ -1,4 +1,7 @@
 import type { Config } from "tailwindcss"
+import { light } from "daisyui/src/theming/themes"
+import daisyui from "daisyui"
+import typography from "@tailwindcss/typography"
 
 export default {
   content: ["./src/**/*.{html,js,svelte,ts}"],
@@ -10,7 +13,7 @@ export default {
     themes: [
       {
         light: {
-          ...require("daisyui/src/theming/themes")["light"],
+          light,
           primary: "#75ba75",
           secondary: "#f5945c",
           accent: "#be95be",
@@ -25,5 +28,5 @@ export default {
       },
     ],
   },
-  plugins: [require("daisyui"), require("@tailwindcss/typography")],
+  plugins: [daisyui, typography],
 } satisfies Config

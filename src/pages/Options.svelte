@@ -1,8 +1,4 @@
 <script lang="ts">
-  import Palette from "../lib/Palette.svelte"
-  import ColorBox from "../lib/ColorBox.svelte"
-  import PickFromWebpageButton from "../lib/PickFromWebpageButton.svelte"
-  import { random } from "@ctrl/tinycolor"
   import {
     autoClipboard,
     autoClipboardType,
@@ -14,46 +10,10 @@
   import cursorDefault from "/img/cursor_default.png"
   import cursorCrosshair from "/img/cursor_crosshair.png"
   import Link from "../Link.svelte"
-  import { colorToString } from "../color"
 </script>
 
-<div class="navbar bg-base-100">
-  <div class="navbar-start">
-    <div class="dropdown">
-      <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          ><path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h8m-8 6h16"
-          /></svg
-        >
-      </div>
-      <ul
-        tabindex="0"
-        class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-      >
-        <li><a href="#">Options</a></li>
-      </ul>
-    </div>
-    <a class="btn btn-ghost text-xl">Eye Dropper</a>
-  </div>
-  <div class="navbar-center hidden lg:flex">
-    <ul class="menu menu-horizontal px-1">
-      <li><a href="#">Options</a></li>
-    </ul>
-  </div>
-  <div class="navbar-end"></div>
-</div>
-
 <div>
-  <h1 class="text-3xl px-6 pb-4">Options</h1>
+  <h1 class="text-3xl px-6 pb-4 pt-4">Eye Dropper Options</h1>
   <h2 class="text-2xl px-6 py-2 my-2 bg-primary text-black">Copy to clipboard</h2>
 
   <div class="w-max px-6">
@@ -110,7 +70,7 @@
         >.
       </p>
     </div>
-    <div class>
+    <div>
       <span class="text-xl">Cancel Pick:</span>
       <span class="kbd ml-2 text-xl">Esc</span>
       <p class="prose">
@@ -183,6 +143,5 @@
         >
       </label>
     </div>
-    <div class></div>
   </div>
 </div>

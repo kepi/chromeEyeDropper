@@ -1,5 +1,5 @@
 <script>
-  import { alterDimension, getColorData } from "../../color"
+  import { getColorData } from "../../color"
   import { getDimension } from "./dimensions"
 
   export let color = "#00ff00"

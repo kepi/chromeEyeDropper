@@ -4,10 +4,6 @@
 
   export let toggle: boolean
 
-  const dialogToggle = () => {
-    toggle = !toggle
-  }
-
   let promise = Promise.resolve(getPalettesForExport())
 </script>
 

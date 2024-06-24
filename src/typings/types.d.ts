@@ -49,3 +49,62 @@ type V24Data = {
     plus_type: any
   }
 }
+
+declare interface SortableEvent extends Event {
+  clone: HTMLElement
+  /**
+   * previous list
+   */
+  from: HTMLElement
+  /**
+   * dragged element
+   */
+  item: HTMLElement
+  /**
+   * dragged elements
+   */
+  items: HTMLElement[]
+  /**
+   * new index within parent
+   */
+  newIndex: number | undefined
+  /**
+   * old index within parent
+   */
+  oldIndex: number | undefined
+  target: HTMLElement
+  /**
+   * list, in which moved element.
+   */
+  to: HTMLElement
+  /**
+   * Old index within parent, only counting draggable elements
+   */
+  oldDraggableIndex: number | undefined
+  /**
+   * New index within parent, only counting draggable elements
+   */
+  newDraggableIndex: number | undefined
+  /**
+   * Pull mode if dragging into another sortable
+   */
+  pullMode: "clone" | boolean | undefined
+  /**
+   * When MultiDrag is used to sort, this holds a HTMLElement and oldIndex for each item selected.
+   *
+   * `oldIndicies[number]` is directly related to `newIndicies[number]`
+   *
+   * If MultiDrag is not used to sort, this array will be empty.
+   */
+  oldIndicies: Array<{ multiDragElement: HTMLElement; index: number }>
+  /**
+   * When MultiDrag is used to sort, this holds a HTMLElement and newIndex for each item.
+   *
+   * `oldIndicies[number]` is directly related to `newIndicies[number]`
+   *
+   * If MultiDrag is not used to sort, this array will be empty.
+   */
+  newIndicies: Array<{ multiDragElement: HTMLElement; index: number }>
+  /** When Swap is used to sort, this will contain the dragging item that was dropped on.*/
+  swapItem: HTMLElement | null
+}

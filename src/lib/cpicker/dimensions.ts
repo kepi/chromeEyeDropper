@@ -19,10 +19,15 @@ export const dimensions = {
 }
 
 export function getDimension(specifier: string) {
-  let [scale, dim] = specifier.split(".", 2)
+  let [scaleKey, dimKey] = specifier.split(".", 2) as [
+    keyof typeof dimensions,
+    keyof (typeof dimensions)[keyof typeof dimensions],
+  ]
+  const data = dimensions[scaleKey][dimKey]
+
   return {
-    scale,
-    dim,
-    data: dimensions[scale][dim],
+    scale: scaleKey,
+    dim: dimKey,
+    data: data,
   }
 }

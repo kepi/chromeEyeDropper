@@ -6,17 +6,13 @@
 
   export let toggle: boolean
 
-  const dialogToggle = () => {
-    toggle = !toggle
-  }
-
-  const handleClick = (event) => {
+  const handleClick = () => {
     paletteSetColor($newColor, "cp")
   }
 </script>
 
 <PaletteDialog bind:toggle>
-  <ColorPicker bind:color={$newColor} showHex={false} showLabels={true} />
+  <ColorPicker bind:color={$newColor} showLabels={true} />
 
   <button class="btn btn-primary" on:click={handleClick}>Add to palette</button>
 </PaletteDialog>

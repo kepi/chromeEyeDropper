@@ -10,16 +10,22 @@
   }
 
   const wipeClean = () => {
+    if ($pStore.active === undefined) return
+
     paletteWipe($pStore.active.id)
     toggle = false
   }
 
   const wipeDefault = () => {
+    if ($pStore.active === undefined) return
+
     paletteWipe($pStore.active.id, { colors: "default" })
     toggle = false
   }
 
   const wipeRandom = () => {
+    if ($pStore.active === undefined) return
+
     paletteWipe($pStore.active.id, { colors: "random" })
     toggle = false
   }

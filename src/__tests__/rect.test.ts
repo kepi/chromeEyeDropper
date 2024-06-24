@@ -48,7 +48,7 @@ test("cannot merge rA and rD", () => {
 test("can merge rA with rE and then with rD", () => {
   const m = rA.merge(rE)
   expect(m).toStrictEqual(rAE)
-  expect(m.merge(rD)).toStrictEqual(rAED)
+  expect(m?.merge(rD)).toStrictEqual(rAED)
 })
 
 test("transposed rC", () => {
@@ -63,6 +63,10 @@ test("can merge rA with rX", () => {
   expect(rA.merge(rX)).toStrictEqual(rAX)
 })
 
+test("can merge rA with rX", () => {
+  expect(rA.merge(rX)).toStrictEqual(rAX)
+})
+
 test("cannot merge rA with rY", () => {
   expect(rA.merge(rY)).toBeNull()
 })
@@ -70,7 +74,7 @@ test("cannot merge rA with rY", () => {
 test("can merge rA with rX and then rY", () => {
   const m = rA.merge(rX)
   expect(m).toStrictEqual(rAX)
-  expect(m.merge(rY)).toStrictEqual(rAXY)
+  expect(m?.merge(rY)).toStrictEqual(rAXY)
 })
 
 test("cannot merge horizontally and vertically different", () => {

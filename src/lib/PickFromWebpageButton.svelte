@@ -1,5 +1,5 @@
 <script lang="ts">
-  import browser, { type Runtime } from "webextension-polyfill"
+  import browser from "webextension-polyfill"
   import { getTabId } from "../background"
 
   function handleClick() {

@@ -6,18 +6,21 @@
 
   export let toggle: boolean
 
-  let dragging = false
-
   const dialogToggle = () => {
     toggle = !toggle
   }
 
-  const onEnd = (event) => {
+  const onEnd = (event: SortableEvent) => {
     const fromTrash = event.from.classList.contains("trash-area")
     const toTrash = event.to.classList.contains("trash-area")
 
-    pStore.manualSort($pStore.active, fromTrash, toTrash, event.oldIndex, event.newIndex)
+    if ($pStore.active && event.oldIndex && event.newIndex) {
+      pStore.manualSort($pStore.active, fromTrash, toTrash, event.oldIndex, event.newIndex)
+    }
   }
+
+  $: unsorted = $pStore.active?.unsorted ?? []
+  $: deleted = $pStore.active?.deleted ?? []
 </script>
 
 <div class="bg-slate-200 pt-8 rounded prose prose-sm relative border p-1">
@@ -30,7 +33,7 @@
         animation={150}
         {onEnd}
       >
-        {#each $pStore.active.unsorted as color (color)}
+        {#each unsorted as color (color)}
           <Square color={color.h} passive />
         {/each}
       </SortableList>
@@ -39,7 +42,7 @@
         group="colors"
         {onEnd}
       >
-        {#each $pStore.active.deleted as color (color)}
+        {#each deleted as color (color)}
           <Square color={color.h} passive small />
         {/each}
       </SortableList>
@@ -54,10 +57,10 @@
       </p>
     </div>
   </div>
-  <div
+  <button
     class="absolute right-0 top-0 w-8 h-8 hover:text-red-500 items-center justify-center flex cursor-pointer"
     on:click={dialogToggle}
   >
     ✖
-  </div>
+  </button>
 </div>

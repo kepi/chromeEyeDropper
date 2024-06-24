@@ -1,8 +1,10 @@
-export function relativePosition(e) {
+export function relativePosition(e: MouseEvent) {
   let clientX = e.clientX
   let clientY = e.clientY
 
-  let rect = e.target.getBoundingClientRect()
+  if (!e.target) return
+
+  let rect = (e.target as HTMLElement).getBoundingClientRect()
   const relativeX = clientX - rect.x
   const relativeY = clientY - rect.y
 

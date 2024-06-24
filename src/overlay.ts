@@ -4,8 +4,8 @@ class Overlay {
   el: HTMLElement
   private cursor: string
 
-  private _toolbox: ToolBox
-  private _tooltip: ToolTip
+  private _toolbox = {} as ToolBox
+  private _tooltip = {} as ToolTip
 
   tools: Array<Tool> = []
 
@@ -53,7 +53,7 @@ class Overlay {
     document.body.prepend(this.el)
   }
 
-  hook(hook: string, args: any) {
+  hook(hook: ToolHook, args: any) {
     for (let tool of this.tools) {
       tool[hook](args)
     }
@@ -95,11 +95,13 @@ class Overlay {
   }
 }
 
+type ToolHook = "hookDeactivate" | "hookShow" | "hookHide" | "hookColor"
+
 abstract class Tool {
-  el: HTMLElement
-  color: Color
-  x: number
-  y: number
+  el!: HTMLElement
+  color!: Color
+  x!: number
+  y!: number
 
   constructor() {}
 

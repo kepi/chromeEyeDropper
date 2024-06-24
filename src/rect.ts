@@ -6,7 +6,7 @@ class Rect {
   width: number
   height: number
 
-  constructor(left, top, width, height) {
+  constructor(left: number, top: number, width: number, height: number) {
     this.left = left
     this.top = top
     this.right = left + width
@@ -16,7 +16,7 @@ class Rect {
   }
 
   transposed() {
-    return new Rect(this.top, this.left, this.height, this.width)
+    return new (this.constructor as typeof Rect)(this.top, this.left, this.height, this.width)
   }
 
   contains(other: Rect): boolean {
@@ -28,7 +28,7 @@ class Rect {
     )
   }
 
-  horizontalMerge(other) {
+  horizontalMerge(other: Rect) {
     const A = this.transposed()
     const B = other.transposed()
 
@@ -40,9 +40,9 @@ class Rect {
     return X.transposed()
   }
 
-  verticalMerge(other) {
-    let A = this
-    let B = other
+  verticalMerge(other: Rect) {
+    let A: Rect = this
+    let B: Rect = other
 
     // swap A and B if A is not on top
     if (this.top > other.top) {
@@ -57,9 +57,7 @@ class Rect {
     }
   }
 
-  merge(other: Rect): Rect {
-    let x, y, w, h: number
-
+  merge(other: Rect): Rect | null {
     // same left and right
     if (this.left == other.left && this.right == other.right) {
       return this.verticalMerge(other)

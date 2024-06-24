@@ -4,10 +4,10 @@ const eventTypeConversion = {
   touchend: "mouseup",
 }
 
-function touchHandler(event) {
+function touchHandler(event: TouchEvent) {
   let touches = event.changedTouches
   let first = touches[0]
-  let type = eventTypeConversion[event.type]
+  let type = eventTypeConversion[event.type as keyof typeof eventTypeConversion]
 
   if (!type) {
     return
@@ -22,11 +22,16 @@ function touchHandler(event) {
     buttons: 1,
   })
 
-  event.target.dispatchEvent(simulatedEvent)
+  const target = event.target
+  if (target === null) {
+    return
+  }
+
+  target.dispatchEvent(simulatedEvent)
   event.preventDefault()
 }
 
-export default function touchToMouse(element) {
+export default function touchToMouse(element: HTMLElement) {
   element.addEventListener("touchstart", touchHandler, true)
   element.addEventListener("touchmove", touchHandler, true)
   element.addEventListener("touchend", touchHandler, true)

@@ -14,17 +14,17 @@
 
 <li>
   #{$pStore[paletteId].id}:
-  {#if paletteId === $pStore.active.id}
+  {#if paletteId === $pStore.active?.id}
     <b>{$pStore[paletteId].name}</b>
   {:else}
-    <a class="link hover:bg-primary" on:click={() => switchPalette($pStore[paletteId].id)}>
+    <button class="link hover:bg-primary" on:click={() => switchPalette($pStore[paletteId].id)}>
       {$pStore[paletteId].name}
-    </a>
+    </button>
   {/if}
   ({$pStore[paletteId].colors.length} colors)
 
   <button
-    disabled={paletteId === $pStore.active.id}
+    disabled={paletteId === $pStore.active?.id}
     class="btn btn-sm btn-primary"
     data-paletteid={$pStore[paletteId].id}
     on:click={deleteAction}>delete</button

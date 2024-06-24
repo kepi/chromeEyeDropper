@@ -10,18 +10,26 @@
   $: tinyColor = new TinyColor(color)
   $: colorHex = tinyColor.toHexString()
 
-  const handleOver = (event) => {
-    const color = event.target.getAttribute("data-color")
-    newColor.update(() => color)
+  const handleOver = (event: MouseEvent | FocusEvent) => {
+    if (!event.target) return
+
+    const color = (event.target as HTMLElement).getAttribute("data-color")
+    if (color) {
+      newColor.update(() => color)
+    }
   }
 
-  const handleClick = (event) => {
-    const color = event.target.getAttribute("data-color")
-    selectedColor.update(() => color)
+  const handleClick = (event: MouseEvent) => {
+    if (!event.target) return
+
+    const color = (event.target as HTMLElement).getAttribute("data-color")
+    if (color) {
+      selectedColor.update(() => color)
+    }
   }
 </script>
 
-<div
+<button
   class={`${classes} box-content h-6 w-6 rounded-full border-4 border-gray-200 text-gray-700 hover:border-double`}
   class:h-6={!small}
   class:w-6={!small}
@@ -30,7 +38,8 @@
   style="background-color: {colorHex}"
   data-color={colorHex}
   on:mouseover={passive ? null : handleOver}
+  on:focus={passive ? null : handleOver}
   on:click={passive ? null : handleClick}
 >
   &nbsp;
-</div>
+</button>

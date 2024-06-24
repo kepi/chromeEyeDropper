@@ -1,9 +1,9 @@
 <script>
-  import { dimensions, getDimension } from "./dimensions"
+  import { dimensions } from "./dimensions"
 
   import ScrollBar from "./Scrollbar.svelte"
   import Matrix from "./Matrix.svelte"
-  import DimInput from "./DimInput.svelte"
+  import DimensionInput from "./DimensionInput.svelte"
 
   export let color = "#ff9900"
 
@@ -11,11 +11,7 @@
   export let selectedTab = "hsl"
   export let background = "#fff"
 
-  export let collapse = false
   export let tabbed = true
-
-  export let handleWidth = 32
-  export let handleHeight = 32
 
   export let showMatrix = true
   export let showSliders = {}
@@ -37,8 +33,6 @@
   export let matrixHeight = 200
   export let scrollbarHeight = 20
 
-  let collapsed = true
-
   let dimX = null
   let dimY = null
 
@@ -52,25 +46,10 @@
 
   $: sliderWidth =
     matrixWidth - (selectDimensions ? 25 : 0) - (showLabels ? 25 : 0) - (showNumeric ? 65 : 0)
-  $: textboxWidth = matrixWidth - (showLabels ? 50 : 0)
 </script>
 
-<div class="color-picker {collapse ? 'collapse' : ''}">
-  {#if collapse && !collapsed}
-    <div class="color-picker-background" on:click={collapsePicker} />
-  {/if}
-
-  {#if collapse}
-    <div
-      class="color-picker-handle"
-      style="width: {handleWidth}px; height: {handleHeight}px; background: {color.toHex()};"
-    ></div>
-  {/if}
-
-  <div
-    class="color-picker-controls {collapse && collapsed ? 'collapsed' : ''}"
-    style="background: {background};"
-  >
+<div class="color-picker">
+  <div class="color-picker-controls" style="background: {background};">
     {#if showMatrix}
       <Matrix
         bind:color
@@ -86,7 +65,7 @@
         <div class="tab-bar">
           {#each Object.keys(dimensions) as scale}
             {#if Object.keys(dimensions[scale]).some((dim) => showSliders[`${scale}.${dim}`])}
-              <div
+              <button
                 class="tab {selectedTab === scale ? 'active' : ''}"
                 on:click={() => {
                   selectedTab = scale
@@ -94,7 +73,7 @@
                 }}
               >
                 {scale}
-              </div>
+              </button>
             {/if}
           {/each}
         </div>
@@ -125,7 +104,7 @@
                   />
 
                   {#if showNumeric}
-                    <DimInput bind:color dimension="{scale}.{dim}" />
+                    <DimensionInput bind:color dimension="{scale}.{dim}" />
                   {/if}
                 </div>
               {/if}
@@ -142,40 +121,6 @@
     display: inline-block;
     position: relative;
   }
-
-  .color-picker-handle {
-    border: 1px solid #666;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-
-  .color-picker-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.2);
-    z-index: 9999999;
-  }
-
-  .color-picker.collapse .color-picker-controls {
-    position: absolute;
-    top: -5px;
-    left: -5px;
-
-    border: 1px solid #666;
-    border-radius: 5px;
-    box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.4);
-    padding: 5px;
-
-    z-index: 100000000;
-  }
-
-  .color-picker.collapse .color-picker-controls.collapsed {
-    display: none;
-  }
-
   .tab-bar {
     display: flex;
     height: 30px;
@@ -199,8 +144,7 @@
     margin: 5px 0 0 0;
   }
 
-  .slider,
-  .text {
+  .slider {
     display: flex;
     align-items: center;
   }
@@ -214,12 +158,6 @@
   .slider label {
     padding: 0 5px 0 0;
     width: 20px;
-  }
-
-  .text label {
-    padding: 0 5px 0 0;
-    width: 45px;
-    text-align: right;
   }
 
   input[type="radio"] {

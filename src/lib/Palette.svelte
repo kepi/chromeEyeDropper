@@ -1,7 +1,5 @@
 <script lang="ts">
-  import { derived } from "svelte/store"
   import pStore from "../allPalettesStore"
-  import PaletteDialog from "./PaletteDialog.svelte"
   import PaletteWipe from "./PaletteWipe.svelte"
   import PalettePalettes from "./PalettePalettes.svelte"
   import PaletteEdit from "./PaletteEdit.svelte"
@@ -10,9 +8,6 @@
   import ColorPicker from "./ColorPicker.svelte"
   import Square from "./Square.svelte"
   import { paletteSortByIcon } from "../palette"
-  import storage from "../storage"
-  import syncedWritable from "../syncedWritable"
-  import { match } from "ts-pattern"
 
   let showTipClick = false
   let toggles = {
@@ -21,7 +16,7 @@
     edit: false,
     sort: false,
     exp: false,
-    cp: true,
+    cp: false,
   }
 
   type Toggles = typeof toggles
@@ -34,38 +29,38 @@
   <div>
     {#if $pStore.active}
       Palette #{$pStore.active.id}: <b>{$pStore.active.name}</b>
-      <a
+      <button
         on:click={() => {
           toggle("palettes")
-        }}>palettes</a
+        }}>palettes</button
       >
       |
-      <a on:click={() => toggle("sort")}
-        >sort <span>{paletteSortByIcon($pStore.active.sortBy)} </span></a
+      <button on:click={() => toggle("sort")}
+        >sort <span>{paletteSortByIcon($pStore.active.sortBy)} </span></button
       >
       |
-      <a
+      <button
         on:click={() => {
           toggle("edit")
-        }}>edit</a
+        }}>edit</button
       >
       |
-      <a
+      <button
         on:click={() => {
           toggle("exp")
-        }}>export</a
+        }}>export</button
       >
       |
-      <a
+      <button
         on:click={() => {
           toggle("wipe")
-        }}>wipe</a
+        }}>wipe</button
       >
       |
-      <a
+      <button
         on:click={() => {
           toggle("cp")
-        }}>pick</a
+        }}>pick</button
       >
     {/if}
   </div>
@@ -88,11 +83,11 @@
         <h4>Your palette is clean</h4>
 
         <p>
-          Maybe too clean? Try to pick some color or <a
+          Maybe too clean? Try to pick some color or <button
             class="link"
             on:click={() => {
               toggle("palettes")
-            }}>switch to different palette</a
+            }}>switch to different palette</button
           >?
         </p>
       </div>
@@ -103,6 +98,12 @@
           showTipClick = true
         }}
         on:mouseout={() => {
+          showTipClick = false
+        }}
+        on:focus={() => {
+          showTipClick = true
+        }}
+        on:blur={() => {
           showTipClick = false
         }}
       >
