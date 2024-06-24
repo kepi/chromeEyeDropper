@@ -7,6 +7,7 @@
   import PaletteEdit from "./PaletteEdit.svelte"
   import PaletteExport from "./PaletteExport.svelte"
   import PaletteSort from "./PaletteSort.svelte"
+  import ColorPicker from "./ColorPicker.svelte"
   import Square from "./Square.svelte"
   import { paletteSortByIcon } from "../palette"
   import storage from "../storage"
@@ -20,6 +21,7 @@
     edit: false,
     sort: false,
     exp: false,
+    cp: true,
   }
 
   type Toggles = typeof toggles
@@ -31,7 +33,8 @@
 <div>
   <div>
     {#if $pStore.active}
-      Palette #{$pStore.active.id}: <b>{$pStore.active.name}</b> (<a
+      Palette #{$pStore.active.id}: <b>{$pStore.active.name}</b>
+      <a
         on:click={() => {
           toggle("palettes")
         }}>palettes</a
@@ -57,7 +60,13 @@
         on:click={() => {
           toggle("wipe")
         }}>wipe</a
-      >)
+      >
+      |
+      <a
+        on:click={() => {
+          toggle("cp")
+        }}>pick</a
+      >
     {/if}
   </div>
 
@@ -72,6 +81,8 @@
       <PaletteEdit bind:toggle={toggles.edit} />
     {:else if toggles.exp}
       <PaletteExport bind:toggle={toggles.exp} />
+    {:else if toggles.cp}
+      <ColorPicker bind:toggle={toggles.cp} />
     {:else if $pStore.active?.colors.length === 0}
       <div class="p-4 rounded prose prose-sm">
         <h4>Your palette is clean</h4>

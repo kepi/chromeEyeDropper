@@ -59,7 +59,7 @@ importers:
         version: 3.59.2
       svelte-check:
         specifier: ^2.10.3
-        version: 2.10.3(postcss-load-config@6.0.1(postcss@8.4.38))(postcss@8.4.38)(sass@1.77.6)(svelte@3.59.2)
+        version: 2.10.3(postcss-load-config@4.0.2(postcss@8.4.38))(postcss@8.4.38)(sass@1.77.6)(svelte@3.59.2)
       tailwindcss:
         specifier: ^3.4.4
         version: 3.4.4
@@ -1613,24 +1613,6 @@ packages:
       postcss:
         optional: true
       ts-node:
-        optional: true
-
-  postcss-load-config@6.0.1:
-    resolution: {integrity: sha512-oPtTM4oerL+UXmx+93ytZVN82RrlY/wPUV8IeDxFrzIjXOLF1pN+EmKPLbubvKHT2HC20xXsCAH2Z+CKV6Oz/g==}
-    engines: {node: '>= 18'}
-    peerDependencies:
-      jiti: '>=1.21.0'
-      postcss: '>=8.0.9'
-      tsx: ^4.8.1
-      yaml: ^2.4.2
-    peerDependenciesMeta:
-      jiti:
-        optional: true
-      postcss:
-        optional: true
-      tsx:
-        optional: true
-      yaml:
         optional: true
 
   postcss-nested@6.0.1:
@@ -3697,13 +3679,6 @@ snapshots:
     optionalDependencies:
       postcss: 8.4.38
 
-  postcss-load-config@6.0.1(postcss@8.4.38):
-    dependencies:
-      lilconfig: 3.1.2
-    optionalDependencies:
-      postcss: 8.4.38
-    optional: true
-
   postcss-nested@6.0.1(postcss@8.4.38):
     dependencies:
       postcss: 8.4.38
@@ -4006,7 +3981,7 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  svelte-check@2.10.3(postcss-load-config@6.0.1(postcss@8.4.38))(postcss@8.4.38)(sass@1.77.6)(svelte@3.59.2):
+  svelte-check@2.10.3(postcss-load-config@4.0.2(postcss@8.4.38))(postcss@8.4.38)(sass@1.77.6)(svelte@3.59.2):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       chokidar: 3.6.0
@@ -4015,7 +3990,7 @@ snapshots:
       picocolors: 1.0.1
       sade: 1.8.1
       svelte: 3.59.2
-      svelte-preprocess: 4.10.7(postcss-load-config@6.0.1(postcss@8.4.38))(postcss@8.4.38)(sass@1.77.6)(svelte@3.59.2)(typescript@5.5.2)
+      svelte-preprocess: 4.10.7(postcss-load-config@4.0.2(postcss@8.4.38))(postcss@8.4.38)(sass@1.77.6)(svelte@3.59.2)(typescript@5.5.2)
       typescript: 5.5.2
     transitivePeerDependencies:
       - '@babel/core'
@@ -4033,7 +4008,7 @@ snapshots:
     dependencies:
       svelte: 3.59.2
 
-  svelte-preprocess@4.10.7(postcss-load-config@6.0.1(postcss@8.4.38))(postcss@8.4.38)(sass@1.77.6)(svelte@3.59.2)(typescript@5.5.2):
+  svelte-preprocess@4.10.7(postcss-load-config@4.0.2(postcss@8.4.38))(postcss@8.4.38)(sass@1.77.6)(svelte@3.59.2)(typescript@5.5.2):
     dependencies:
       '@types/pug': 2.0.10
       '@types/sass': 1.45.0
@@ -4044,7 +4019,7 @@ snapshots:
       svelte: 3.59.2
     optionalDependencies:
       postcss: 8.4.38
-      postcss-load-config: 6.0.1(postcss@8.4.38)
+      postcss-load-config: 4.0.2(postcss@8.4.38)
       sass: 1.77.6
       typescript: 5.5.2
 
