@@ -79,8 +79,8 @@ importers:
         specifier: ^1.6.0
         version: 1.6.0(@types/node@20.14.8)(sass@1.77.6)
       webextension-polyfill:
-        specifier: ^0.12.0
-        version: 0.12.0
+        specifier: ^0.10.0
+        version: 0.10.0
 
 packages:
 
@@ -2234,9 +2234,6 @@ packages:
   webextension-polyfill@0.10.0:
     resolution: {integrity: sha512-c5s35LgVa5tFaHhrZDnr3FpQpjj1BB+RXhLTYUxGqBVN460HkbM8TBtEqdXWbpTKfzwCcjAZVF7zXCYSKtcp9g==}
 
-  webextension-polyfill@0.12.0:
-    resolution: {integrity: sha512-97TBmpoWJEE+3nFBQ4VocyCdLKfw54rFaJ6EVQYLBCXqCIpLSZkwGgASpv4oPt9gdKCJ80RJlcmNzNn008Ag6Q==}
-
   when@3.7.7:
     resolution: {integrity: sha512-9lFZp/KHoqH6bPKjbWqa+3Dg/K/r2v0X/3/G2x4DBGchVS2QX2VXL3cZV994WQVnTM1/PD71Az25nAzryEUugw==}
 
@@ -4279,8 +4276,6 @@ snapshots:
       - utf-8-validate
 
   webextension-polyfill@0.10.0: {}
-
-  webextension-polyfill@0.12.0: {}
 
   when@3.7.7: {}
 
