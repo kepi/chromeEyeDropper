@@ -7,7 +7,9 @@
   import PaletteSort from "./PaletteSort.svelte"
   import ColorPicker from "./ColorPicker.svelte"
   import Square from "./Square.svelte"
-  import { paletteSortByIcon } from "../palette"
+  import { sortByInfo } from "../palette"
+  import { Icon } from "@steeze-ui/svelte-icon"
+  import { Download, LayoutGrid, Move, SlidersHorizontal, Trash2 } from "@steeze-ui/lucide-icons"
 
   let showTipClick = false
   let toggles = {
@@ -23,45 +25,81 @@
   const toggle = (what: keyof Toggles) => {
     toggles[what] = !toggles[what]
   }
+
+  $: sortBy = $pStore.active?.sortBy ?? "m:asc"
+  $: sortInfo = sortByInfo[sortBy]
 </script>
 
 <div>
-  <div>
+  <div class="flex items-center gap-2">
     {#if $pStore.active}
-      Palette #{$pStore.active.id}: <b>{$pStore.active.name}</b>
-      <button
-        on:click={() => {
-          toggle("palettes")
-        }}>palettes</button
-      >
+      <div>
+        Palette #{$pStore.active.id}: <b>{$pStore.active.name}</b>
+      </div>
+
+      <div class="tooltip tooltip-bottom" data-tip="Manage Palettes">
+        <button
+          class="flex"
+          on:click={() => {
+            toggle("palettes")
+          }}
+        >
+          <Icon src={LayoutGrid} class="w-4 h-4 hover:stroke-primary" />
+        </button>
+      </div>
+
+      <div>|</div>
+
+      <div class="tooltip tooltip-bottom" data-tip="Change sorting of active Palette">
+        <button class="flex gap-1 group" on:click={() => toggle("sort")}>
+          <Icon src={sortInfo.icon} class="w-4 h-4 group-hover:stroke-primary" />
+          <Icon src={sortInfo.iconOrder} class="w-4 h-4 group-hover:stroke-primary" />
+        </button>
+      </div>
       |
-      <button on:click={() => toggle("sort")}
-        >sort <span>{paletteSortByIcon($pStore.active.sortBy)} </span></button
-      >
+      <div class="tooltip tooltip-bottom" data-tip="Reorder or delete colors in Palette">
+        <button
+          class="flex"
+          on:click={() => {
+            toggle("edit")
+          }}
+        >
+          <Icon src={Move} class="w-4 h-4 hover:stroke-primary" />
+        </button>
+      </div>
       |
-      <button
-        on:click={() => {
-          toggle("edit")
-        }}>edit</button
-      >
+      <div class="tooltip tooltip-bottom" data-tip="Export your Palettes">
+        <button
+          class="flex"
+          on:click={() => {
+            toggle("exp")
+          }}
+        >
+          <Icon src={Download} class="w-4 h-4 hover:stroke-primary" />
+        </button>
+      </div>
       |
-      <button
-        on:click={() => {
-          toggle("exp")
-        }}>export</button
-      >
+      <div class="tooltip tooltip-bottom" data-tip="Wipe colors from active Palette">
+        <button
+          class="flex"
+          on:click={() => {
+            toggle("wipe")
+          }}
+        >
+          <Icon src={Trash2} class="w-4 h-4 hover:stroke-primary" />
+        </button>
+      </div>
       |
-      <button
-        on:click={() => {
-          toggle("wipe")
-        }}>wipe</button
-      >
-      |
-      <button
-        on:click={() => {
-          toggle("cp")
-        }}>pick</button
-      >
+      <div class="tooltip tooltip-bottom" data-tip="Pick color from Color Picker">
+        <button
+          class="flex"
+          on:click={() => {
+            toggle("cp")
+          }}
+        >
+          <Icon src={SlidersHorizontal} class="w-4 h-4 hover:stroke-primary" />
+        </button>
+      </div>
     {/if}
   </div>
 

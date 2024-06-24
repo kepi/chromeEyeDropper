@@ -15,9 +15,4 @@
   }
 </script>
 
-<button
-  class="rounded-lg bg-green-500 px-6 py-3 font-semibold text-white shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
-  on:click={handleClick}
->
-  Pick color from webpage
-</button>
+<button class="btn btn-primary shadow-md" on:click={handleClick}> Pick color from webpage </button>

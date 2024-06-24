@@ -1,11 +1,7 @@
 <script lang="ts">
   import PaletteDialog from "./PaletteDialog.svelte"
-  import {
-    storePaletteSortBy,
-    paletteSort,
-    paletteSortByIcon,
-    type StorePaletteSortBy,
-  } from "../palette"
+  import { paletteSort, sortByInfo, type StorePaletteSortBy } from "../palette"
+  import { Icon } from "@steeze-ui/svelte-icon"
 
   export let toggle: boolean
 
@@ -13,7 +9,7 @@
     toggle = !toggle
   }
 
-  const sortByKeys = Object.keys(storePaletteSortBy) as StorePaletteSortBy[]
+  const sortByKeys = Object.keys(sortByInfo) as StorePaletteSortBy[]
 </script>
 
 <PaletteDialog bind:toggle>
@@ -24,14 +20,15 @@
       {#each sortByKeys as sortBy}
         <li>
           <button
-            class="cursor-pointer hover:text-primary"
+            class="cursor-pointer hover:text-primary flex gap-1 items-center"
             on:click={() => {
               paletteSort(undefined, sortBy)
               dialogToggle()
             }}
           >
-            {paletteSortByIcon(sortBy)}
-            {storePaletteSortBy[sortBy].text}
+            <Icon src={sortByInfo[sortBy].icon} class="w-4 h-4" />
+            <Icon src={sortByInfo[sortBy].iconOrder} class="w-4 h-4" />
+            {sortByInfo[sortBy].text}
           </button>
         </li>
       {/each}

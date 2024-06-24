@@ -21,6 +21,12 @@ importers:
       '@sonderbase/svelte-sortablejs':
         specifier: ^2.0.2
         version: 2.0.2(svelte@3.59.2)
+      '@steeze-ui/lucide-icons':
+        specifier: ^1.2.1
+        version: 1.2.1
+      '@steeze-ui/svelte-icon':
+        specifier: ^1.5.0
+        version: 1.5.0(svelte@3.59.2)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^2.0.3
         version: 2.5.3(svelte@3.59.2)(vite@4.5.3(@types/node@20.14.8)(sass@1.77.6))
@@ -30,9 +36,6 @@ importers:
       '@tsconfig/svelte':
         specifier: ^5.0.4
         version: 5.0.4
-      '@types/sortablejs':
-        specifier: ^1.15.8
-        version: 1.15.8
       '@types/webextension-polyfill':
         specifier: ^0.10.0
         version: 0.10.7
@@ -540,6 +543,14 @@ packages:
     peerDependencies:
       svelte: ^4.0.0
 
+  '@steeze-ui/lucide-icons@1.2.1':
+    resolution: {integrity: sha512-8kb4GCMhhG3SR+kGqnO30HMtW3zHKBPQMhRyJLapc+WZDDsxDpebxrB64zGQYqoSxhhqkRXBeeypQ7Hub1vCpw==}
+
+  '@steeze-ui/svelte-icon@1.5.0':
+    resolution: {integrity: sha512-Y0S7Qk2kO6byzOlD5SQGbOF2ZaKXJgfTkH78QUPcq579wiWMQJ5H14zL4XwtsPJ0DfkoL5qa3WaIdYkWb9A6AA==}
+    peerDependencies:
+      svelte: ^4.0.0
+
   '@sveltejs/vite-plugin-svelte-inspector@1.0.4':
     resolution: {integrity: sha512-zjiuZ3yydBtwpF3bj0kQNV0YXe+iKE545QGZVTaylW3eAzFr+pJ/cwK8lZEaRp4JtaJXhD5DyWAV4AxLh6DgaQ==}
     engines: {node: ^14.18.0 || >= 16}
@@ -585,9 +596,6 @@ packages:
   '@types/sass@1.45.0':
     resolution: {integrity: sha512-jn7qwGFmJHwUSphV8zZneO3GmtlgLsmhs/LQyVvQbIIa+fzGMUiHI4HXJZL3FT8MJmgXWbLGiVVY7ElvHq6vDA==}
     deprecated: This is a stub types definition. sass provides its own type definitions, so you do not need this installed.
-
-  '@types/sortablejs@1.15.8':
-    resolution: {integrity: sha512-b79830lW+RZfwaztgs1aVPgbasJ8e7AXtZYHTELNXZPsERt4ymJdjV4OccDbHQAvHrCcFpbF78jkm0R6h/pZVg==}
 
   '@types/webextension-polyfill@0.10.7':
     resolution: {integrity: sha512-10ql7A0qzBmFB+F+qAke/nP1PIonS0TXZAOMVOxEUsm+lGSW6uwVcISFNa0I4Oyj0884TZVWGGMIWeXOVSNFHw==}
@@ -2603,6 +2611,12 @@ snapshots:
       sortablejs: 1.15.2
       svelte: 3.59.2
 
+  '@steeze-ui/lucide-icons@1.2.1': {}
+
+  '@steeze-ui/svelte-icon@1.5.0(svelte@3.59.2)':
+    dependencies:
+      svelte: 3.59.2
+
   '@sveltejs/vite-plugin-svelte-inspector@1.0.4(@sveltejs/vite-plugin-svelte@2.5.3(svelte@3.59.2)(vite@4.5.3(@types/node@20.14.8)(sass@1.77.6)))(svelte@3.59.2)(vite@4.5.3(@types/node@20.14.8)(sass@1.77.6))':
     dependencies:
       '@sveltejs/vite-plugin-svelte': 2.5.3(svelte@3.59.2)(vite@4.5.3(@types/node@20.14.8)(sass@1.77.6))
@@ -2655,8 +2669,6 @@ snapshots:
   '@types/sass@1.45.0':
     dependencies:
       sass: 1.77.4
-
-  '@types/sortablejs@1.15.8': {}
 
   '@types/webextension-polyfill@0.10.7': {}
 

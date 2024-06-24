@@ -3,7 +3,9 @@
   import ColorBox from "../lib/ColorBox.svelte"
   import PickFromWebpageButton from "../lib/PickFromWebpageButton.svelte"
   import { selectedColor, newColor } from "../store"
+  import { Icon } from "@steeze-ui/svelte-icon"
   import Link from "../Link.svelte"
+  import { Palette as PaletteIcon } from "@steeze-ui/lucide-icons"
 </script>
 
 <div class="container max-w-xl">
@@ -28,7 +30,9 @@
     </code>
   </div>
   <div class="bg-gray-100 p-2 flex gap-4 justify-between">
-    <div class="font-bold">Eye Dropper</div>
+    <div class="font-bold flex gap-1 items-center">
+      <Icon src={PaletteIcon} class="w-6 h-6" />Eye Dropper
+    </div>
     <div class="flex gap-2">
       <Link href="https://eyedropper.org">hp</Link>
       <Link href="https://github.com/kepi/chromeEyeDropper/issues">bugs</Link>

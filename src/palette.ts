@@ -18,6 +18,14 @@ import { copyToClipboard } from "./clipboard"
 import { colorToString } from "./color"
 import { random, TinyColor } from "@ctrl/tinycolor"
 import { match } from "ts-pattern"
+import {
+  ArrowUpNarrowWide as Asc,
+  ArrowDownNarrowWide as Desc,
+  Hand,
+  type IconSource,
+  Clock,
+  Palette as PaletteIcon,
+} from "@steeze-ui/lucide-icons"
 
 export type StorePaletteColorSource =
   /** eye dropper */
@@ -45,18 +53,19 @@ export type StorePaletteSortBy =
 
 type StorePaletteSortByObj = {
   [K in StorePaletteSortBy]: {
-    icon: string
+    icon: IconSource
+    iconOrder: IconSource
     text: string
   }
 }
 
-export const storePaletteSortBy: StorePaletteSortByObj = {
-  "m:asc": { icon: "↑", text: "manual order" },
-  "m:desc": { icon: "↓", text: "reverse manual order" },
-  "t:asc": { icon: "⌚↑", text: "oldest picked color first" },
-  "t:desc": { icon: "⌚↓", text: "most recent color first" },
-  "h:asc": { icon: "💡↑", text: "color hue" },
-  "h:desc": { icon: "💡↓", text: "color hue in descending order" },
+export const sortByInfo: StorePaletteSortByObj = {
+  "m:asc": { icon: Hand, iconOrder: Asc, text: "manual order" },
+  "m:desc": { icon: Hand, iconOrder: Desc, text: "reverse manual order" },
+  "t:asc": { icon: Clock, iconOrder: Asc, text: "oldest picked color first" },
+  "t:desc": { icon: Clock, iconOrder: Desc, text: "most recent color first" },
+  "h:asc": { icon: PaletteIcon, iconOrder: Asc, text: "color hue" },
+  "h:desc": { icon: PaletteIcon, iconOrder: Desc, text: "color hue in descending order" },
 }
 
 export interface StorePaletteColor {
@@ -452,10 +461,6 @@ export const paletteSort = async (paletteId?: number, sortBy?: StorePaletteSortB
       .exhaustive()
 
   storage.setItem(paletteMetaKey, meta)
-}
-
-export const paletteSortByIcon = (sortBy: StorePaletteSortBy) => {
-  return storePaletteSortBy[sortBy].icon
 }
 
 export type Palette = {
