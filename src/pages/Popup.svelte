@@ -15,7 +15,7 @@
   }
 </script>
 
-<div class="container max-w-xl">
+<div class="container max-w-[480px]">
   <div class="flex flex-nowrap p-2 gap-4">
     <div class="flex-grow min-w-72 pl-2">
       <div class="py-4">
