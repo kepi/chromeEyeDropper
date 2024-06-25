@@ -6,6 +6,13 @@
   import { Icon } from "@steeze-ui/svelte-icon"
   import Link from "../Link.svelte"
   import { Palette as PaletteIcon } from "@steeze-ui/lucide-icons"
+  import { copyToClipboard } from "../clipboard"
+
+  $: value = `linear-gradient(to right, {$selectedColor} 0%, {$newColor} 100%)`
+
+  const copy = () => {
+    copyToClipboard(value)
+  }
 </script>
 
 <div class="container max-w-xl">
@@ -22,12 +29,16 @@
     </div>
   </div>
   <div
-    class="flex p-2 align-middle"
+    class="flex p-2 align-middle tooltip tooltip-bottom"
+    data-tip="Click to copy to clipboard"
     style="background: linear-gradient(to right, {$selectedColor} 0%, {$newColor} 100%)"
   >
-    <code class="rounded bg-white text-black px-1 font-mono text-xs text-nowrap">
-      linear-gradient(to right, {$selectedColor} 0%, {$newColor} 100%)
-    </code>
+    <button
+      class="hover:bg-neutral hover:text-white rounded bg-white text-black px-1 font-mono text-xs text-nowrap"
+      on:click={copy}
+    >
+      {value}
+    </button>
   </div>
   <div class="bg-gray-100 p-2 flex gap-4 justify-between">
     <div class="font-bold flex gap-1 items-center">
