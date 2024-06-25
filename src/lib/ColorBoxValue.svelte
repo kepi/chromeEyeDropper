@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { Icon } from "@steeze-ui/svelte-icon"
-  import { Clipboard } from "@steeze-ui/lucide-icons"
   import { copyToClipboard } from "../clipboard"
   export let value: string
 

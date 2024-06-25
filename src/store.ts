@@ -1,7 +1,8 @@
-import { writable } from "svelte/store"
+import { derived, writable } from "svelte/store"
 import { paletteGetColor, paletteSetColorAfterHooks, palletteColorToClipboard } from "./palette"
 import syncedWritable from "./syncedWritable"
 import { defaults } from "./settings"
+import { match } from "ts-pattern"
 
 /** use for setting selected color and badge */
 export const selectedColor = await syncedWritable("c", "#75bb75")
@@ -13,6 +14,14 @@ selectedColor.subscribe((color) => {
 })
 
 export const newColor = writable(await paletteGetColor())
+
+export const popupDialog = writable("palette")
+export const wideDialog = derived(popupDialog, ($popupDialog) =>
+  match($popupDialog)
+    .with("palette", () => false)
+    .with("picker", () => false)
+    .otherwise(() => true),
+)
 
 // Options
 export const autoClipboard = await syncedWritable("autoClipboard", defaults["autoClipboard"])

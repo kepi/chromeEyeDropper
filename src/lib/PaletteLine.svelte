@@ -1,31 +1,39 @@
 <script lang="ts">
   import pStore from "../allPalettesStore"
+  import { popupDialog } from "../store"
   import { paletteSetActive } from "../palette"
 
   export let deleteAction
   export let paletteId: number
-  export let toggle: boolean
 
   async function switchPalette(paletteId: number) {
     paletteSetActive(paletteId)
-    toggle = !toggle
+    $popupDialog = "palette"
   }
 </script>
 
-<li>
-  #{$pStore[paletteId].id}:
-  {#if paletteId === $pStore.active?.id}
-    <b>{$pStore[paletteId].name}</b>
-  {:else}
-    <button class="link hover:bg-primary" on:click={() => switchPalette($pStore[paletteId].id)}>
-      {$pStore[paletteId].name}
-    </button>
-  {/if}
-  ({$pStore[paletteId].colors.length} colors)
+<li class="flex items-center gap-2 px-2 py-1 mt-1 rounded hover:bg-slate-300">
+  <div class="w-6 text-right font-mono">
+    #{$pStore[paletteId].id}:
+  </div>
+
+  <div class="text-base">
+    {#if paletteId === $pStore.active?.id}
+      <b>➤ {$pStore[paletteId].name}</b>
+    {:else}
+      <button
+        class="link font-bold text-neutral hover:text-primary"
+        on:click={() => switchPalette($pStore[paletteId].id)}
+      >
+        {$pStore[paletteId].name}
+      </button>
+    {/if}
+    <span class="text-xs ml-2 mr-4">({$pStore[paletteId].colors.length} colors)</span>
+  </div>
 
   <button
     disabled={paletteId === $pStore.active?.id}
-    class="btn btn-sm btn-primary"
+    class="btn btn-xs btn-error"
     data-paletteid={$pStore[paletteId].id}
     on:click={deleteAction}>delete</button
   >

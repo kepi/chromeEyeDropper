@@ -1,14 +1,8 @@
 <script lang="ts">
   import pStore from "../allPalettesStore"
-  import PaletteDialog from "./PaletteDialog.svelte"
   import PaletteDelete from "./PaletteDelete.svelte"
   import PaletteLine from "./PaletteLine.svelte"
-
-  export let toggle: boolean
-
-  const dialogToggle = () => {
-    toggle = !toggle
-  }
+  import { popupDialog } from "../store"
 
   function isNumber(input: unknown): input is number {
     return !isNaN(Number(input))
@@ -19,7 +13,7 @@
   const newPalette = async () => {
     pStore.createPalette(newPaletteName)
     newPaletteName = ""
-    dialogToggle()
+    $popupDialog = "palette"
   }
 
   const deletePaletteDialog = (event: MouseEvent) => {
@@ -36,26 +30,25 @@
 {#if showPaletteDelete}
   <PaletteDelete bind:paletteId={paletteIdToDelete} bind:show={showPaletteDelete} />
 {:else}
-  <PaletteDialog bind:toggle>
-    <h4>Switch to Palette:</h4>
-    <ul>
-      <li>
-        <form>
-          <input
-            class="input input-sm"
-            type="text"
-            name="newPaletteName"
-            bind:value={newPaletteName}
-            placeholder="new palette"
-          />
-          <button type="submit" class="btn btn-sm btn-primary" on:click|preventDefault={newPalette}
-            >create</button
-          >
-        </form>
+  <h4 class="mb-4">Switch to Palette:</h4>
+  <ul class="not-prose ml-2">
+    <form>
+      <li class="flex items-center gap-2 px-2 py-1 mt-1 rounded hover:bg-slate-300">
+        <div class="w-6 text-right font-mono">#?:</div>
+        <input
+          class="input input-sm"
+          type="text"
+          name="newPaletteName"
+          bind:value={newPaletteName}
+          placeholder="name of new palette"
+        />
+        <button type="submit" class="btn btn-sm btn-secondary" on:click|preventDefault={newPalette}
+          >create</button
+        >
       </li>
-      {#each Object.keys($pStore).filter(isNumber) as id}
-        <PaletteLine bind:toggle paletteId={Number(id)} deleteAction={deletePaletteDialog} />
-      {/each}
-    </ul>
-  </PaletteDialog>
+    </form>
+    {#each Object.keys($pStore).filter(isNumber) as id}
+      <PaletteLine paletteId={Number(id)} deleteAction={deletePaletteDialog} />
+    {/each}
+  </ul>
 {/if}

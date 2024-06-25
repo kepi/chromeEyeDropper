@@ -1,18 +1,19 @@
 <script lang="ts">
-  import PaletteDialog from "./PaletteDialog.svelte"
   import ColorPicker from "./cpicker/ColorPick.svelte"
   import { newColor } from "../store"
   import { paletteSetColor } from "../palette"
+  import { popupDialog } from "../store"
 
-  export let toggle: boolean
+  const close = () => {
+    $popupDialog = "palette"
+  }
 
   const handleClick = () => {
     paletteSetColor($newColor, "cp")
   }
 </script>
 
-<PaletteDialog bind:toggle>
-  <ColorPicker bind:color={$newColor} showLabels={true} />
+<ColorPicker bind:color={$newColor} showLabels={true} />
 
-  <button class="btn btn-primary" on:click={handleClick}>Add to palette</button>
-</PaletteDialog>
+<button class="btn btn-primary" on:click={handleClick}>Add to palette</button>
+<button class="btn" on:click={close}>Close</button>

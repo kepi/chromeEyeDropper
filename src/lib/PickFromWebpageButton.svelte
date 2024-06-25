@@ -15,4 +15,7 @@
   }
 </script>
 
-<button class="btn btn-primary shadow-md" on:click={handleClick}> Pick color from webpage </button>
+<button
+  class="btn btn-sm btn-primary hover:btn-secondary font-normal shadow-md"
+  on:click={handleClick}>Web Page</button
+>
