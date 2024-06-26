@@ -52,7 +52,7 @@
         </button>
       </div>
       <div class="text-slate-300">|</div>
-      <div class="tooltip tooltip-bottom" data-tip="Reorder or delete colors in Palette">
+      <div class="tooltip tooltip-bottom" data-tip="Rearrange or trash colors in Palette">
         <button
           class="flex"
           on:click={() => {

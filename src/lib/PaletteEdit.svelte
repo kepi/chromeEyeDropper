@@ -2,17 +2,12 @@
   import { SortableList } from "@sonderbase/svelte-sortablejs"
   import pStore from "../allPalettesStore"
   import Square from "./Square.svelte"
-  import { popupDialog } from "../store"
-
-  const close = () => {
-    $popupDialog = "palette"
-  }
 
   const onEnd = (event: SortableEvent) => {
     const fromTrash = event.from.classList.contains("trash-area")
     const toTrash = event.to.classList.contains("trash-area")
 
-    if ($pStore.active && event.oldIndex && event.newIndex) {
+    if ($pStore.active && event.oldIndex !== undefined && event.newIndex !== undefined) {
       pStore.manualSort($pStore.active, fromTrash, toTrash, event.oldIndex, event.newIndex)
     }
   }

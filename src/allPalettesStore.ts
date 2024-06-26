@@ -134,7 +134,6 @@ function createAllPalettesStore() {
     colors.splice(oldIndex, 1)
     colors.splice(newIndex, 0, movedColor)
 
-    // colors.map((c) => console.log(c.h))
     paletteSetColors(active.id, colors)
   }
 
