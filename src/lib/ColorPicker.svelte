@@ -9,11 +9,14 @@
   }
 
   const handleClick = () => {
+    if ($newColor === null) return
     paletteSetColor($newColor, "cp")
   }
 </script>
 
-<ColorPicker bind:color={$newColor} showLabels={true} />
+{#if $newColor !== null}
+  <ColorPicker bind:color={$newColor} showLabels={true} />
 
-<button class="btn btn-primary" on:click={handleClick}>Add to palette</button>
-<button class="btn" on:click={close}>Close</button>
+  <button class="btn btn-primary" on:click={handleClick}>Add to palette</button>
+  <button class="btn" on:click={close}>Close</button>
+{/if}

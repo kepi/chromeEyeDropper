@@ -1,11 +1,11 @@
-import { derived, writable } from "svelte/store"
+import { derived, writable, type Writable } from "svelte/store"
 import { paletteGetColor, paletteSetColorAfterHooks, palletteColorToClipboard } from "./palette"
 import syncedWritable from "./syncedWritable"
 import { defaults } from "./settings"
 import { match } from "ts-pattern"
 
 /** use for setting selected color and badge */
-export const selectedColor = await syncedWritable("c", "#75bb75")
+export const selectedColor = syncedWritable("c", "#75bb75")
 selectedColor.subscribe((color) => {
   paletteSetColorAfterHooks(color)
 
@@ -13,7 +13,18 @@ selectedColor.subscribe((color) => {
   palletteColorToClipboard(color)
 })
 
-export const newColor = writable(await paletteGetColor())
+// export const newColor: Writable<string | null> = writable(null);
+// Define a writable store with a placeholder initial value (can be null or any default value)
+export const newColor: Writable<string | null> = writable(null)
+
+// Initialize the store asynchronously
+async function initializeNewColor() {
+  const color = await paletteGetColor()
+  newColor.set(color)
+}
+
+// Call the initialization function
+initializeNewColor().catch(console.error)
 
 export const popupDialog = writable("palette")
 export const wideDialog = derived(popupDialog, ($popupDialog) =>
@@ -24,25 +35,22 @@ export const wideDialog = derived(popupDialog, ($popupDialog) =>
 )
 
 // Options
-export const autoClipboard = await syncedWritable("autoClipboard", defaults["autoClipboard"])
-export const autoClipboardType = await syncedWritable(
-  "autoClipboardType",
-  defaults["autoClipboardType"],
-)
-export const enableColorToolbox = await syncedWritable(
+export const autoClipboard = syncedWritable("autoClipboard", defaults["autoClipboard"])
+export const autoClipboardType = syncedWritable("autoClipboardType", defaults["autoClipboardType"])
+export const enableColorToolbox = syncedWritable(
   "enableColorToolbox",
   defaults["enableColorToolbox"],
 )
-export const enableColorTooltip = await syncedWritable(
+export const enableColorTooltip = syncedWritable(
   "enableColorTooltip",
   defaults["enableColorTooltip"],
 )
-export const enableRightClickDeactivate = await syncedWritable(
+export const enableRightClickDeactivate = syncedWritable(
   "enableRightClickDeactivate",
   defaults["enableRightClickDeactivate"],
 )
-export const dropperCursor = await syncedWritable("dropperCursor", defaults["dropperCursor"])
-export const enablePromoOnUpdate = await syncedWritable(
+export const dropperCursor = syncedWritable("dropperCursor", defaults["dropperCursor"])
+export const enablePromoOnUpdate = syncedWritable(
   "enablePromoOnUpdate",
   defaults["enablePromoOnUpdate"],
 )
