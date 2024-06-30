@@ -128,6 +128,18 @@ function commandHandler(command: string) {
 function onInstalledHandler(details: Runtime.OnInstalledDetailsType) {
   console.log("Extension installed:", details)
   checkStorage()
+
+  /**
+   * When Eye Dropper is just installed, we want to display nice
+   * page to new users.
+   */
+  if (details.reason === "install") {
+    console.info("Extension has been installed.")
+    browser.tabs.create({
+      url: "https://eyedropper.org/installed",
+      active: true,
+    })
+  }
 }
 
 async function initBadge() {
