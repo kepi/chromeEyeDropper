@@ -5,9 +5,7 @@
   export let color
   export let label
 
-  // TODO handle null color
-
-  $: tinyColor = new TinyColor(color)
+  $: tinyColor = new TinyColor(color ? color : "#75bb75")
   $: colorName = tinyColor.toName()
 
   $: hex = tinyColor.toHexString()
