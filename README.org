@@ -49,7 +49,7 @@ You can report bugs and ideas at [[https://github.com/kepi/chromeEyeDropper/issu
 * License
 This extension is released under [[http://github.com/kepi/chromeEyeDropper/blob/master/LICENSE][MIT License]].
 
-* TODO v0.6 [13/21]
+* TODO v0.6 [12/21]
 ** DONE Basic popup
 :LOGBOOK:
 - State "DONE"       from "DONE"       [2024-06-06 Čt 21:21]
@@ -109,10 +109,7 @@ too.
 - State "DONE"       from "TODO"       [2024-06-29 So 14:50]
 :END:
 
-** DONE Display error about picking from chrome pages
-:LOGBOOK:
-- State "DONE"       from "TODO"       [2024-06-30 Ne 20:06]
-:END:
+** TODO Display error about picking from chrome pages
 - maybe just disable button and in hover explain why
 
 ** DONE Popup banner

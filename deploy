@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+readonly ENV=$1
+readonly VERSION=$2
+
+[[ -n "$ENV" ]] || (echo "$0 prod|beta version"; exit 1)
+[[ -n "$VERSION" ]] || (echo "$0 prod|beta version"; exit 1)
+[[ "$VERSION" =~ ^([0-9]+\.){3}[0-9]+$ ]] || (echo "version has to be in sprint.feature.fix.build format"; exit 2)
+
+if [[ "$ENV" == "beta" ]]; then
+  PACKAGE="EyeDropper-beta_${VERSION}"
+  BETA=1
+else
+  PACKAGE="EyeDropper_${VERSION}"
+  BETA=0
+fi
+readonly PACKAGE
+readonly BETA
+export BETA
+
+if [ ! -d ../archives ]; then
+  echo "../archives dir doesn't exist, create it first"
+  exit 3
+fi
+
+ARCHIVES_DIR=$(cd ../archives && pwd)
+readonly ARCHIVES_DIR
+
+readonly PACKAGE_FILE="${ARCHIVES_DIR}/${PACKAGE}.zip"
+
+if [ -f "$PACKAGE_FILE"  ]; then
+  echo "Package file already exists, you probably need to raise build number in package.json"
+  exit 4
+fi
+
+pnpm run test --run && pnpm run check && pnpm run build && (cd dist && zip -r "${PACKAGE_FILE}" -- *)
