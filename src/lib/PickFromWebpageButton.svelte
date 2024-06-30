@@ -1,21 +1,34 @@
 <script lang="ts">
   import browser from "webextension-polyfill"
-  import { getTabId } from "../background"
-
-  function handleClick() {
-    console.log("clicked pick color from webpage")
-
-    const pickFromWeb = async () => {
-      const tabId = await getTabId()
-      const response = await browser.runtime.sendMessage({ command: "pick-from-web", tabId })
-      console.log(response)
-      window.close()
-    }
-    pickFromWeb()
-  }
+  import { getTab } from "../background"
+  import PickFromWpButton from "./PickFromWpButton.svelte"
 </script>
 
-<button
-  class="btn btn-sm btn-primary hover:btn-secondary font-normal shadow-md"
-  on:click={handleClick}>Web Page</button
->
+{#await getTab() then tab}
+  {#if tab.url === undefined}
+    <PickFromWpButton
+      reason="Can't pick from this page. Your browser won't allow me to access it."
+    />
+  {:else if tab.url.indexOf("chrome") == 0}
+    <PickFromWpButton
+      reason="Can't pick from this page. Extensions can't interact with special browser pages."
+    />
+  {:else if tab.url.indexOf("https://chrome.google.com/webstore") == 0}
+    <PickFromWpButton
+      reason="Can't pick from this page. Extensions can't interact with Chrome Web Store."
+    />
+  {:else if tab.url.indexOf("file") === 0}
+    {#await browser.extension.isAllowedFileSchemeAccess() then isAllowedAccess}
+      {#if isAllowedAccess}
+        <PickFromWpButton tabId={tab.id} />
+      {:else}
+        <PickFromWpButton
+          reason="You have to allow access to file URL's first if you want to pick color from local files."
+          href="https://eyedropper.org/help/file-urls"
+        />
+      {/if}
+    {/await}
+  {:else if tab.id !== undefined}
+    <PickFromWpButton tabId={tab.id} />
+  {/if}
+{/await}
