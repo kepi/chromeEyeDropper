@@ -49,7 +49,7 @@ You can report bugs and ideas at [[https://github.com/kepi/chromeEyeDropper/issu
 * License
 This extension is released under [[http://github.com/kepi/chromeEyeDropper/blob/master/LICENSE][MIT License]].
 
-* TODO v0.6 [8/16]
+* TODO v0.6 [11/21]
 ** DONE Basic popup
 :LOGBOOK:
 - State "DONE"       from "DONE"       [2024-06-06 Čt 21:21]
@@ -103,7 +103,10 @@ too.
 
 ** TODO Color Picker
 
-** TODO Popup banner
+** DONE Popup banner
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2024-06-30 Ne 19:04]
+:END:
 - from MaxAI.me
 
 ** TODO Maybe - On installed page

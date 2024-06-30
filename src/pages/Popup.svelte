@@ -1,6 +1,7 @@
 <script lang="ts">
   import Palette from "../lib/Palette.svelte"
   import ColorBox from "../lib/ColorBox.svelte"
+  import BottomBanner from "../lib/BottomBanner.svelte"
   import PickFromWebpageButton from "../lib/PickFromWebpageButton.svelte"
   import { selectedColor, newColor } from "../store"
   import { Icon } from "@steeze-ui/svelte-icon"
@@ -106,4 +107,5 @@
       >
     </div>
   </div>
+  <BottomBanner />
 </div>
