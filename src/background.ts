@@ -51,9 +51,14 @@ async function needInject(tabId: number) {
   }
 }
 
+export async function getTab() {
+  const tabs = await browser.tabs.query({ active: true, currentWindow: true })
+  return tabs[0]
+}
+
 export async function getTabId() {
-  let tabs = await browser.tabs.query({ active: true, currentWindow: true })
-  return tabs[0].id
+  const tab = await getTab()
+  return tab.id
 }
 
 async function injectDrop(tabId: number) {
