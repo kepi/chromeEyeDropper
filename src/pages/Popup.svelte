@@ -29,7 +29,7 @@
   }
 </script>
 
-<div class="container max-w-[480px]">
+<div class="container max-w-[480px] relative m-auto">
   <div class="flex flex-nowrap p-2 gap-4">
     <div class="flex-grow min-w-72 pl-2">
       <div class="pt-2 flex gap-2 items-center">
@@ -50,7 +50,7 @@
     </div>
     <div class="w-36">
       {#if $wideDialog}
-        <div class="absolute top-[70px] left-[448px]">
+        <div class="absolute top-[70px] right-0">
           <button
             class="text-sm w-8 h-8 bg-slate-100 rounded hover:text-red-500 items-center justify-center flex cursor-pointer"
             on:click={close}
