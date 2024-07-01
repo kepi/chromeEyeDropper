@@ -21,18 +21,9 @@
 
 <input
   type="number"
+  class="w-12 text-right"
   value={roundedValue}
   min={dim.data.extent[0]}
   max={dim.data.extent[1]}
   on:change={onChange}
 />
-
-<style>
-  input[type="number"] {
-    display: inline-block;
-    margin: 0 0 0 5px;
-    padding: 5px 0 5px 5px;
-    width: 60px;
-    height: 30px;
-  }
-</style>

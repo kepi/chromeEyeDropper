@@ -17,6 +17,8 @@
 {#if $newColor !== null}
   <ColorPicker bind:color={$newColor} showLabels={true} />
 
-  <button class="btn btn-primary" on:click={handleClick}>Add to palette</button>
-  <button class="btn" on:click={close}>Close</button>
+  <div class="mt-4 flex gap-2">
+    <button class="btn btn-sm btn-secondary" on:click={handleClick}>Add to palette</button>
+    <button class="btn btn-sm" on:click={close}>Close</button>
+  </div>
 {/if}

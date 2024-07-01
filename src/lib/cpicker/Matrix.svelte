@@ -108,23 +108,14 @@
   }
 </script>
 
-<div class="matrix" bind:clientWidth={cWidth} bind:clientHeight={cHeight}>
-  <canvas bind:this={canvas} {width} {height} on:mousedown={onMouse} on:mousemove={onMouse}>
+<div class="inline-block shadow-lg" bind:clientWidth={cWidth} bind:clientHeight={cHeight}>
+  <canvas
+    class="inline-block rounded cursor-crosshair"
+    bind:this={canvas}
+    {width}
+    {height}
+    on:mousedown={onMouse}
+    on:mousemove={onMouse}
+  >
   </canvas>
 </div>
-
-<style>
-  .matrix,
-  canvas {
-    display: inline-block;
-    padding: 0;
-    margin: 0;
-    line-height: 0;
-  }
-
-  canvas {
-    border: 1px solid #666;
-    border-radius: 5px;
-    cursor: crosshair;
-  }
-</style>

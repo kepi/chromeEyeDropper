@@ -29,9 +29,9 @@
 
   export let selectDimensions = true
 
-  export let matrixWidth = 300
-  export let matrixHeight = 200
-  export let scrollbarHeight = 20
+  export let matrixWidth = 280
+  export let matrixHeight = 100
+  export let scrollbarHeight = 14
 
   let dimX = null
   let dimY = null
@@ -44,12 +44,11 @@
     dimY = `${scale}.${dims[1]}`
   }
 
-  $: sliderWidth =
-    matrixWidth - (selectDimensions ? 25 : 0) - (showLabels ? 25 : 0) - (showNumeric ? 65 : 0)
+  $: sliderWidth = matrixWidth - 74
 </script>
 
-<div class="color-picker">
-  <div class="color-picker-controls" style="background: {background};">
+<div class="">
+  <div class="" style="background: {background};">
     {#if showMatrix}
       <Matrix
         bind:color
@@ -62,11 +61,12 @@
 
     {#if showSliders}
       {#if tabbed}
-        <div class="tab-bar">
+        <div class="flex mt-1">
           {#each Object.keys(dimensions) as scale}
             {#if Object.keys(dimensions[scale]).some((dim) => showSliders[`${scale}.${dim}`])}
               <button
-                class="tab {selectedTab === scale ? 'active' : ''}"
+                class="uppercase font-bold px-1 mx-1 border-b border-gray-600"
+                class:border-b-2={selectedTab === scale}
                 on:click={() => {
                   selectedTab = scale
                   selectedDimension = `${scale}.${Object.keys(dimensions[scale])[0]}`
@@ -81,12 +81,13 @@
 
       {#each Object.keys(dimensions) as scale}
         {#if !tabbed || selectedTab === scale}
-          <div class="group">
+          <div class="mt-1">
             {#each Object.keys(dimensions[scale]) as dim}
               {#if showSliders[`${scale}.${dim}`]}
-                <div class="slider">
+                <div class="flex items-center h-6">
                   {#if selectDimensions}
                     <input
+                      class="inline-block mr-1 w-4"
                       type="radio"
                       bind:group={selectedDimension}
                       value="{scale}.{dim}"
@@ -94,7 +95,7 @@
                     />
                   {/if}
                   {#if showLabels}
-                    <label for="{scale}-{dim}">{dim.toUpperCase()}</label>
+                    <label class="w-4" for="{scale}-{dim}">{dim.toUpperCase()}</label>
                   {/if}
                   <ScrollBar
                     width={sliderWidth}
@@ -115,54 +116,3 @@
     {/if}
   </div>
 </div>
-
-<style>
-  .color-picker {
-    display: inline-block;
-    position: relative;
-  }
-  .tab-bar {
-    display: flex;
-    height: 30px;
-    line-height: 30px;
-  }
-
-  .tab {
-    margin: 0 5px;
-    padding: 0 3px;
-    border-bottom: 1px solid #aaa;
-    cursor: pointer;
-    text-transform: uppercase;
-    font-weight: bold;
-  }
-
-  .tab.active {
-    border-bottom-width: 3px;
-  }
-
-  .group {
-    margin: 5px 0 0 0;
-  }
-
-  .slider {
-    display: flex;
-    align-items: center;
-  }
-
-  label {
-    display: inline;
-    vertical-align: middle;
-    margin: 0;
-  }
-
-  .slider label {
-    padding: 0 5px 0 0;
-    width: 20px;
-  }
-
-  input[type="radio"] {
-    display: inline-block;
-    margin: 0 5px 0 0;
-    width: 20px;
-  }
-</style>
