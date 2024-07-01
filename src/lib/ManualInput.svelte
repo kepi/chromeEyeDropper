@@ -26,7 +26,7 @@
     Quick input
   </div>
   <div
-    class="shadow-lg flex w-36 flex-wrap gap-2 rounded p-2 text-xs"
+    class="shadow-lg flex w-full flex-wrap gap-2 rounded p-2 text-xs"
     style="background-color: {acceptedHexColor}"
   >
     <form on:submit|preventDefault={onSubmit}>
