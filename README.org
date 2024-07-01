@@ -18,34 +18,29 @@ You can view the hex values for any color and add any color to your palette.
 
 1. Clone the repository from GitHub ~git clone <repository-url>~
 
-2. Make sure you have node and yarn installed. If you do not have yarn, you can install it from npm using: ~npm install --global yarn~
+2. Make sure you have [[https://pnpm.io/][pnpm]] installed.
 
-3. Install all dependencies ~yarn install~
+3. Install all dependencies ~pnpm install~
 
-4. Run the build command ~npm run build:dev~. There should be a new file in the repo labeled "dist".
-
-5. Go to Google Chrome: Extensions > Manage Extensions. Click the switch labeled "Developer mode". Click the "Load unpacked" button that appears.
-
-6. Select the "dist" folder inside your local repository. The extension will now be added to your extensions list.
-
-The dist folder will contain the ~manifest.json~ file, which will contain important information about the extension.
-Notably, it lists ~popup.html~ (located in the ~public~ directory) as the default popup browser action.
-This is where the main structure of the extension popup is defined.
-
-Other HTML pages, such as the page for the extension settings can be found in the ~public~ directory (options.html).
-
-JavaScript and TypeScript scripts are located in the ~src~ directory.
-This includes the script background.js, which stores state information for the extension in a background page that is loaded when the extension is initialized.
+4. Run the dev version ~pnpm dev~ to be able to develop with HMR active etc.
 
 ** Testing
-
 Tests are defined in ~src/__tests__~
 
-Run tests by installing dependencies and using: ~npm run test~
+Run tests by installing dependencies and using: ~pnpm test~
+
+** Testing builded extension
+Developing is much easier with ~pnpm dev~, but once you are done, you need to
+test if everything really works after a build.
+
+1. Run ~pnpm build~ which will create prod build in =dist= directory.
+2. Open Chrome and to go =chrome://extensions/= page.
+3. Click the switch labeled /Developer mode/ (should be top right of the screen).
+4. Click the /Load unpacked/ button that appears (should be top left just under page heading).
+5. Locate =dist= directory.
 
 * Bugs and ideas
 You can report bugs and ideas at [[https://github.com/kepi/chromeEyeDropper/issues][project's issues tracker]].
 
 * License
 This extension is released under [[http://github.com/kepi/chromeEyeDropper/blob/master/LICENSE][MIT License]].
-
