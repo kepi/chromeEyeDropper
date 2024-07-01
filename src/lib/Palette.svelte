@@ -29,6 +29,7 @@
     {:else if $pStore.active}
       <div
         class="flex flex-wrap gap-2"
+        role="tooltip"
         on:mouseover={() => {
           showTipClick = true
         }}
