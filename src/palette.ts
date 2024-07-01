@@ -493,11 +493,11 @@ export const sortColors = (colors: StorePaletteColor[], sortBy: StorePaletteSort
     if (order === "asc") {
       return colors
     } else {
-      return colors.reverse()
+      return colors.toReversed()
     }
   }
 
-  const sorted = colors.sort((a, b) => {
+  const sorted = colors.toSorted((a, b) => {
     // order by HUE
     if (by === "h") {
       const tA = new TinyColor(a.h)
