@@ -11,6 +11,7 @@
   import { wideDialog } from "../store"
   import WideDialog from "../lib/WideDialog.svelte"
   import PaletteHeader from "../lib/PaletteHeader.svelte"
+  import ManualInput from "../lib/ManualInput.svelte"
   import { popupDialog } from "../store"
 
   $: value = `linear-gradient(to right, {$selectedColor} 0%, {$newColor} 100%)`
@@ -60,6 +61,9 @@
       {:else}
         <ColorBox label="Selected" color={$selectedColor} />{" "}
         <ColorBox label="New" color={$newColor} />
+        {#if $popupDialog === "picker"}
+          <ManualInput />
+        {/if}
       {/if}
     </div>
   </div>
