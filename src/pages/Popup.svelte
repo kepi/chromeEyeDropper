@@ -14,7 +14,7 @@
   import ManualInput from "../lib/ManualInput.svelte"
   import { popupDialog } from "../store"
 
-  $: value = `linear-gradient(to right, {$selectedColor} 0%, {$newColor} 100%)`
+  $: value = `linear-gradient(to right, ${$selectedColor} 0%, ${$newColor} 100%)`
 
   const copy = () => {
     copyToClipboard(value)
@@ -29,7 +29,7 @@
   }
 </script>
 
-<div class="container max-w-[464px] relative m-auto">
+<div class="container min-w-[464px] max-w-[600px] relative m-auto">
   <div class="flex flex-nowrap p-1 gap-2">
     <div class="flex-grow w-full">
       <div class="pt-2 flex gap-2 items-center">
