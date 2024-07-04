@@ -146,7 +146,7 @@ export const paletteSetActive = async (paletteId: number) => {
  *
  *  @param color - hex color (i.e. #ffffff)
  */
-export const palletteColorToClipboard = async (color: string) => {
+export const paletteColorToClipboard = async (color: string) => {
   // copy to clipboard if wanted
   if (await settingsGet("autoClipboard")) {
     console.log("copying to clipboard")

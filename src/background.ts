@@ -100,8 +100,8 @@ async function setColor(color: string) {
 
 async function messageHandler(message: Message, sender: Runtime.MessageSender) {
   console.log(
-    sender.tab ? "from a content script:" + sender.tab.url : "from the extension",
-    message,
+    sender.tab ? `Message from a content script ${sender.tab.url}:` : "Message from the extension:",
+    JSON.stringify(message),
   )
 
   switch (message.command) {
@@ -162,6 +162,7 @@ async function initBadge() {
 }
 
 async function init() {
+  console.log("worker init")
   initBadge()
 }
 

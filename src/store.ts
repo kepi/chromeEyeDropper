@@ -1,5 +1,5 @@
 import { derived, writable, type Writable } from "svelte/store"
-import { paletteGetColor, paletteSetColorAfterHooks, palletteColorToClipboard } from "./palette"
+import { paletteGetColor, paletteSetColorAfterHooks, paletteColorToClipboard } from "./palette"
 import syncedWritable from "./syncedWritable"
 import { defaults } from "./settings"
 import { match } from "ts-pattern"
@@ -10,7 +10,7 @@ selectedColor.subscribe((color) => {
   paletteSetColorAfterHooks(color)
 
   // copy to clipboard
-  palletteColorToClipboard(color)
+  paletteColorToClipboard(color)
 })
 
 // export const newColor: Writable<string | null> = writable(null);

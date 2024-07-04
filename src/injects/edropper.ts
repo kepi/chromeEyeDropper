@@ -2,7 +2,7 @@ import browser from "webextension-polyfill"
 import scrollStop from "../vendor/scrollStop"
 import Overlay from "../overlay"
 import Rect from "../rect"
-import { palletteColorToClipboard } from "../palette"
+import { paletteColorToClipboard } from "../palette"
 
 var EDROPPER_VERSION = 14
 var CANVAS_MAX_SIZE = 32767 - 20
@@ -170,7 +170,7 @@ var page = {
       color: hex,
     })
 
-    palletteColorToClipboard(hex)
+    paletteColorToClipboard(hex)
   },
   onScrollStop: function () {
     if (!page.dropperActivated) return
