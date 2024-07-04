@@ -97,6 +97,7 @@ export const checkStorage = async () => {
       await backupStorage(data)
 
       // sync to store
+      await browser.storage.sync.clear()
       await browser.storage.sync.set(convertedData)
 
       // handle palettes
