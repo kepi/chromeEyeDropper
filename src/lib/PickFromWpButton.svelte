@@ -10,8 +10,6 @@
 
   $: fullReason = help ? `${reason} Click for more info.` : reason
 
-  console.log(href)
-
   const pickFromWeb = async () => {
     const response = await browser.runtime.sendMessage({ command: "pick-from-web", tabId })
     console.log(response)
