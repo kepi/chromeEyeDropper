@@ -12,7 +12,7 @@ export interface SettingsProps {
 }
 
 export const defaults: SettingsProps = {
-  autoClipboard: false,
+  autoClipboard: true,
   autoClipboardType: "hex6",
   enableColorToolbox: true,
   enableColorTooltip: true,
