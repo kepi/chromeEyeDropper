@@ -31,7 +31,7 @@
 
 <div class="container max-w-[464px] relative m-auto">
   <div class="flex flex-nowrap p-1 gap-2">
-    <div class="flex-grow min-w-72">
+    <div class="flex-grow w-full">
       <div class="pt-2 flex gap-2 items-center">
         <div>
           <b>Pick</b> from:
@@ -48,7 +48,7 @@
         <Palette />
       {/if}
     </div>
-    <div class="w-40">
+    <div>
       {#if $wideDialog}
         <div class="absolute top-[70px] right-0">
           <button
