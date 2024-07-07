@@ -27,6 +27,8 @@
   const colorPicker = () => {
     $popupDialog = "picker"
   }
+
+  const version = __APP_VERSION__
 </script>
 
 <div class="container min-w-[464px] max-w-[600px] relative m-auto">
@@ -93,6 +95,7 @@
         <div>Eye Dropper</div>
       </Link>
     </div>
+    <div class="flex items-end text-gray-400 text-[0.65rem]">v{version}</div>
     <div class="flex gap-3">
       <Link class="tooltip tooltip-top" data-tip="ED Home Page" href="https://eyedropper.org"
         ><Icon src={Home} class="stroke-normal w-4 h-4 hover:stroke-primary" /></Link
