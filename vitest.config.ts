@@ -1,6 +1,11 @@
 import { defineConfig } from "vitest/config"
+import { readJsonFile } from "vite-plugin-web-extension"
+const pkg = readJsonFile("package.json")
 
 export default defineConfig({
+  define: {
+    __APP_VERSION__: JSON.stringify(`${pkg.version}`),
+  },
   test: {
     // List setup file
     setupFiles: ["vitest.setup.ts"],

@@ -1,3 +1,5 @@
+declare const __APP_VERSION__: string
+
 declare interface Color {
   r: number
   g: number

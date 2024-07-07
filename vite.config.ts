@@ -3,10 +3,10 @@ import { svelte } from "@sveltejs/vite-plugin-svelte"
 import webExtension, { readJsonFile } from "vite-plugin-web-extension"
 
 const beta = process.env.BETA === "1" ? true : false
+const pkg = readJsonFile("package.json")
 
 function generateManifest() {
   const manifest = readJsonFile("src/manifest.json")
-  const pkg = readJsonFile("package.json")
 
   if (beta) {
     return {
@@ -27,6 +27,9 @@ function generateManifest() {
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  define: {
+    __APP_VERSION__: JSON.stringify(`${pkg.version}`),
+  },
   plugins: [
     svelte(),
     webExtension({
