@@ -7,6 +7,8 @@ import { describe, beforeEach, it, expect } from "vitest"
 
 import { storeV24TwoPalettes, storeV24, storeV13 } from "./storage.previous"
 
+const STORAGE_VERSION = 26
+
 describe("emptyStore", () => {
   beforeEach(async () => {
     fakeBrowser.reset()
@@ -33,10 +35,16 @@ describe("unknownStore", () => {
     expect(check).toBe(true)
   })
 
-  it("sync storage is empty", async () => {
+  it("sync storage is set to default", async () => {
     await checkStorage()
     const syncStorage = await browser.storage.sync.get()
-    expect(syncStorage).toEqual({})
+
+    expect(syncStorage.v).toEqual(STORAGE_VERSION)
+    expect(syncStorage.p).toEqual(0)
+
+    const { t, ...p0mWoTime } = syncStorage.p0m
+    expect(p0mWoTime).toEqual({ i: 0, n: "default", s: "m:asc" })
+    expect(syncStorage.p0c.length).toEqual(7)
   })
 
   it("local storage has one backup", async () => {

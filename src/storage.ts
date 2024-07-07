@@ -53,11 +53,17 @@ export const backupStorage = async (data: unknown) => {
   await localExtStorage.setItem(`backup${t}`, data)
 }
 
+const setDefaultStorage = async () => {
+  await browser.storage.sync.set({ v: STORAGE_VERSION, p: 0 })
+  await paletteCreate(0, "default", paletteDefaultColors())
+}
+
 export const checkStorage = async () => {
   const v = await extensionStorage.getItem("v")
 
   // v exists, we are in post 0.6 schema
   if (v) {
+    // return that we are OK
     return true
   }
 
@@ -65,12 +71,11 @@ export const checkStorage = async () => {
   const unknData = await browser.storage.sync.get()
 
   if (unknData) {
-    // empty storage - nothing to do
     const isEmpty = Object.keys(unknData).length === 0 && unknData.constructor === Object
+
+    // empty storage - create new palette with default colors
     if (isEmpty) {
-      // create palette in new store
-      browser.storage.sync.set({ v: STORAGE_VERSION, p: 0 })
-      paletteCreate(0, "default", paletteDefaultColors())
+      setDefaultStorage()
 
       return true
     }
@@ -152,9 +157,12 @@ export const checkStorage = async () => {
       })
 
       return true
+
+      // store format is unknown -  let's backup and clear storage to default state
     } else {
       backupStorage(unknData)
       await browser.storage.sync.clear()
+      await setDefaultStorage()
       return true
     }
   }
@@ -162,18 +170,5 @@ export const checkStorage = async () => {
   // we shouldn't end here
   return false
 }
-
-// - pokud existuje v tak máme nový styl schématu
-// - pokud existuje history.v tak je pre 0.6
-// - pre history v 14
-// const checkHistoryUpgrades = (version: number) => {
-//   // Wrong timestamp saved before version 14
-//   //
-//   //
-//   // We will check for such times and set them to start of epoch
-//   if (version < 14) {
-//     bg.saveHistory()
-//   }
-// }
 
 export default extensionStorage
