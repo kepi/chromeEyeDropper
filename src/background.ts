@@ -1,6 +1,7 @@
 import browser, { type Runtime } from "webextension-polyfill"
 import { checkStorage } from "./storage"
 import { paletteGetColor, paletteSetColor } from "./palette"
+import { getSprintFromVersion, isBigUpdate, storeAppVersion } from "./version"
 
 const NEED_DROPPER_VERSION = 14
 
@@ -130,9 +131,9 @@ function commandHandler(command: string) {
   }
 }
 
-function onInstalledHandler(details: Runtime.OnInstalledDetailsType) {
+async function onInstalledHandler(details: Runtime.OnInstalledDetailsType) {
   console.log("Extension installed:", details)
-  checkStorage()
+  await checkStorage()
 
   /**
    * When Eye Dropper is just installed, we want to display nice
@@ -144,6 +145,30 @@ function onInstalledHandler(details: Runtime.OnInstalledDetailsType) {
       url: "https://eyedropper.org/installed",
       active: true,
     })
+
+    /**
+     * When Eye Dropper is updated, we want to display update page on
+     * major updates.
+     **/
+  } else if (details.reason === "update") {
+    console.info("Extension has been updated")
+
+    const bigUpdate = await isBigUpdate()
+    const sprint = getSprintFromVersion(__APP_VERSION__)
+
+    // we always want to store new version first in case some unexpected thing
+    // happens later, like browser crash, so we don't open tab twice
+    await storeAppVersion()
+
+    // if we have everything and this is big update, we can safely display
+    // update page
+    if (__APP_VERSION__ && bigUpdate && sprint !== null) {
+      console.info("This is big update, show update tab.")
+      browser.tabs.create({
+        url: `https://eyedropper.org/updated/${sprint}/`,
+        active: true,
+      })
+    }
   }
 }
 
