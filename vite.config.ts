@@ -33,6 +33,7 @@ export default defineConfig({
   plugins: [
     svelte(),
     webExtension({
+      browser: process.env.TARGET ?? "chrome",
       manifest: generateManifest,
       watchFilePaths: ["package.json", "manifest.json"],
       additionalInputs: ["src/injects/edropper.ts"],
