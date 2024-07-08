@@ -412,10 +412,17 @@ export const paletteRandomColors = () => {
     .map((color) => color2StorePaletteColor(color.toHexString(), "def"))
   return paletteColors
 }
+
+/**
+ * Returns default color we are using when none is defined
+ **/
+export const getDefaultColor = () => {
+  return "#75bb75"
+}
+
 /**
  * Returns default colors in format used in Palette colors.
  **/
-
 export const paletteDefaultColors = () => {
   const defaultColors: string[] = [
     "#f5945c",

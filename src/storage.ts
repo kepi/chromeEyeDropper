@@ -25,7 +25,7 @@ const STORAGE_VERSION = 26
 
 import browser from "webextension-polyfill"
 import { defineExtensionStorage, localExtStorage } from "@webext-core/storage"
-import type { SettingsProps } from "./settings"
+import { defaults, type SettingsProps } from "./settings"
 import {
   paletteCreate,
   paletteSetActive,
@@ -33,7 +33,9 @@ import {
   type StorePaletteColor,
   type StorePaletteColorSource,
   paletteDefaultColors,
+  getDefaultColor,
 } from "./palette"
+import { storeAppVersion } from "./version"
 
 export type StoreBasic = {
   /** store schema version */
@@ -63,6 +65,7 @@ export const checkStorage = async () => {
 
   // v exists, we are in post 0.6 schema
   if (v) {
+    console.debug("Storage: latest version, everything OK.")
     // return that we are OK
     return true
   }
@@ -75,35 +78,41 @@ export const checkStorage = async () => {
 
     // empty storage - create new palette with default colors
     if (isEmpty) {
+      console.debug("Storage: empty storage, setting default.")
       setDefaultStorage()
 
       return true
     }
 
     // V24 - let's convert it to new version
-    if (unknData.history?.v) {
+    if (unknData.history?.v || unknData.settings) {
+      console.debug("Storage: old V24 storage, making backup and converting to new format.")
       const data = unknData as V24Data
-
-      // settings and basic info
-      const convertedData: Schema = {
-        v: data.history.v,
-        c: data.history.lc,
-        p: 0, // we will set selected palette in next steps
-        autoClipboard: data.settings.autoClipboard,
-        autoClipboardType: data.settings.autoClipboardNoGrid ? "nhex6" : "hex6",
-        enableColorToolbox: data.settings.enableColorToolbox,
-        enableColorTooltip: data.settings.enableColorTooltip,
-        enableRightClickDeactivate: data.settings.enableRightClickDeactivate,
-        dropperCursor: data.settings.dropperCursor,
-        enablePromoOnUpdate: data.settings.enablePromoOnUpdate,
-      }
 
       // backup first
       await backupStorage(data)
 
+      // settings and basic info
+      const convertedData: Schema = {
+        v: STORAGE_VERSION,
+        c: data.history?.lc || getDefaultColor(),
+        p: 0, // we will set selected palette in next steps
+        autoClipboard: data.settings?.autoClipboard ?? defaults.autoClipboard,
+        autoClipboardType: data.settings?.autoClipboardNoGrid ? "nhex6" : "hex6",
+        enableColorToolbox: data.settings?.enableColorToolbox ?? defaults.enableColorToolbox,
+        enableColorTooltip: data.settings?.enableColorTooltip ?? defaults.enableColorTooltip,
+        enableRightClickDeactivate:
+          data.settings?.enableRightClickDeactivate ?? defaults.enableRightClickDeactivate,
+        dropperCursor: data.settings?.dropperCursor ?? defaults.dropperCursor,
+        enablePromoOnUpdate: data.settings?.enablePromoOnUpdate ?? defaults.enablePromoOnUpdate,
+      }
+
       // sync to store
       await browser.storage.sync.clear()
       await browser.storage.sync.set(convertedData)
+
+      // set version to oldest pre-v1
+      await storeAppVersion("0.5.25")
 
       // handle palettes
       let palettes_count = 0
@@ -160,6 +169,9 @@ export const checkStorage = async () => {
 
       // store format is unknown -  let's backup and clear storage to default state
     } else {
+      console.debug("Storage: unknown storage, making backup and setting default.")
+      await storeAppVersion("0.0.0.0")
+
       backupStorage(unknData)
       await browser.storage.sync.clear()
       await setDefaultStorage()

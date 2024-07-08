@@ -153,3 +153,51 @@ export const storeV24TwoPalettes = {
     plus_type: "new",
   },
 }
+
+export const storeV24NoPalettes = {
+  settings: {
+    autoClipboard: false,
+    autoClipboardNoGrid: false,
+    dropperCursor: "default",
+    enableColorToolbox: true,
+    enableColorTooltip: true,
+    enablePromoOnUpdate: false,
+    enableRightClickDeactivate: true,
+    plus: false,
+    plus_type: null,
+  },
+}
+
+export const storeV24NoSettings = {
+  history: {
+    cp: "default",
+    lc: "#fcb040",
+    v: 24,
+  },
+  "palette.default": {
+    c: [
+      {
+        f: 0,
+        h: "#f4efea",
+        n: "",
+        s: 1,
+        t: 1705944463495,
+      },
+      {
+        f: 0,
+        h: "#e36c25",
+        n: "",
+        s: 1,
+        t: 1705944480255,
+      },
+      {
+        f: 0,
+        h: "#fcb040",
+        n: "",
+        s: 1,
+        t: 1707647001550,
+      },
+    ],
+    t: 1705944446032,
+  },
+}

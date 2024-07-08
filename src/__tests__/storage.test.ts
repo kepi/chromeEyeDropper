@@ -3,15 +3,22 @@ import { checkStorage } from "../storage"
 import browser from "webextension-polyfill"
 import { fakeBrowser } from "@webext-core/fake-browser"
 import { syncExtStorage } from "@webext-core/storage"
-import { describe, beforeEach, it, expect } from "vitest"
+import { describe, beforeEach, it, expect, vi } from "vitest"
 
-import { storeV24TwoPalettes, storeV24, storeV13 } from "./storage.previous"
+import {
+  storeV24TwoPalettes,
+  storeV24,
+  storeV13,
+  storeV24NoPalettes,
+  storeV24NoSettings,
+} from "./storage.previous"
 
 const STORAGE_VERSION = 26
 
 describe("emptyStore", () => {
   beforeEach(async () => {
     fakeBrowser.reset()
+    vi.spyOn(console, "debug").mockImplementation(() => {})
   })
 
   it("checkStorage returns true", async () => {
@@ -28,6 +35,7 @@ describe("unknownStore", () => {
   beforeEach(async () => {
     fakeBrowser.reset()
     await browser.storage.sync.set(data)
+    vi.spyOn(console, "debug").mockImplementation(() => {})
   })
 
   it("checkStorage returns true", async () => {
@@ -63,6 +71,7 @@ describe("old store v24", () => {
     fakeBrowser.reset()
     // set test object
     await browser.storage.sync.set(storeV24)
+    vi.spyOn(console, "debug").mockImplementation(() => {})
   })
 
   it("we can get correct last color", async () => {
@@ -82,6 +91,7 @@ describe("old store v13", () => {
     fakeBrowser.reset()
     // set test object
     await browser.storage.sync.set(storeV13)
+    vi.spyOn(console, "debug").mockImplementation(() => {})
   })
 
   it("we can get correct last color", async () => {
@@ -101,11 +111,42 @@ describe("old store v24 two palettes", () => {
     fakeBrowser.reset()
     // set test object
     await browser.storage.sync.set(storeV24TwoPalettes)
+    vi.spyOn(console, "debug").mockImplementation(() => {})
   })
 
   it("we can get correct last color", async () => {
     const history = await syncExtStorage.getItem("history")
     expect(history.lc).toBe("#56aba6")
+  })
+
+  it("checkStorage returns true", async () => {
+    const check = await checkStorage()
+    expect(check).toBe(true)
+  })
+})
+
+describe("old store v24 no palettes", () => {
+  beforeEach(async () => {
+    // Reset the in-memory state before every test
+    fakeBrowser.reset()
+    // set test object
+    await browser.storage.sync.set(storeV24NoPalettes)
+    vi.spyOn(console, "debug").mockImplementation(() => {})
+  })
+
+  it("checkStorage returns true", async () => {
+    const check = await checkStorage()
+    expect(check).toBe(true)
+  })
+})
+
+describe("old store v24 no settings", () => {
+  beforeEach(async () => {
+    // Reset the in-memory state before every test
+    fakeBrowser.reset()
+    // set test object
+    await browser.storage.sync.set(storeV24NoSettings)
+    vi.spyOn(console, "debug").mockImplementation(() => {})
   })
 
   it("checkStorage returns true", async () => {

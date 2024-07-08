@@ -1,11 +1,16 @@
 import { derived, writable, type Writable } from "svelte/store"
-import { paletteGetColor, paletteSetColorAfterHooks, paletteColorToClipboard } from "./palette"
+import {
+  paletteGetColor,
+  paletteSetColorAfterHooks,
+  paletteColorToClipboard,
+  getDefaultColor,
+} from "./palette"
 import syncedWritable from "./syncedWritable"
 import { defaults } from "./settings"
 import { match } from "ts-pattern"
 
 /** use for setting selected color and badge */
-export const selectedColor = syncedWritable("c", "#75bb75")
+export const selectedColor = syncedWritable("c", getDefaultColor())
 selectedColor.subscribe((color) => {
   paletteSetColorAfterHooks(color)
 

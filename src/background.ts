@@ -156,6 +156,7 @@ async function onInstalledHandler(details: Runtime.OnInstalledDetailsType) {
 
     const bigUpdate = await isBigUpdate()
     const sprint = getSprintFromVersion(__APP_VERSION__)
+    const isOnUpdateEnabled = await settingsGet("enablePromoOnUpdate")
 
     // we always want to store new version first in case some unexpected thing
     // happens later, like browser crash, so we don't open tab twice
@@ -163,12 +164,7 @@ async function onInstalledHandler(details: Runtime.OnInstalledDetailsType) {
 
     // if we have everything and this is big update, we can safely display
     // update page
-    if (
-      __APP_VERSION__ &&
-      bigUpdate &&
-      sprint !== null &&
-      (await settingsGet("enablePromoOnUpdate"))
-    ) {
+    if (__APP_VERSION__ && bigUpdate && sprint !== null && isOnUpdateEnabled) {
       console.info("This is big update, show update tab.")
       browser.tabs.create({
         url: `https://eyedropper.org/updated/${sprint}/`,

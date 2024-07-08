@@ -46,18 +46,18 @@ export async function isBigUpdate() {
   if (__APP_VERSION__ === undefined) return false
 
   // versions are same, no need to get sprint
-  const previous_app_version = await getStoredAppVersion()
-  if (__APP_VERSION__ === previous_app_version) return false
+  const previousAppVersion = await getStoredAppVersion()
+  if (__APP_VERSION__ === previousAppVersion) return false
 
-  const previous_sprint = getSprintFromVersion(previous_app_version)
-  const current_sprint = getSprintFromVersion(__APP_VERSION__)
+  const previousSprint = getSprintFromVersion(previousAppVersion)
+  const currentSprint = getSprintFromVersion(__APP_VERSION__)
 
   // check for null - happens when version is wrong
-  if (previous_sprint === null) return false
-  if (current_sprint === null) return false
+  if (previousSprint === null) return false
+  if (currentSprint === null) return false
 
   // only reason to update tab
-  if (previous_sprint < current_sprint) return true
+  if (previousSprint < currentSprint) return true
 
   return false
 }
