@@ -2,6 +2,7 @@ import browser, { type Runtime } from "webextension-polyfill"
 import { checkStorage } from "./storage"
 import { paletteGetColor, paletteSetColor } from "./palette"
 import { getSprintFromVersion, isBigUpdate, storeAppVersion } from "./version"
+import { settingsGet } from "./settings"
 
 const NEED_DROPPER_VERSION = 14
 
@@ -162,7 +163,12 @@ async function onInstalledHandler(details: Runtime.OnInstalledDetailsType) {
 
     // if we have everything and this is big update, we can safely display
     // update page
-    if (__APP_VERSION__ && bigUpdate && sprint !== null) {
+    if (
+      __APP_VERSION__ &&
+      bigUpdate &&
+      sprint !== null &&
+      (await settingsGet("enablePromoOnUpdate"))
+    ) {
       console.info("This is big update, show update tab.")
       browser.tabs.create({
         url: `https://eyedropper.org/updated/${sprint}/`,
