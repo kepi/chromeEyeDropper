@@ -11,6 +11,7 @@ import {
 } from "./palette"
 import { writable } from "svelte/store"
 import type Browser from "webextension-polyfill"
+import { toString } from "./helpers"
 
 type AllPalettesStore = Record<number, Palette> & {
   active?: Palette
@@ -32,7 +33,7 @@ function createAllPalettesStore() {
   function getValueFromChange(change: Browser.Storage.StorageChange) {
     if (change) {
       try {
-        return JSON.parse(change.newValue)
+        return JSON.parse(toString(change.newValue))
       } catch {
         return change.newValue
       }
