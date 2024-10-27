@@ -3,6 +3,7 @@ import { checkStorage } from "~/storage"
 import { paletteGetColor, paletteSetColor } from "~/palette"
 import { getSprintFromVersion, isBigUpdate, storeAppVersion } from "~/version"
 import { settingsGet } from "~/settings"
+import { match, P } from "ts-pattern"
 
 const NEED_DROPPER_VERSION = 14
 
@@ -40,12 +41,19 @@ async function sendMessage(message: unknown, tabId?: number) {
 async function needInject(tabId: number) {
   console.log("needInject?")
   try {
-    const eDropperVersion = await sendMessage({ command: "version" }, tabId)
+    const eDropperVersion: unknown = await sendMessage({ command: "version" }, tabId)
     console.log("checking", eDropperVersion)
-    if (eDropperVersion < NEED_DROPPER_VERSION) {
+
+    const version = match(eDropperVersion)
+      .with(P.number, (v) => v)
+      .otherwise(() => 0)
+
+    if (version < NEED_DROPPER_VERSION) {
       console.log(`eDropper is ${eDropperVersion} which is lower than ${NEED_DROPPER_VERSION}`)
+      return true
     } else {
       console.log(`eDropper version is already ${eDropperVersion}`)
+      return false
     }
   } catch (error) {
     console.log("not injected")
@@ -100,23 +108,25 @@ async function setColor(color: string) {
   paletteSetColor(color, "ed")
 }
 
-async function messageHandler(message: Message, sender: Runtime.MessageSender) {
+async function messageHandler(message: unknown, sender: Runtime.MessageSender) {
   console.log(
     sender.tab ? `Message from a content script ${sender.tab.url}:` : "Message from the extension:",
     JSON.stringify(message),
   )
 
-  switch (message.command) {
+  const m = message as Message
+
+  switch (m.command) {
     case "pick-from-web":
-      pickFromWeb(message.tabId)
+      pickFromWeb(m.tabId)
       break
 
     case "capture":
-      return capture()
+      capture()
 
     case "set-color":
-      if (message.color) {
-        setColor(message.color)
+      if (m.color) {
+        setColor(m.color)
       }
   }
 

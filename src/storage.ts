@@ -85,7 +85,7 @@ export const checkStorage = async () => {
     }
 
     // V24 - let's convert it to new version
-    if (unknData.history?.v || unknData.settings) {
+    if ((unknData as V24Data).history?.v || unknData.settings) {
       console.debug("Storage: old V24 storage, making backup and converting to new format.")
       const data = unknData as V24Data
 
@@ -109,7 +109,7 @@ export const checkStorage = async () => {
 
       // sync to store
       await browser.storage.sync.clear()
-      await browser.storage.sync.set(convertedData)
+      await browser.storage.sync.set(convertedData as Record<string, any>)
 
       // set version to oldest pre-v1
       await storeAppVersion("0.5.25")

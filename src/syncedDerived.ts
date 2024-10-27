@@ -1,6 +1,7 @@
 import storage, { type Schema } from "./storage"
 import browser from "webextension-polyfill"
 import { derived, type Readable } from "svelte/store"
+import { toString } from "./helpers"
 
 export default function syncedDerived<K extends keyof Schema>(
   key: Readable<K>,
@@ -25,9 +26,9 @@ export default function syncedDerived<K extends keyof Schema>(
             }
 
             try {
-              set(JSON.parse(change.newValue))
+              set(JSON.parse(toString(change.newValue)))
             } catch {
-              set(change.newValue)
+              set(change.newValue as Schema[K])
             }
           }
         }

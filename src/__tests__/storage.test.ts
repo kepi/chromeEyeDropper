@@ -1,4 +1,4 @@
-import { checkStorage } from "~/storage"
+import { Schema, checkStorage } from "~/storage"
 
 import browser from "webextension-polyfill"
 import { fakeBrowser } from "wxt/testing"
@@ -12,6 +12,7 @@ import {
   storeV24NoPalettes,
   storeV24NoSettings,
 } from "./storage.previous"
+import { StorePaletteColor, StorePaletteMeta, StorePalettes } from "@/palette"
 
 const STORAGE_VERSION = 26
 
@@ -50,9 +51,9 @@ describe("unknownStore", () => {
     expect(syncStorage.v).toEqual(STORAGE_VERSION)
     expect(syncStorage.p).toEqual(0)
 
-    const { t, ...p0mWoTime } = syncStorage.p0m
+    const { t, ...p0mWoTime } = syncStorage.p0m as StorePaletteMeta
     expect(p0mWoTime).toEqual({ i: 0, n: "default", s: "m:asc" })
-    expect(syncStorage.p0c.length).toEqual(7)
+    expect((syncStorage.p0c as StorePaletteColor[]).length).toEqual(7)
   })
 
   it("local storage has one backup", async () => {

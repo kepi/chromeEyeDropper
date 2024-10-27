@@ -1,6 +1,7 @@
 import storage, { type Schema } from "./storage"
 import browser from "webextension-polyfill"
 import { writable, get, type Writable } from "svelte/store"
+import { toString } from "./helpers"
 
 type SyncedWritable<T> = Writable<T> & {
   clear: () => void
@@ -27,9 +28,9 @@ async function initializeSyncedWritable<K extends keyof Schema>(
         }
 
         try {
-          w.set(JSON.parse(change.newValue))
+          w.set(JSON.parse(toString(change.newValue)))
         } catch {
-          w.set(change.newValue)
+          w.set(change.newValue as Schema[K])
         }
       }
     }
