@@ -1,8 +1,8 @@
 import browser from "webextension-polyfill"
-import scrollStop from "../vendor/scrollStop"
-import Overlay from "../overlay"
-import Rect from "../rect"
-import { paletteColorToClipboard } from "../palette"
+import scrollStop from "~/vendor/scrollStop"
+import Overlay from "~/overlay"
+import Rect from "~/rect"
+import { paletteColorToClipboard } from "~/palette"
 
 var EDROPPER_VERSION = 14
 var CANVAS_MAX_SIZE = 32767 - 20
@@ -442,4 +442,7 @@ var page = {
     mqList.addEventListener("change", page.onWindowResize)
   },
 }
-page.init()
+
+export default defineUnlistedScript(() => {
+  page.init()
+})

@@ -1,4 +1,4 @@
-import { fakeBrowser } from "@webext-core/fake-browser"
+import { fakeBrowser } from "wxt/testing"
 
 fakeBrowser.action.setBadgeBackgroundColor = async (_details) => {}
 

@@ -1,6 +1,6 @@
-import { fakeBrowser } from "@webext-core/fake-browser"
+import { fakeBrowser } from "wxt/testing"
 import { describe, test, it, expect } from "vitest"
-import { getSprintFromVersion, isBigUpdate } from "../version"
+import { getSprintFromVersion, isBigUpdate } from "~/version"
 
 const [sprint, feature, fix, build] = __APP_VERSION__.split(".").map((p) => Number(p))
 const nextBuild = build + 1

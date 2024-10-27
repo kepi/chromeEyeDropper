@@ -1,5 +1,5 @@
 <script lang="ts">
-  import pStore from "../allPalettesStore"
+  import pStore from "~/allPalettesStore"
 
   export let paletteId: number
   export let show: boolean

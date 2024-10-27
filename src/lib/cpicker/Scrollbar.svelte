@@ -1,5 +1,5 @@
 <script>
-  import { alterDimension, getColorData } from "../../color"
+  import { alterDimension, getColorData } from "~/color"
   import { TinyColor } from "@ctrl/tinycolor"
   import { onMount } from "svelte"
 

@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { popupDialog } from "../store"
-  import PaletteWipe from "./PaletteWipe.svelte"
-  import PalettePalettes from "./PalettePalettes.svelte"
-  import PaletteEdit from "./PaletteEdit.svelte"
-  import PaletteExport from "./PaletteExport.svelte"
-  import PaletteSort from "./PaletteSort.svelte"
+  import { popupDialog } from "~/store"
+  import PaletteWipe from "~/lib/PaletteWipe.svelte"
+  import PalettePalettes from "~/lib/PalettePalettes.svelte"
+  import PaletteEdit from "~/lib/PaletteEdit.svelte"
+  import PaletteExport from "~/lib/PaletteExport.svelte"
+  import PaletteSort from "~/lib/PaletteSort.svelte"
 </script>
 
 <div class="bg-slate-100 px-4 py-2 rounded prose prose-sm">

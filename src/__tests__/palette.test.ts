@@ -1,6 +1,6 @@
 import { test, describe, beforeEach, it, expect } from "vitest"
-import { fakeBrowser } from "@webext-core/fake-browser"
-import { findFirstMissingNumber, paletteCreate, paletteGetColor, paletteSetColor } from "../palette"
+import { fakeBrowser } from "wxt/testing"
+import { findFirstMissingNumber, paletteCreate, paletteGetColor, paletteSetColor } from "~/palette"
 
 describe("findFirstMissingNumber", async () => {
   type Inputs = [string, number[], number][]

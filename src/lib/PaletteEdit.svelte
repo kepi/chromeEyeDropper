@@ -1,7 +1,7 @@
 <script lang="ts">
   import { SortableList } from "@sonderbase/svelte-sortablejs"
-  import pStore from "../allPalettesStore"
-  import Square from "./Square.svelte"
+  import pStore from "~/allPalettesStore"
+  import Square from "~/lib/Square.svelte"
 
   const onEnd = (event: SortableEvent) => {
     const fromTrash = event.from.classList.contains("trash-area")

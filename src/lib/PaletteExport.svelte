@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { getPalettesForExport } from "../palette"
+  import { getPalettesForExport } from "~/palette"
   import { Icon } from "@steeze-ui/svelte-icon"
   import { Clipboard } from "@steeze-ui/lucide-icons"
-  import { copyToClipboard } from "../clipboard"
+  import { copyToClipboard } from "~/clipboard"
 
   let promise = Promise.resolve(getPalettesForExport())
 </script>

@@ -8,6 +8,10 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+.output
+stats.html
+stats-*.json
+.wxt
 dist
 dist-ssr
 *.local
@@ -24,5 +28,4 @@ dist-ssr
 *.sw?
 
 # Config files
-.webextrc
-.webextrc.*
+.web-ext.config.ts

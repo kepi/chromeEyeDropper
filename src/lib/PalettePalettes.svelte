@@ -1,8 +1,8 @@
 <script lang="ts">
-  import pStore from "../allPalettesStore"
-  import PaletteDelete from "./PaletteDelete.svelte"
-  import PaletteLine from "./PaletteLine.svelte"
-  import { popupDialog } from "../store"
+  import pStore from "~/allPalettesStore"
+  import PaletteDelete from "~/lib/PaletteDelete.svelte"
+  import PaletteLine from "~/lib/PaletteLine.svelte"
+  import { popupDialog } from "~/store"
 
   function isNumber(input: unknown): input is number {
     return !isNaN(Number(input))

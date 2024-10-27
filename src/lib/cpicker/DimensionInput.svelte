@@ -1,6 +1,6 @@
 <script>
-  import { getColorData } from "../../color"
-  import { getDimension } from "./dimensions"
+  import { getColorData } from "~/color"
+  import { getDimension } from "~/lib/cpicker/dimensions"
 
   export let color = "#00ff00"
   export let dimension = "hsl.h"

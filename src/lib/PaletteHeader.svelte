@@ -1,9 +1,9 @@
 <script lang="ts">
-  import pStore from "../allPalettesStore"
+  import pStore from "~/allPalettesStore"
   import { Icon } from "@steeze-ui/svelte-icon"
   import { Download, Move, Palette as PaletteIcon, Trash2 } from "@steeze-ui/lucide-icons"
-  import { sortByInfo } from "../palette"
-  import { popupDialog } from "../store"
+  import { sortByInfo } from "~/palette"
+  import { popupDialog } from "~/store"
 
   const toggle = (what: string) => {
     $popupDialog = $popupDialog === what ? "palette" : what

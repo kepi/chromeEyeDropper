@@ -1,9 +1,9 @@
 <script lang="ts">
-  import pStore from "../allPalettesStore"
-  import PaletteHeader from "./PaletteHeader.svelte"
-  import ColorPicker from "./ColorPicker.svelte"
-  import Square from "./Square.svelte"
-  import { popupDialog } from "../store"
+  import pStore from "~/allPalettesStore"
+  import PaletteHeader from "~/lib/PaletteHeader.svelte"
+  import ColorPicker from "~/lib/ColorPicker.svelte"
+  import Square from "~/lib/Square.svelte"
+  import { popupDialog } from "~/store"
 
   let showTipClick = false
 </script>

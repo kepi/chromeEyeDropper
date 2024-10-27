@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { copyToClipboard } from "../clipboard"
+  import { copyToClipboard } from "~/clipboard"
   export let value: string
 
   const copy = () => {

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { TinyColor } from "@ctrl/tinycolor"
-  import { selectedColor, newColor } from "../store"
+  import { selectedColor, newColor } from "~/store"
 
   export let color
   export let passive: boolean = false

@@ -1,7 +1,7 @@
 <script lang="ts">
   import browser from "webextension-polyfill"
-  import { getTab } from "../background"
-  import PickFromWpButton from "./PickFromWpButton.svelte"
+  import { getTab } from "~/entrypoints/background"
+  import PickFromWpButton from "~/lib/PickFromWpButton.svelte"
 </script>
 
 {#await getTab() then tab}

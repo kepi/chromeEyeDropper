@@ -1,7 +1,7 @@
 <script lang="ts">
   import { TinyColor } from "@ctrl/tinycolor"
-  import { selectedColor, newColor } from "../store"
-  import { noColor } from "../palette"
+  import { selectedColor, newColor } from "~/store"
+  import { noColor } from "~/palette"
 
   $: hexColor = ""
   $: acceptedHexColor = noColor()

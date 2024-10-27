@@ -1,7 +1,7 @@
 <script lang="ts">
-  import pStore from "../allPalettesStore"
-  import { paletteWipe } from "../palette"
-  import { popupDialog } from "../store"
+  import pStore from "~/allPalettesStore"
+  import { paletteWipe } from "~/palette"
+  import { popupDialog } from "~/store"
 
   const close = () => {
     $popupDialog = "palette"

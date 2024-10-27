@@ -1,7 +1,7 @@
-import { checkStorage } from "../storage"
+import { checkStorage } from "~/storage"
 
 import browser from "webextension-polyfill"
-import { fakeBrowser } from "@webext-core/fake-browser"
+import { fakeBrowser } from "wxt/testing"
 import { syncExtStorage } from "@webext-core/storage"
 import { describe, beforeEach, it, expect, vi } from "vitest"
 

@@ -1,8 +1,8 @@
 <script lang="ts">
-  import ColorPicker from "./cpicker/ColorPick.svelte"
-  import { newColor } from "../store"
-  import { paletteSetColor } from "../palette"
-  import { popupDialog } from "../store"
+  import ColorPicker from "~/lib/cpicker/ColorPick.svelte"
+  import { newColor } from "~/store"
+  import { paletteSetColor } from "~/palette"
+  import { popupDialog } from "~/store"
 
   const close = () => {
     $popupDialog = "palette"

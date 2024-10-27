@@ -1,8 +1,8 @@
 import browser, { type Runtime } from "webextension-polyfill"
-import { checkStorage } from "./storage"
-import { paletteGetColor, paletteSetColor } from "./palette"
-import { getSprintFromVersion, isBigUpdate, storeAppVersion } from "./version"
-import { settingsGet } from "./settings"
+import { checkStorage } from "~/storage"
+import { paletteGetColor, paletteSetColor } from "~/palette"
+import { getSprintFromVersion, isBigUpdate, storeAppVersion } from "~/version"
+import { settingsGet } from "~/settings"
 
 const NEED_DROPPER_VERSION = 14
 
@@ -69,7 +69,7 @@ async function injectDrop(tabId: number) {
     console.log("need inject, injecting...")
     await browser.scripting.executeScript({
       target: { tabId },
-      files: ["src/injects/edropper.js"],
+      files: ["edropper.js"],
     })
   }
 }
@@ -193,8 +193,13 @@ async function init() {
   initBadge()
 }
 
-browser.commands.onCommand.addListener(commandHandler)
-browser.runtime.onInstalled.addListener(onInstalledHandler)
-browser.runtime.onMessage.addListener(messageHandler)
+export default defineBackground({
+  type: "module",
+  main() {
+    browser.commands.onCommand.addListener(commandHandler)
+    browser.runtime.onInstalled.addListener(onInstalledHandler)
+    browser.runtime.onMessage.addListener(messageHandler)
 
-init()
+    init()
+  },
+})

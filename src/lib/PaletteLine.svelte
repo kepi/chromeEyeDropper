@@ -1,7 +1,7 @@
 <script lang="ts">
-  import pStore from "../allPalettesStore"
-  import { popupDialog } from "../store"
-  import { paletteSetActive } from "../palette"
+  import pStore from "~/allPalettesStore"
+  import { popupDialog } from "~/store"
+  import { paletteSetActive } from "~/palette"
 
   export let deleteAction
   export let paletteId: number

@@ -6,10 +6,10 @@
     enableColorTooltip,
     enableRightClickDeactivate,
     dropperCursor,
-  } from "../store"
+  } from "~/store"
   import cursorDefault from "/img/cursor_default.png"
   import cursorCrosshair from "/img/cursor_crosshair.png"
-  import Link from "../Link.svelte"
+  import Link from "~/Link.svelte"
 </script>
 
 <div>

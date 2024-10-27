@@ -1,18 +1,16 @@
 <script lang="ts">
-  import Palette from "../lib/Palette.svelte"
-  import ColorBox from "../lib/ColorBox.svelte"
-  import BottomBanner from "../lib/BottomBanner.svelte"
-  import PickFromWebpageButton from "../lib/PickFromWebpageButton.svelte"
-  import { selectedColor, newColor } from "../store"
+  import Palette from "~/lib/Palette.svelte"
+  import ColorBox from "~/lib/ColorBox.svelte"
+  import BottomBanner from "~/lib/BottomBanner.svelte"
+  import PickFromWebpageButton from "~/lib/PickFromWebpageButton.svelte"
+  import { selectedColor, newColor, wideDialog, popupDialog } from "~/store"
   import { Icon } from "@steeze-ui/svelte-icon"
-  import Link from "../Link.svelte"
-  import { Bug, Home, Maximize2, Palette as PaletteIcon, Settings } from "@steeze-ui/lucide-icons"
-  import { copyToClipboard } from "../clipboard"
-  import { wideDialog } from "../store"
-  import WideDialog from "../lib/WideDialog.svelte"
-  import PaletteHeader from "../lib/PaletteHeader.svelte"
-  import ManualInput from "../lib/ManualInput.svelte"
-  import { popupDialog } from "../store"
+  import Link from "~/Link.svelte"
+  import { Bug, House, Maximize2, Palette as PaletteIcon, Settings } from "@steeze-ui/lucide-icons"
+  import { copyToClipboard } from "~/clipboard"
+  import WideDialog from "~/lib/WideDialog.svelte"
+  import PaletteHeader from "~/lib/PaletteHeader.svelte"
+  import ManualInput from "~/lib/ManualInput.svelte"
 
   $: value = `linear-gradient(to right, ${$selectedColor} 0%, ${$newColor} 100%)`
 
@@ -98,7 +96,7 @@
     <div class="flex items-end text-gray-400 text-[0.65rem]">v{version}</div>
     <div class="flex gap-3">
       <Link class="tooltip tooltip-top" data-tip="ED Home Page" href="https://eyedropper.org"
-        ><Icon src={Home} class="stroke-normal w-4 h-4 hover:stroke-primary" /></Link
+        ><Icon src={House} class="stroke-normal w-4 h-4 hover:stroke-primary" /></Link
       >
       <Link
         class="tooltip tooltip-left"
@@ -106,10 +104,10 @@
         href="https://github.com/kepi/chromeEyeDropper/issues"
         ><Icon src={Bug} class="stroke-normal w-4 h-4 hover:stroke-primary" /></Link
       >
-      <Link class="tooltip tooltip-left" data-tip="Open ED in a tab" href="/src/popup.html"
+      <Link class="tooltip tooltip-left" data-tip="Open ED in a tab" href="/popup.html"
         ><Icon src={Maximize2} class="stroke-normal w-4 h-4 hover:stroke-primary" /></Link
       >
-      <Link class="tooltip tooltip-left" data-tip="Customize ED behaviour" href="/src/options.html"
+      <Link class="tooltip tooltip-left" data-tip="Customize ED behaviour" href="/options.html"
         ><Icon src={Settings} class="stroke-normal w-4 h-4 hover:stroke-primary" /></Link
       >
     </div>
