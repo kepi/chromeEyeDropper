@@ -99,7 +99,7 @@
       <label class="label justify-start cursor-pointer">
         <input
           type="checkbox"
-          name="autoClipboard"
+          name="enableColorToolbox"
           bind:checked={$enableColorToolbox}
           class="checkbox checkbox-primary mr-3"
         />
@@ -108,7 +108,7 @@
       <label class="label justify-start cursor-pointer">
         <input
           type="checkbox"
-          name="autoClipboard"
+          name="enableColorTooltip"
           bind:checked={$enableColorTooltip}
           class="checkbox checkbox-primary mr-3"
         />
