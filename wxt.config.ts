@@ -31,7 +31,7 @@ export default defineConfig({
     },
     browser_specific_settings: {
       gecko: {
-        id: "app@eyedropper.org",
+        id: "prod@eyedropper.org",
       },
     },
   }),
