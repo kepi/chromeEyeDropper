@@ -19,7 +19,7 @@ export default {
           accent: "#be95be",
           neutral: "#2a323c",
           info: "#6dbfb8",
-          success: "#ffffff",
+          success: "#a7d8d5",
           warning: "#ffbe00",
           error: "#ff5861",
           // use later for dark theme

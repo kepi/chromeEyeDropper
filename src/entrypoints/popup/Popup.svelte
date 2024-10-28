@@ -5,7 +5,14 @@
   import { selectedColor, newColor, wideDialog, popupDialog } from "~/store"
   import { Icon } from "@steeze-ui/svelte-icon"
   import Link from "~/Link.svelte"
-  import { Bug, House, Maximize2, Palette as PaletteIcon, Settings } from "@steeze-ui/lucide-icons"
+  import {
+    SlidersHorizontal as Mixer,
+    Bug,
+    House,
+    Maximize2,
+    Palette as PaletteIcon,
+    Settings,
+  } from "@steeze-ui/lucide-icons"
   import { copyToClipboard } from "~/clipboard"
   import WideDialog from "~/lib/WideDialog.svelte"
   import PaletteHeader from "~/lib/PaletteHeader.svelte"
@@ -31,15 +38,8 @@
 <div class="container min-w-[464px] max-w-[600px] relative m-auto">
   <div class="flex flex-nowrap p-1 gap-2">
     <div class="flex-grow w-full">
-      <div class="pt-2 flex gap-2 items-center">
-        <div>
-          <b>Pick</b> from:
-        </div>
+      <div class="pt-2">
         <PickFromWebpageButton />
-        <button
-          class="btn btn-sm font-normal btn-primary hover:btn-secondary shadow-md"
-          on:click={colorPicker}>Color Picker</button
-        >
       </div>
       {#if $wideDialog}
         <PaletteHeader />
@@ -62,6 +62,16 @@
         <ColorBox label="New" color={$newColor} />
         {#if $popupDialog === "picker"}
           <ManualInput />
+        {:else}
+          <div class="justify-self-end">
+            <button
+              class="btn btn-xs font-normal btn-neutral hover:btn-info shadow-md"
+              on:click={colorPicker}
+            >
+              <Icon class="hover:stroke-primary w-4 h-4 hover:scale-125" src={Mixer} />
+              mix a color</button
+            >
+          </div>
         {/if}
       {/if}
     </div>

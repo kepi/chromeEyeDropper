@@ -2,8 +2,10 @@
   import { enableErrorReportingTab } from "~/store"
   import browser from "webextension-polyfill"
   import { sendMessage } from "~/messaging"
+  import { Pipette as Dropper } from "@steeze-ui/lucide-icons"
+  import { Icon } from "@steeze-ui/svelte-icon"
 
-  export let reason = "Pick color from active tab"
+  export let reason = "Pick a color from active tab"
   export let tabId = -1
   export let href = ""
   export let error = false
@@ -52,7 +54,7 @@
 <div class="tooltip tooltip-bottom before:left-24" data-tip={fullReason}>
   <button
     {disabled}
-    class="btn btn-sm btn-primary hover:btn-secondary font-normal shadow-md"
+    class="btn btn-sm btn-success hover:btn-accent shadow-md font-bold"
     class:bg-neutral-300={help}
     class:border-neutral-300={help}
     class:hover:bg-neutral-300={help}
@@ -62,9 +64,10 @@
     on:click={action}
   >
     {#if error}
-      Picker Failed
+      Sorry, picking a color failed
     {:else}
-      Web Page
+      <Icon class="hover:stroke-primary w-4 h-4 hover:scale-125" src={Dropper} />
+      Pick a color from this web
     {/if}
   </button>
 </div>
