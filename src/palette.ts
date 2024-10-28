@@ -169,10 +169,32 @@ export const paletteColorToClipboard = async (color: string) => {
  * @param color - hex color (i.e. #ffffff)
  */
 export const paletteSetColorAfterHooks = async (color: string) => {
-  // set badge color
-  await browser.action.setBadgeBackgroundColor({
-    color,
-  })
+  paletteSetBadge(color)
+}
+
+export const paletteSetBadge = async (color: string) => {
+  // On firefox, we can't simply set empty text and use background color, as it
+  // looks really weird.
+  //
+  // I'm trying to achieve similar effect as on Chrome with colored badge text
+  // with text set to square-like unicode character and transparent background
+  if (import.meta.env.FIREFOX) {
+    await browser.browserAction.setBadgeText({
+      text: "⏹",
+    })
+    if (color) {
+      browser.browserAction.setBadgeTextColor({
+        color,
+      })
+      await browser.browserAction.setBadgeBackgroundColor({
+        // color,
+        color: [0, 0, 0, 0],
+      })
+    }
+    // I hope that on other browsers it would work as nicely as on Chrome
+  } else {
+    await browser.browserAction.setBadgeBackgroundColor({ color })
+  }
 }
 
 /**

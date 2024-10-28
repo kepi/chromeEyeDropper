@@ -1,6 +1,6 @@
 import browser, { type Runtime } from "webextension-polyfill"
 import { checkStorage } from "~/storage"
-import { paletteGetColor, paletteSetColor } from "~/palette"
+import { paletteGetColor, paletteSetBadge, paletteSetColor } from "~/palette"
 import { getSprintFromVersion, isBigUpdate, storeAppVersion } from "~/version"
 import { settingsGet } from "~/settings"
 import { onMessage, sendMessage } from "~/messaging"
@@ -179,15 +179,9 @@ async function onInstalledHandler(details: Runtime.OnInstalledDetailsType) {
 
 async function initBadge() {
   console.log("init badge")
-  await browser.action.setBadgeText({
-    text: " ",
-  })
   const color = await paletteGetColor()
-  console.log("badge color", color)
   if (color) {
-    await browser.action.setBadgeBackgroundColor({
-      color,
-    })
+    paletteSetBadge(color)
   }
 }
 

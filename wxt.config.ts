@@ -9,6 +9,9 @@ export default defineConfig({
   extensionApi: "chrome",
   modules: ["@wxt-dev/module-svelte"],
   manifest: () => ({
+    browser_action: {
+      theme_icons: [{ light: "icon/light.svg", dark: "icon/dark.svg", size: 16 }],
+    },
     name: import.meta.env.PROD ? pkg_name : `${pkg_name} BETA`,
     description: import.meta.env.PROD ? pkg_description : "THIS EXTENSION IS FOR BETA TESTING",
     permissions: ["activeTab", "storage", "scripting"],
