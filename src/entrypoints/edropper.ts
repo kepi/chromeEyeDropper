@@ -3,6 +3,7 @@ import scrollStop from "~/vendor/scrollStop"
 import Overlay from "~/overlay"
 import Rect from "~/rect"
 import { paletteColorToClipboard } from "~/palette"
+import { onMessage, sendMessage } from "~/messaging"
 
 var EDROPPER_VERSION = 14
 var CANVAS_MAX_SIZE = 32767 - 20
@@ -22,13 +23,13 @@ var page = {
     enableColorToolbox: true,
     enableColorTooltip: true,
     enableRightClickDeactivate: true,
-  },
+  } as EdropperOptions,
 
   canvas: {} as HTMLCanvasElement,
   canvasData: {} as ImageData["data"],
   canvasContext: {} as CanvasRenderingContext2D | null,
   canvasBorders: 20,
-  imageData: null,
+  imageData: null as string | null,
   resetCanvas: true,
 
   rects: [] as Array<Rect>,
@@ -65,31 +66,18 @@ var page = {
   // MESSAGING
   // ---------------------------------
   messageListener: function () {
-    browser.runtime.onMessage.addListener(async (req) => {
-      // Listen for pickup activate
-      console.log("dropper: message received", req)
-
-      switch (req.type) {
-        case "version":
-          return EDROPPER_VERSION
-        case "pickup-activate":
-          page.options = req.options
-          page.dropperActivate()
-          break
-        case "pickup-deactivate":
-          page.dropperDeactivate()
-          break
-        case "update-image":
-          console.log("dropper: background send me updated screenshot")
-          page.imageData = req.data
-          page.capture()
-          break
-      }
+    onMessage("getVersion", () => {
+      return EDROPPER_VERSION
     })
-  },
-  sendMessage: async function (message: any) {
-    // browser.runtime.connect().postMessage(message)
-    return browser.runtime.sendMessage(message)
+
+    onMessage("pickupActivate", (message) => {
+      page.options = message.data
+      page.dropperActivate()
+    })
+
+    onMessage("pickupDeactivate", () => {
+      page.dropperDeactivate()
+    })
   },
   // ---------------------------------
   // DROPPER CONTROL
@@ -165,10 +153,7 @@ var page = {
 
     const hex = `#${color.rgbhex}`
 
-    page.sendMessage({
-      command: "set-color",
-      color: hex,
-    })
+    sendMessage("setColor", hex)
 
     paletteColorToClipboard(hex)
   },
@@ -328,9 +313,7 @@ var page = {
 
     page.setScreenshoting(true)
     setTimeout(async () => {
-      const data = await page.sendMessage({
-        command: "capture",
-      })
+      const data = await sendMessage("capture", undefined)
 
       if (data) {
         console.log("got data")

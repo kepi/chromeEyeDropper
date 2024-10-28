@@ -1,5 +1,6 @@
 <script lang="ts">
   import browser from "webextension-polyfill"
+  import { sendMessage } from "~/messaging"
 
   export let reason = "Pick color from active tab"
   export let tabId = -1
@@ -11,16 +12,15 @@
   $: fullReason = help ? `${reason} Click for more info.` : reason
 
   const pickFromWeb = async () => {
-    const response = await browser.runtime.sendMessage({ command: "pick-from-web", tabId })
-    console.log(response)
+    await sendMessage("pickFromWeb", tabId)
     window.close()
   }
 
   const action = async (e: MouseEvent) => {
-    // we have tabId -> pick from web
+    // we have tabId -> we can pick from web
     if (tabId !== -1) {
       pickFromWeb()
-      // we have href - open link
+      // we have help href - open link with more info
     } else if (href !== "") {
       browser.tabs.create({
         url: href,

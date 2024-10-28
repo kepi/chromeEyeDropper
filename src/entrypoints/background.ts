@@ -4,8 +4,14 @@ import { paletteGetColor, paletteSetColor } from "~/palette"
 import { getSprintFromVersion, isBigUpdate, storeAppVersion } from "~/version"
 import { settingsGet } from "~/settings"
 import { match, P } from "ts-pattern"
+import { onMessage, sendMessage } from "~/messaging"
 
 const NEED_DROPPER_VERSION = 14
+
+export type EdropperRequest = {
+  type: string
+  options: EdropperOptions
+}
 
 async function pickFromWeb(tabId?: number) {
   console.log("picking from webpage")
@@ -22,26 +28,13 @@ async function pickFromWeb(tabId?: number) {
     enableRightClickDeactivate: true,
   }
 
-  sendMessage(
-    {
-      type: "pickup-activate",
-      options,
-    },
-    tabId,
-  )
-}
-
-async function sendMessage(message: unknown, tabId?: number) {
-  tabId ??= await getTabId()
-  if (tabId == null) return
-
-  return browser.tabs.sendMessage(tabId, message)
+  sendMessage("pickupActivate", options, tabId)
 }
 
 async function needInject(tabId: number) {
   console.log("needInject?")
   try {
-    const eDropperVersion: unknown = await sendMessage({ command: "version" }, tabId)
+    const eDropperVersion: unknown = await sendMessage("getVersion", undefined, tabId)
     console.log("checking", eDropperVersion)
 
     const version = match(eDropperVersion)
@@ -108,27 +101,16 @@ async function setColor(color: string) {
   paletteSetColor(color, "ed")
 }
 
-async function messageHandler(message: unknown, sender: Runtime.MessageSender) {
-  console.log(
-    sender.tab ? `Message from a content script ${sender.tab.url}:` : "Message from the extension:",
-    JSON.stringify(message),
-  )
+async function messageHandler() {
+  onMessage("pickFromWeb", (message) => {
+    pickFromWeb(message.data)
+  })
 
-  const m = message as Message
+  onMessage("setColor", (message) => {
+    setColor(message.data)
+  })
 
-  switch (m.command) {
-    case "pick-from-web":
-      pickFromWeb(m.tabId)
-      break
-
-    case "capture":
-      capture()
-
-    case "set-color":
-      if (m.color) {
-        setColor(m.color)
-      }
-  }
+  onMessage("capture", () => capture())
 
   return { result: "passed" }
 }
@@ -208,7 +190,7 @@ export default defineBackground({
   main() {
     browser.commands.onCommand.addListener(commandHandler)
     browser.runtime.onInstalled.addListener(onInstalledHandler)
-    browser.runtime.onMessage.addListener(messageHandler)
+    messageHandler()
 
     init()
   },

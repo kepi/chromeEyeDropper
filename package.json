@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@ctrl/tinycolor": "^4.1.0",
+    "@webext-core/messaging": "^2.0.2",
     "@webext-core/storage": "^1.2.0",
     "ts-pattern": "^5.5.0"
   }
