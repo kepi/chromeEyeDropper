@@ -16,7 +16,7 @@ const inputs: Inputs = [
   ["old version format", { app_version: "0.5.25" }, true, 0],
   ["old version format but high first number", { app_version: "5.5" }, false, null],
   ["more recent version then our store", { app_version: "99999.4.3.5" }, false, 99999],
-  ["first nextgen version", { app_version: "1.3.6.0" }, false, 1],
+  ["first nextgen version", { app_version: "1.3.6.0" }, true, 1],
   ["previous version", { app_version: "0.2.1.0" }, true, 0],
   ["same version", { app_version: __APP_VERSION__ }, false, sprint],
   ["same version different build", { app_version: versionWithDifferentBuild }, false, sprint],
