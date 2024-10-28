@@ -26,6 +26,11 @@ export default defineConfig({
         description: "Pick color from web page",
       },
     },
+    browser_specific_settings: {
+      gecko: {
+        id: "app@eyedropper.org",
+      },
+    },
   }),
   runner: {
     startUrls: ["https://eyedropper.org"],
