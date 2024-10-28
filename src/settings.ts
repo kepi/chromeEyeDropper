@@ -9,6 +9,7 @@ export interface SettingsProps {
   enableRightClickDeactivate: boolean
   dropperCursor: string
   enablePromoOnUpdate: boolean
+  enableErrorReportingTab: boolean
 }
 
 export const defaults: SettingsProps = {
@@ -19,6 +20,7 @@ export const defaults: SettingsProps = {
   enableRightClickDeactivate: true,
   dropperCursor: "default",
   enablePromoOnUpdate: true,
+  enableErrorReportingTab: true,
 }
 
 export const settingsGet = async <K extends keyof SettingsProps>(prop: K) => {

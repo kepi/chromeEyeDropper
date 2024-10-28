@@ -50,6 +50,10 @@ export const enableColorTooltip = syncedWritable(
   "enableColorTooltip",
   defaults["enableColorTooltip"],
 )
+export const enableErrorReportingTab = syncedWritable(
+  "enableErrorReportingTab",
+  defaults["enableErrorReportingTab"],
+)
 export const enableRightClickDeactivate = syncedWritable(
   "enableRightClickDeactivate",
   defaults["enableRightClickDeactivate"],

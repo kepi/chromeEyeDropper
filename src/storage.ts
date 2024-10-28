@@ -105,6 +105,7 @@ export const checkStorage = async () => {
           data.settings?.enableRightClickDeactivate ?? defaults.enableRightClickDeactivate,
         dropperCursor: data.settings?.dropperCursor ?? defaults.dropperCursor,
         enablePromoOnUpdate: data.settings?.enablePromoOnUpdate ?? defaults.enablePromoOnUpdate,
+        enableErrorReportingTab: true,
       }
 
       // sync to store
