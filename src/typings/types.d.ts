@@ -1,5 +1,11 @@
 declare const __APP_VERSION__: string
 
+type pickResponse = {
+  status: pickStatus
+  error?: string
+}
+type pickStatus = "ok" | "noTab" | "timeout" | "unknownError" | "injectFailed"
+
 declare interface Color {
   r: number
   g: number

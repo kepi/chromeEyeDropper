@@ -3,7 +3,6 @@ import { checkStorage } from "~/storage"
 import { paletteGetColor, paletteSetColor } from "~/palette"
 import { getSprintFromVersion, isBigUpdate, storeAppVersion } from "~/version"
 import { settingsGet } from "~/settings"
-import { match, P } from "ts-pattern"
 import { onMessage, sendMessage } from "~/messaging"
 
 const NEED_DROPPER_VERSION = 14
@@ -13,11 +12,11 @@ export type EdropperRequest = {
   options: EdropperOptions
 }
 
-async function pickFromWeb(tabId?: number) {
+async function pickFromWeb(tabId?: number): Promise<pickResponse> {
   console.log("picking from webpage")
 
   tabId ??= await getTabId()
-  if (tabId == null) return
+  if (tabId === null || tabId === undefined) return { status: "noTab" }
 
   await injectDrop(tabId)
 
@@ -28,20 +27,34 @@ async function pickFromWeb(tabId?: number) {
     enableRightClickDeactivate: true,
   }
 
-  sendMessage("pickupActivate", options, tabId)
+  const timeoutDuration = 3000
+
+  const timeoutPromise = new Promise<pickResponse>((resolve) =>
+    setTimeout(() => resolve({ status: "timeout" }), timeoutDuration),
+  )
+
+  try {
+    return await Promise.race([sendMessage("pickupActivate", options, tabId), timeoutPromise])
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message == "Could not establish connection. Receiving end does not exist.") {
+        return { status: "injectFailed", error: error.message }
+      }
+      console.error(error)
+      return { status: "unknownError", error: error.message }
+    }
+    console.error(error)
+    return { status: "unknownError", error: `${error}` }
+  }
 }
 
 async function needInject(tabId: number) {
   console.log("needInject?")
   try {
-    const eDropperVersion: unknown = await sendMessage("getVersion", undefined, tabId)
+    const eDropperVersion = await sendMessage("getVersion", undefined, tabId)
     console.log("checking", eDropperVersion)
 
-    const version = match(eDropperVersion)
-      .with(P.number, (v) => v)
-      .otherwise(() => 0)
-
-    if (version < NEED_DROPPER_VERSION) {
+    if (eDropperVersion < NEED_DROPPER_VERSION) {
       console.log(`eDropper is ${eDropperVersion} which is lower than ${NEED_DROPPER_VERSION}`)
       return true
     } else {
@@ -103,7 +116,7 @@ async function setColor(color: string) {
 
 async function messageHandler() {
   onMessage("pickFromWeb", (message) => {
-    pickFromWeb(message.data)
+    return pickFromWeb(message.data)
   })
 
   onMessage("setColor", (message) => {
@@ -111,8 +124,6 @@ async function messageHandler() {
   })
 
   onMessage("capture", () => capture())
-
-  return { result: "passed" }
 }
 
 function commandHandler(command: string) {

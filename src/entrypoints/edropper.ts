@@ -73,6 +73,7 @@ var page = {
     onMessage("pickupActivate", (message) => {
       page.options = message.data
       page.dropperActivate()
+      return { status: "ok" }
     })
 
     onMessage("pickupDeactivate", () => {
