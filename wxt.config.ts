@@ -42,5 +42,8 @@ export default defineConfig({
     define: {
       __APP_VERSION__: JSON.stringify(`${import.meta.env.npm_package_version}`),
     },
+    ssr: {
+      noExternal: ["@webext-core/messaging"],
+    },
   }),
 })
