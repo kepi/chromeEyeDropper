@@ -63,7 +63,7 @@
         {#if $popupDialog === "picker"}
           <ManualInput />
         {:else}
-          <div class="justify-self-end">
+          <div class="flex justify-end pb-2">
             <button
               class="btn btn-xs font-normal btn-neutral hover:btn-info shadow-md"
               on:click={colorPicker}
