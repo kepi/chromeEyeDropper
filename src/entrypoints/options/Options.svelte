@@ -5,6 +5,7 @@
     enableColorToolbox,
     enableColorTooltip,
     enableRightClickDeactivate,
+    enableErrorReportingTab,
     dropperCursor,
   } from "~/store"
   import cursorDefault from "/img/cursor_default.png"
@@ -113,6 +114,15 @@
           class="checkbox checkbox-primary mr-3"
         />
         <span class="label-text">Enable color tooltip next to the mouse cursor.</span>
+      </label>
+      <label class="label justify-start cursor-pointer">
+        <input
+          type="checkbox"
+          name="enableErrorReportingTab"
+          bind:checked={$enableErrorReportingTab}
+          class="checkbox checkbox-primary mr-3"
+        />
+        <span class="label-text">Enable opening report tab when error is encountered.</span>
       </label>
     </div>
     <div>
