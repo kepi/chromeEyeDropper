@@ -1,7 +1,7 @@
 import { defineConfig } from "wxt"
 
-const pkg_name = import.meta.env.npm_package_name
-const pkg_description = import.meta.env.npm_package_description
+// const pkg_name = import.meta.env.npm_package_name
+// const pkg_description = import.meta.env.npm_package_description
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
@@ -12,8 +12,8 @@ export default defineConfig({
     browser_action: {
       theme_icons: [{ light: "icon/light.svg", dark: "icon/dark.svg", size: 16 }],
     },
-    name: import.meta.env.PROD ? pkg_name : `${pkg_name} BETA`,
-    description: import.meta.env.PROD ? pkg_description : "THIS EXTENSION IS FOR BETA TESTING",
+    // name: import.meta.env.PROD ? pkg_name : `${pkg_name} BETA`,
+    // description: import.meta.env.PROD ? pkg_description : "THIS EXTENSION IS FOR BETA TESTING",
     permissions: ["activeTab", "storage", "scripting"],
     web_accessible_resources: [
       {

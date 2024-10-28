@@ -163,6 +163,8 @@ class ToolTip extends Tool {
 class ToolBox extends Tool {
   elColor: HTMLElement
   elText: HTMLElement
+  elTextHex: HTMLElement
+  elTextRgb: HTMLElement
 
   constructor() {
     super()
@@ -213,17 +215,22 @@ class ToolBox extends Tool {
     })
     this.el.append(this.elColor)
     this.el.append(this.elText)
+
+    this.elTextHex = createNode("div", {
+      id: "color-toolbox-text-hex",
+    })
+    this.elTextRgb = createNode("div", {
+      id: "color-toolbox-text-rgb",
+    })
+    this.elText.append(this.elTextHex)
+    this.elText.append(this.elTextRgb)
   }
 
   hookColor(args: { color: any; x: number; y: number; top: number; left: number }) {
     super.hookColor(args)
 
-    // let debug_info = DEV_MODE
-    //   ? `<div style="font-size: 0.8em">coord: ${args.x},${args.y}</div>`
-    //   : ""
-    let debug_info = ""
-
-    this.elText.innerHTML = `#${this.color.rgbhex}<br/>rgb(${this.color.r},${this.color.g},${this.color.b})${debug_info}`
+    this.elTextHex.textContent = `#${this.color.rgbhex}`
+    this.elTextRgb.textContent = `rgb(${this.color.r},${this.color.g},${this.color.b})`
     this.elColor.style.backgroundColor = `#${this.color.rgbhex}`
   }
 }
