@@ -21,7 +21,7 @@
     if (received.status === "ok") {
       window.close()
     } else {
-      const url = `https://eyedropper.org/error?status=${received.status}&error=${received.error}`
+      const url = `https://eyedropper.org/error/?status=${received.status}&error=${received.error}&version=${__APP_VERSION__}`
       if ($enableErrorReportingTab) {
         browser.tabs.create({
           url,
