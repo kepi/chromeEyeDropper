@@ -1,20 +1,23 @@
-<script>
-  import { getColorData } from "~/color"
-  import { getDimension } from "~/lib/cpicker/dimensions"
+<script lang="ts">
+  import { TinyColor } from "@ctrl/tinycolor"
+  import { alterDimension } from "~/color"
+  import { colorTo, dimensions, type DimensionKey } from "./dimensions"
 
-  export let color = "#00ff00"
-  export let dimension = "hsl.h"
+  interface Props {
+    color: string
+    dimensionKey: DimensionKey
+  }
 
-  $: dim = getDimension(dimension)
-  $: colBaseData = getColorData(dim.scale, color)
-  $: value = colBaseData[dim.dim] * dim.data.scale
-  $: roundedValue = Math.round(value)
+  let { color = $bindable(), dimensionKey }: Props = $props()
 
-  function onChange(e) {
-    let v = +e.target.value
-    console.log(v)
+  let dim = $derived(dimensions[dimensionKey])
+  let colorInColorspace = $derived(colorTo(color, dim.colorspace))
+  let roundedValue = $derived(Math.round(colorInColorspace[dim.dimension] * dim.scale))
+
+  function onChange(e: Event & { currentTarget: EventTarget & HTMLInputElement }) {
+    let v = +e.currentTarget.value
     color = new TinyColor(
-      color.alterDimension(dim.scale, dim.dim, v / dim.data.scale),
+      alterDimension(colorInColorspace, dim.dimension, v / dim.scale),
     ).toHexString()
   }
 </script>
@@ -23,7 +26,7 @@
   type="number"
   class="w-12 text-right"
   value={roundedValue}
-  min={dim.data.extent[0]}
-  max={dim.data.extent[1]}
-  on:change={onChange}
+  min={dim.extent[0]}
+  max={dim.extent[1]}
+  onchange={onChange}
 />

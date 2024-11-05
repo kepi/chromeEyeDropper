@@ -30,18 +30,7 @@ export const colorToString = (color: string, format: ColorStringFormat) => {
   return removeHash ? output.substring(1) : output
 }
 
-export const getColorData = (mode: keyof DataMode, color: string) => {
-  const tColor = new TinyColor(color)
-
-  if (mode === "hsl") {
-    return tColor.toHsl()
-  } else if (mode === "hsv") {
-    return tColor.toHsv()
-  } else {
-    return tColor.toRgb()
-  }
-}
-
+// this alter one dimension of colorspace, like i.e. chaning g in r,g,b
 export const alterDimension = <M extends keyof DataMode>(
   data: DataMode[M],
   key: keyof DataMode[M],

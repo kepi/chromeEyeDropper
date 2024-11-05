@@ -1,10 +1,14 @@
 <script lang="ts">
   import pStore from "~/allPalettesStore"
 
-  export let paletteId: number
-  export let show: boolean
+  interface Props {
+    paletteId: number
+    show: boolean
+  }
 
-  function reallyDeletePalette(id: number) {
+  let { paletteId = $bindable(), show = $bindable() }: Props = $props()
+
+  function reallyDeletePalette(id: number, show: boolean) {
     // we have to use pStore function as we need to remove it first from store,
     // than from synced store
     pStore.destroyPalette(id)
@@ -21,7 +25,7 @@
       >#{$pStore[paletteId].id} {$pStore[paletteId].name}"?</span
     >
   </h4>
-  <button class="btn btn-error" on:click={() => reallyDeletePalette(paletteId)}
+  <button class="btn btn-error" onclick={() => reallyDeletePalette(paletteId, show)}
     >Yes, I know it can't be restored.</button
   >
 {/if}

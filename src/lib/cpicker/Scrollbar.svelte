@@ -1,48 +1,57 @@
-<script>
-  import { alterDimension, getColorData } from "~/color"
+<script lang="ts">
+  import { alterDimension } from "~/color"
   import { TinyColor } from "@ctrl/tinycolor"
   import { onMount } from "svelte"
-
-  import { getDimension } from "./dimensions"
   import { relativePosition } from "./event"
   import touchToMouse from "./touch"
+  import { colorTo, type DimensionData, type DimensionKey, dimensions } from "./dimensions"
 
-  export let color = "#00fff00"
-  export let dimension = "hsl.h"
-  export let detail = 100
+  interface Props {
+    color: string
+    dimensionKey: DimensionKey
+    width: any
+    height: any
+  }
 
-  export let width = null
-  export let height = null
+  let {
+    color = $bindable("#00fff00"),
+    dimensionKey = "hsl.h",
+    width = null,
+    height = null,
+  }: Props = $props()
 
-  let canvas
-  let ctx
-  let cWidth
-  let cHeight
+  let canvas: HTMLCanvasElement | undefined = $state()
+  let ctx: CanvasRenderingContext2D | null = $state(null)
+  let cWidth = $state(0)
+  let cHeight = $state(0)
+
+  const detail = 100
+
+  let dim = $derived(dimensions[dimensionKey])
+  let colorInColorspace = $derived(colorTo(color, dim.colorspace))
 
   onMount(() => {
-    ctx = canvas.getContext("2d")
-    touchToMouse(canvas)
+    if (canvas) {
+      ctx = canvas.getContext("2d")
+      touchToMouse(canvas)
+    }
   })
 
-  $: dim = getDimension(dimension)
-  $: colBaseData = getColorData(dim.scale, color)
+  function fillRect(dim: DimensionData) {
+    let value = colorInColorspace[dim.dimension] * dim.scale
+    let sliderPos = ((cWidth - 2) * (value - dim.extent[0])) / (dim.extent[1] - dim.extent[0])
 
-  $: value = colBaseData[dim.dim] * dim.data.scale
-  $: sliderPos =
-    ((cWidth - 2) * (value - dim.data.extent[0])) / (dim.data.extent[1] - dim.data.extent[0])
-
-  $: {
     if (ctx) {
-      ctx.imageSmoothingEnabled = false
       ctx.clearRect(0, 0, cWidth, cHeight)
+      ctx.imageSmoothingEnabled = false
 
       let d = Math.min(detail, cWidth - 2)
       let xStep = (cWidth - 2) / d
-      let range = dim.data.extent[1] - dim.data.extent[0]
+      let range = dim.extent[1] - dim.extent[0]
 
       for (let i = 0; i <= d; i++) {
-        const v = ((i / d) * range + dim.data.extent[0]) / dim.data.scale
-        const col = alterDimension(colBaseData, dim.dim, v)
+        const v = ((i / d) * range + dim.extent[0]) / dim.scale
+        const col = alterDimension(colorInColorspace, dim.dimension, v)
         ctx.fillStyle = new TinyColor(col).toHexString()
         ctx.fillRect(Math.round(i * xStep), 0, Math.ceil(xStep), cHeight)
       }
@@ -55,26 +64,34 @@
     }
   }
 
-  function onMouse(e) {
+  $effect(() => {
+    fillRect(dim)
+  })
+
+  function onMouse(e: MouseEvent) {
     if (e.buttons === 1) {
       const pos = relativePosition(e)
-      let x = pos.relativeX
 
-      let v = (x / (cWidth - 2)) * (dim.data.extent[1] - dim.data.extent[0]) + dim.data.extent[0]
-      if (v > dim.data.extent[1]) {
-        v = dim.data.extent[1]
+      if (pos && dim) {
+        let x = pos.relativeX
+
+        let v = (x / (cWidth - 2)) * (dim.extent[1] - dim.extent[0]) + dim.extent[0]
+        if (v > dim.extent[1]) {
+          v = dim.extent[1]
+        }
+        if (v < dim.extent[0]) {
+          v = dim.extent[0]
+        }
+        color = new TinyColor(
+          alterDimension(colorInColorspace, dim.dimension, v / dim.scale),
+        ).toHexString()
       }
-      if (v < dim.data.extent[0]) {
-        v = dim.data.extent[0]
-      }
-      color = new TinyColor(alterDimension(colBaseData, dim.dim, v / dim.data.scale)).toHexString()
     }
   }
 </script>
 
 <div class="scrollbar" bind:clientWidth={cWidth} bind:clientHeight={cHeight}>
-  <canvas bind:this={canvas} {width} {height} on:mousedown={onMouse} on:mousemove={onMouse}>
-  </canvas>
+  <canvas bind:this={canvas} {width} {height} onmousedown={onMouse} onmousemove={onMouse}> </canvas>
 </div>
 
 <style>

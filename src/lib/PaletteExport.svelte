@@ -14,7 +14,7 @@
   <div class="flex flex-row not-prose justify-between items-center">
     <div><h4 class="font-bold pt-2">Export your palette</h4></div>
     <button
-      on:click={() => {
+      onclick={() => {
         copyToClipboard(value)
       }}><Icon class="hover:stroke-primary w-4 h-4 hover:scale-125" src={Clipboard} /></button
     >

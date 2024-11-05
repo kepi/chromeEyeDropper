@@ -17,7 +17,7 @@
     <li>
       <button
         class="cursor-pointer hover:text-primary flex gap-1 items-center"
-        on:click={() => {
+        onclick={() => {
           paletteSort(undefined, sortBy)
           close()
         }}

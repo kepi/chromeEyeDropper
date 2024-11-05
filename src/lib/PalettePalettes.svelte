@@ -8,9 +8,10 @@
     return !isNaN(Number(input))
   }
 
-  let newPaletteName: string
+  let newPaletteName = $state("")
 
-  const newPalette = async () => {
+  const newPalette = async (event: Event) => {
+    event.preventDefault()
     pStore.createPalette(newPaletteName)
     newPaletteName = ""
     $popupDialog = "palette"
@@ -23,8 +24,8 @@
     paletteIdToDelete = Number((event.target as HTMLElement).getAttribute("data-paletteid"))
   }
 
-  let showPaletteDelete = false
-  let paletteIdToDelete: number = -1
+  let showPaletteDelete = $state(false)
+  let paletteIdToDelete: number = $state(-1)
 </script>
 
 {#if showPaletteDelete}
@@ -42,9 +43,7 @@
           bind:value={newPaletteName}
           placeholder="name of new palette"
         />
-        <button type="submit" class="btn btn-sm btn-secondary" on:click|preventDefault={newPalette}
-          >create</button
-        >
+        <button type="submit" class="btn btn-sm btn-secondary" onclick={newPalette}>create</button>
       </li>
     </form>
     {#each Object.keys($pStore).filter(isNumber) as id}

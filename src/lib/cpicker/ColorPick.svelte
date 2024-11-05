@@ -1,118 +1,80 @@
-<script>
-  import { dimensions } from "./dimensions"
-
+<script lang="ts">
   import ScrollBar from "./Scrollbar.svelte"
   import Matrix from "./Matrix.svelte"
   import DimensionInput from "./DimensionInput.svelte"
+  import {
+    colorspace,
+    colorspaceDimensions,
+    otherDimensions,
+    type ColorspaceName,
+    type DimensionKey,
+  } from "./dimensions"
 
-  export let color = "#ff9900"
-
-  export let selectedDimension = "hsl.h"
-  export let selectedTab = "hsl"
-  export let background = "#fff"
-
-  export let tabbed = true
-
-  export let showMatrix = true
-  export let showSliders = {}
-
-  if (Object.keys(showSliders).length === 0) {
-    for (const scale in dimensions) {
-      for (const dim in dimensions[scale]) {
-        showSliders[`${scale}.${dim}`] = true
-      }
-    }
+  interface Props {
+    color?: string
   }
 
-  export let showNumeric = true
-  export let showLabels = true
+  let { color = $bindable("#ff9900") }: Props = $props()
+  let selectedDimension: DimensionKey = $state("hsl.h")
+  let selectedTab = $state("hsl")
 
-  export let selectDimensions = true
+  const matrixWidth = 280
+  const sliderWidth = matrixWidth - 74
+  const matrixHeight = 100
+  const scrollbarHeight = 14
 
-  export let matrixWidth = 280
-  export let matrixHeight = 100
-  export let scrollbarHeight = 14
-
-  let dimX = null
-  let dimY = null
-
-  $: {
-    let [scale, dim] = selectedDimension.split(".", 2)
-    let dims = Object.keys(dimensions[scale])
-    dims.splice(dims.indexOf(dim), 1)
-    dimX = `${scale}.${dims[0]}`
-    dimY = `${scale}.${dims[1]}`
-  }
-
-  $: sliderWidth = matrixWidth - 74
+  let [dimX, dimY] = $derived(otherDimensions(selectedDimension))
 </script>
 
-<div class="">
-  <div class="" style="background: {background};">
-    {#if showMatrix}
-      <Matrix
-        bind:color
-        dimensionX={dimX}
-        dimensionY={dimY}
-        width={matrixWidth}
-        height={matrixHeight}
-      />
-    {/if}
+<div>
+  <div>
+    <Matrix
+      bind:color
+      dimensionXKey={dimX}
+      dimensionYKey={dimY}
+      width={matrixWidth}
+      height={matrixHeight}
+    />
 
-    {#if showSliders}
-      {#if tabbed}
-        <div class="flex mt-1">
-          {#each Object.keys(dimensions) as scale}
-            {#if Object.keys(dimensions[scale]).some((dim) => showSliders[`${scale}.${dim}`])}
-              <button
-                class="uppercase font-bold px-1 mx-1 border-b border-gray-600"
-                class:border-b-2={selectedTab === scale}
-                on:click={() => {
-                  selectedTab = scale
-                  selectedDimension = `${scale}.${Object.keys(dimensions[scale])[0]}`
-                }}
+    <div class="flex mt-1">
+      {#each Object.keys(colorspaceDimensions) as colorspaceName}
+        <button
+          class="uppercase font-bold px-1 mx-1 border-b border-gray-600"
+          class:border-b-2={selectedTab === colorspaceName}
+          onclick={() => {
+            selectedTab = colorspaceName
+            selectedDimension =
+              `${colorspaceName}.${Object.keys(colorspaceDimensions[colorspaceName as ColorspaceName])[0]}` as DimensionKey
+          }}
+        >
+          {colorspaceName}
+        </button>
+      {/each}
+    </div>
+
+    {#each Object.keys(colorspaceDimensions) as colorspaceName}
+      {#if selectedTab === colorspaceName}
+        <div class="mt-1">
+          {#each Object.keys(colorspaceDimensions[colorspaceName as ColorspaceName]) as dimensionName}
+            {@const dimensionKey = `${colorspaceName}.${dimensionName}` as DimensionKey}
+            <div class="flex items-center h-6">
+              <input
+                class="inline-block mr-1 w-4"
+                type="radio"
+                bind:group={selectedDimension}
+                value={dimensionKey}
+                id="{colorspaceName}-{dimensionName}"
+              />
+              <label class="w-4" for="{colorspaceName}-{dimensionName}"
+                >{dimensionName.toUpperCase()}</label
               >
-                {scale}
-              </button>
-            {/if}
+              <ScrollBar width={sliderWidth} height={scrollbarHeight} {dimensionKey} bind:color />
+
+              <DimensionInput bind:color {dimensionKey} />
+            </div>
           {/each}
         </div>
       {/if}
-
-      {#each Object.keys(dimensions) as scale}
-        {#if !tabbed || selectedTab === scale}
-          <div class="mt-1">
-            {#each Object.keys(dimensions[scale]) as dim}
-              {#if showSliders[`${scale}.${dim}`]}
-                <div class="flex items-center h-6">
-                  {#if selectDimensions}
-                    <input
-                      class="inline-block mr-1 w-4"
-                      type="radio"
-                      bind:group={selectedDimension}
-                      value="{scale}.{dim}"
-                      id="{scale}-{dim}"
-                    />
-                  {/if}
-                  {#if showLabels}
-                    <label class="w-4" for="{scale}-{dim}">{dim.toUpperCase()}</label>
-                  {/if}
-                  <ScrollBar
-                    width={sliderWidth}
-                    height={scrollbarHeight}
-                    dimension="{scale}.{dim}"
-                    bind:color
-                  />
-
-                  {#if showNumeric}
-                    <DimensionInput bind:color dimension="{scale}.{dim}" />
-                  {/if}
-                </div>
-              {/if}
-            {/each}
-          </div>
-        {/if}
-      {/each}
-    {/if}
+    {/each}
   </div>
 </div>

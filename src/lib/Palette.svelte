@@ -5,7 +5,7 @@
   import Square from "~/lib/Square.svelte"
   import { popupDialog } from "~/store"
 
-  let showTipClick = false
+  let showTipClick = $state(false)
 </script>
 
 <div>
@@ -20,7 +20,7 @@
         <p>
           Maybe too clean? Try to pick some color or <button
             class="link"
-            on:click={() => {
+            onclick={() => {
               $popupDialog = "palettes"
             }}>switch to different palette</button
           >?
@@ -30,16 +30,16 @@
       <div
         class="flex flex-wrap gap-2"
         role="tooltip"
-        on:mouseover={() => {
+        onmouseover={() => {
           showTipClick = true
         }}
-        on:mouseout={() => {
+        onmouseout={() => {
           showTipClick = false
         }}
-        on:focus={() => {
+        onfocus={() => {
           showTipClick = true
         }}
-        on:blur={() => {
+        onblur={() => {
           showTipClick = false
         }}
       >

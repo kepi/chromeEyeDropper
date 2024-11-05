@@ -3,8 +3,12 @@
   import { popupDialog } from "~/store"
   import { paletteSetActive } from "~/palette"
 
-  export let deleteAction
-  export let paletteId: number
+  interface Props {
+    deleteAction: any;
+    paletteId: number;
+  }
+
+  let { deleteAction, paletteId }: Props = $props();
 
   async function switchPalette(paletteId: number) {
     paletteSetActive(paletteId)
@@ -23,7 +27,7 @@
     {:else}
       <button
         class="link font-bold text-neutral hover:text-primary"
-        on:click={() => switchPalette($pStore[paletteId].id)}
+        onclick={() => switchPalette($pStore[paletteId].id)}
       >
         {$pStore[paletteId].name}
       </button>
@@ -35,6 +39,6 @@
     disabled={paletteId === $pStore.active?.id}
     class="btn btn-xs btn-error"
     data-paletteid={$pStore[paletteId].id}
-    on:click={deleteAction}>delete</button
+    onclick={deleteAction}>delete</button
   >
 </li>

@@ -20,7 +20,7 @@ selectedColor.subscribe((color) => {
 
 // export const newColor: Writable<string | null> = writable(null);
 // Define a writable store with a placeholder initial value (can be null or any default value)
-export const newColor: Writable<string | null> = writable(null)
+export const newColor: Writable<string | undefined> = writable()
 
 // Initialize the store asynchronously
 async function initializeNewColor() {

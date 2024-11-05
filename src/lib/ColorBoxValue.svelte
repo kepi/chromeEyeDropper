@@ -1,6 +1,10 @@
 <script lang="ts">
   import { copyToClipboard } from "~/clipboard"
-  export let value: string
+  interface Props {
+    value: string;
+  }
+
+  let { value }: Props = $props();
 
   const copy = () => {
     copyToClipboard(value)
@@ -13,7 +17,7 @@
 >
   <button
     class="bg-white rounded px-1 text-nowrap hover:bg-neutral hover:text-white"
-    on:click={copy}
+    onclick={copy}
   >
     {value}
   </button>

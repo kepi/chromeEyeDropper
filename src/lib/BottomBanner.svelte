@@ -1,4 +1,4 @@
-<script type="ts">
+<script lang="ts">
   import Link from "~/Link.svelte"
 </script>
 

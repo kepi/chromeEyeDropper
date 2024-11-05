@@ -12,8 +12,8 @@
     }
   }
 
-  $: unsorted = $pStore.active?.unsorted ?? []
-  $: deleted = $pStore.active?.deleted ?? []
+  let unsorted = $derived($pStore.active?.unsorted ?? [])
+  let deleted = $derived($pStore.active?.deleted ?? [])
 </script>
 
 <h4>Edit your palette</h4>

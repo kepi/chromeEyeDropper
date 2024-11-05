@@ -19,7 +19,7 @@
   import PaletteHeader from "~/lib/PaletteHeader.svelte"
   import ManualInput from "~/lib/ManualInput.svelte"
 
-  $: value = `linear-gradient(to right, ${$selectedColor} 0%, ${$newColor} 100%)`
+  let value = $derived(`linear-gradient(to right, ${$selectedColor} 0%, ${$newColor} 100%)`)
 
   const copy = () => {
     copyToClipboard(value)
@@ -53,7 +53,7 @@
         <div class="absolute top-[70px] right-0">
           <button
             class="text-sm w-8 h-8 bg-slate-100 rounded hover:text-red-500 items-center justify-center flex cursor-pointer"
-            on:click={close}
+            onclick={close}
           >
             ✖
           </button>
@@ -67,7 +67,7 @@
           <div class="flex justify-end pb-2">
             <button
               class="btn btn-xs font-normal btn-neutral hover:btn-info shadow-md"
-              on:click={colorPicker}
+              onclick={colorPicker}
             >
               <Icon class="hover:stroke-primary w-4 h-4 hover:scale-125" src={Mixer} />
               mix a color</button
@@ -87,7 +87,7 @@
   >
     <button
       class="hover:bg-neutral hover:text-white rounded bg-white text-black px-1 font-mono text-xs text-nowrap"
-      on:click={copy}
+      onclick={copy}
     >
       {value}
     </button>

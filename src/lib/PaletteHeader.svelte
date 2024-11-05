@@ -9,8 +9,8 @@
     $popupDialog = $popupDialog === what ? "palette" : what
   }
 
-  $: sortBy = $pStore.active?.sortBy ?? "m:asc"
-  $: sortInfo = sortByInfo[sortBy]
+  let sortBy = $derived($pStore.active?.sortBy ?? "m:asc")
+  let sortInfo = $derived(sortByInfo[sortBy])
 </script>
 
 {#if $pStore.active}
@@ -19,7 +19,7 @@
       <div class="tooltip tooltip-right" data-tip="Manage Palettes">
         <button
           class="flex"
-          on:click={() => {
+          onclick={() => {
             toggle("palettes")
           }}
         >
@@ -30,7 +30,7 @@
         <button
           class="text-sm hover:text-primary tooltip tooltip-bottom flex gap-1 items-center"
           data-tip={$pStore.active.name}
-          on:click={() => {
+          onclick={() => {
             toggle("palettes")
           }}
         >
@@ -43,7 +43,7 @@
     </div>
     <div class="flex items-center gap-1">
       <div class="tooltip tooltip-bottom" data-tip="Change sorting of active Palette">
-        <button class="flex gap-1 group" on:click={() => toggle("sort")}>
+        <button class="flex gap-1 group" onclick={() => toggle("sort")}>
           <Icon src={sortInfo.icon} class="w-4 h-4 stroke-slate-600 group-hover:stroke-primary" />
           <Icon
             src={sortInfo.iconOrder}
@@ -55,7 +55,7 @@
       <div class="tooltip tooltip-bottom" data-tip="Rearrange or trash colors in Palette">
         <button
           class="flex"
-          on:click={() => {
+          onclick={() => {
             toggle("edit")
           }}
         >
@@ -66,7 +66,7 @@
       <div class="tooltip tooltip-bottom" data-tip="Export your Palettes">
         <button
           class="flex"
-          on:click={() => {
+          onclick={() => {
             toggle("export")
           }}
         >
@@ -77,7 +77,7 @@
       <div class="tooltip tooltip-bottom" data-tip="Wipe colors from active Palette">
         <button
           class="flex"
-          on:click={() => {
+          onclick={() => {
             toggle("wipe")
           }}
         >

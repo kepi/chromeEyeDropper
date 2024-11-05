@@ -2,16 +2,19 @@
   import { TinyColor } from "@ctrl/tinycolor"
   import ColorBoxValue from "./ColorBoxValue.svelte"
 
-  export let color
-  export let label
+  type Props = {
+    color?: string
+    label: string
+  }
+  let { color, label }: Props = $props()
 
-  $: tinyColor = new TinyColor(color ? color : "#75bb75")
-  $: colorName = tinyColor.toName()
+  let tinyColor = $derived(new TinyColor(color ?? "#75bb75"))
+  let colorName = $derived(tinyColor.toName())
 
-  $: hex = tinyColor.toHexString()
-  $: hslString = tinyColor.toHslString()
-  $: hsvString = tinyColor.toHsvString()
-  $: rgbString = tinyColor.toRgbString()
+  let hex = $derived(tinyColor.toHexString())
+  let hslString = $derived(tinyColor.toHslString())
+  let hsvString = $derived(tinyColor.toHsvString())
+  let rgbString = $derived(tinyColor.toRgbString())
 </script>
 
 <div class="mb-2 flex">

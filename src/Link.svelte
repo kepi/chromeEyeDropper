@@ -1,17 +1,19 @@
 <script lang="ts">
   import browser from "webextension-polyfill"
-  export let href: string
-  export let classes = $$props.class
-  export let dataTip = $$props["data-tip"]
+
+  let props = $props()
+  let tip = props["data-tip"]
 </script>
 
 <button
-  class={classes}
-  data-tip={dataTip}
-  on:click={async (e) => {
+  class={props.class}
+  data-tip={tip}
+  onclick={async (event) => {
     browser.tabs.create({
-      url: href,
+      url: props.href,
     })
-    e.preventDefault()
-  }}><slot /></button
+    event.preventDefault()
+  }}
 >
+  {@render props.children()}
+</button>

@@ -3,8 +3,8 @@
   import { selectedColor, newColor } from "~/store"
   import { noColor } from "~/palette"
 
-  $: hexColor = ""
-  $: acceptedHexColor = noColor()
+  let hexColor = $state("")
+  let acceptedHexColor = $state(noColor())
 
   const onInput = (e: Event) => {
     const inputColor = new TinyColor((e.target as HTMLInputElement).value)
@@ -14,8 +14,9 @@
     }
   }
 
-  const onSubmit = () => {
-    if ($newColor !== null) {
+  const onSubmit = (event: Event) => {
+    event.preventDefault()
+    if ($newColor) {
       $selectedColor = $newColor
     }
   }
@@ -29,15 +30,15 @@
     class="shadow-lg flex w-full flex-wrap gap-2 rounded p-2 text-xs"
     style="background-color: {acceptedHexColor}"
   >
-    <form on:submit|preventDefault={onSubmit}>
-      <!-- svelte-ignore a11y-autofocus -->
+    <form onsubmit={onSubmit}>
+      <!-- svelte-ignore a11y_autofocus -->
       <input
         class="input input-xs input-bordered w-24 rounded"
         type="text"
         autofocus
         name="hexinput"
         bind:value={hexColor}
-        on:input={onInput}
+        oninput={onInput}
       />
     </form>
     <div class="bg-white rounded w-full p-1">

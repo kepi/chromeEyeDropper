@@ -1,6 +1,7 @@
 import "~/app.css"
 
 import Popup from "./Popup.svelte"
+import { mount } from "svelte";
 
-const app = new Popup({ target: document.body })
+const app = mount(Popup, { target: document.body })
 export default app

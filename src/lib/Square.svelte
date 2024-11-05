@@ -2,13 +2,16 @@
   import { TinyColor } from "@ctrl/tinycolor"
   import { selectedColor, newColor } from "~/store"
 
-  export let color
-  export let passive: boolean = false
-  export let classes = $$props.class
-  export let small: boolean = false
+  type Props = {
+    class?: string
+    color: string
+    passive?: boolean
+    small?: boolean
+  }
+  let { class: classes, color, passive = false, small = false }: Props = $props()
 
-  $: tinyColor = new TinyColor(color)
-  $: colorHex = tinyColor.toHexString()
+  let tinyColor = $derived(new TinyColor(color))
+  let colorHex = $derived(tinyColor.toHexString())
 
   const handleOver = (event: MouseEvent | FocusEvent) => {
     if (!event.target) return
@@ -37,9 +40,10 @@
   class:w-4={small}
   style="background-color: {colorHex}"
   data-color={colorHex}
-  on:mouseover={passive ? null : handleOver}
-  on:focus={passive ? null : handleOver}
-  on:click={passive ? null : handleClick}
+  onmouseover={passive ? null : handleOver}
+  onfocus={passive ? null : handleOver}
+  onclick={passive ? null : handleClick}
+  aria-label="Select color {colorHex}"
 >
   &nbsp;
 </button>

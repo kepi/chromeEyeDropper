@@ -37,15 +37,15 @@
   <b>You can't restore them after wipe!</b>
 </p>
 <div class="gap-2 flex flex-wrap">
-  <button class="btn btn-sm btn-secondary" on:click={wipeClean}>wipe clean</button>
-  <button class="btn btn-sm btn-secondary" on:click={wipeDefault}
+  <button class="btn btn-sm btn-secondary" onclick={wipeClean}>wipe clean</button>
+  <button class="btn btn-sm btn-secondary" onclick={wipeDefault}
     >wipe and add default colors</button
   >
-  <button class="btn btn-sm btn-secondary" on:click={wipeRandom}
+  <button class="btn btn-sm btn-secondary" onclick={wipeRandom}
     >wipe and add some random colors</button
   >
 </div>
 <div class="flex gap-2 items-center mt-2">
   <p>I changed my mind,</p>
-  <button class="btn btn-sm btn-primary" on:click={close}>leave my colors alone.</button>
+  <button class="btn btn-sm btn-primary" onclick={close}>leave my colors alone.</button>
 </div>

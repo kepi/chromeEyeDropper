@@ -5,15 +5,24 @@
   import { Pipette as Dropper } from "@steeze-ui/lucide-icons"
   import { Icon } from "@steeze-ui/svelte-icon"
 
-  export let reason = "Pick a color from active tab"
-  export let tabId = -1
-  export let href = ""
-  export let error = false
+  interface Props {
+    reason?: string;
+    tabId?: any;
+    href?: string;
+    error?: boolean;
+  }
 
-  $: disabled = tabId === -1 && href === ""
-  $: help = tabId === -1 && href !== ""
+  let {
+    reason = $bindable("Pick a color from active tab"),
+    tabId = -1,
+    href = $bindable(""),
+    error = $bindable(false)
+  }: Props = $props();
 
-  $: fullReason = help ? `${reason} Click for more info.` : reason
+  let disabled = $derived(tabId === -1 && href === "")
+  let help = $derived(tabId === -1 && href !== "")
+
+  let fullReason = $derived(help ? `${reason} Click for more info.` : reason)
 
   const pickFromWeb = async () => {
     const received = await sendMessage("pickFromWeb", tabId)
@@ -61,7 +70,7 @@
     class:hover:border-neutral-300={help}
     class:bg-red-300={error}
     class:hover:bg-red-500={error}
-    on:click={action}
+    onclick={action}
   >
     {#if error}
       Sorry, picking a color failed
