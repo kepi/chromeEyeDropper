@@ -72,7 +72,13 @@ var page = {
 
     onMessage("pickupActivate", (message) => {
       page.options = message.data
-      page.dropperActivate()
+
+      // do not activate dropper before document is ready
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", page.dropperActivate)
+      } else {
+        page.dropperActivate()
+      }
       return { status: "ok" }
     })
 
