@@ -1,5 +1,7 @@
 import { createNode } from "./helpers"
 
+type TooltipArgs = { color: Color; x: number; y: number }
+
 class Overlay {
   el: HTMLElement
   private cursor: string
@@ -8,6 +10,7 @@ class Overlay {
   private _tooltip = {} as ToolTip
 
   tools: Array<Tool> = []
+  mouseMoved: boolean = false
 
   constructor(args: {
     width: number
@@ -59,16 +62,25 @@ class Overlay {
     }
   }
 
+  hide(): void {
+    this.hook("hookHide", {})
+    this.el.style.cursor = "progress"
+  }
+
+  show(): void {
+    if (!this.mouseMoved) return
+
+    this.hook("hookShow", {})
+    this.el.style.cursor = this.cursor
+  }
+
   screenshoting(state: boolean): void {
     if (state) {
       console.log("overlay: screenshoting on. Hiding tools.")
-      this.hook("hookHide", {})
-      this.el.style.cursor = "progress"
+      this.hide()
     } else {
       console.log("overlay: screenshoting off. Showing tools.")
-      this.hook("hookShow", {})
-      this.el.style.cursor = this.cursor
-      // TODO - set new tooltip color - where from without event?
+      this.show()
     }
   }
 
@@ -90,7 +102,11 @@ class Overlay {
     this.el.remove()
   }
 
-  tooltip(args: { screenWidth: number; screenHeight: number; x: number; y: number; color: Color }) {
+  tooltip(args: TooltipArgs) {
+    if (!this.mouseMoved) {
+      this.mouseMoved = true
+      this.show()
+    }
     this.hook("hookColor", args)
   }
 }
@@ -105,7 +121,7 @@ abstract class Tool {
 
   constructor() {}
 
-  hookColor(args: { color: any; x: number; y: number }) {
+  hookColor(args: TooltipArgs) {
     this.color = args.color
     this.x = args.x
     this.y = args.y
