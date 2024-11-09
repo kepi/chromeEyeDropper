@@ -77,7 +77,7 @@ var page = {
       if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", page.dropperActivate)
       } else {
-        page.dropperActivate()
+        return page.dropperActivate()
       }
       return { status: "ok" }
     })
@@ -90,8 +90,14 @@ var page = {
   // DROPPER CONTROL
   // ---------------------------------
   dropperActivate: function () {
-    console.log("?")
     if (page.dropperActivated) return
+
+    if (document.body === null) {
+      if (document.documentElement?.tagName === "svg") {
+        return { status: "svgRoot" }
+      }
+      return { status: "noBody" }
+    }
 
     console.log("dropper: activating page dropper")
     console.log(`dropper: debug page at ${browser.runtime.getURL("debug-tab.html")}`)
@@ -116,6 +122,7 @@ var page = {
     }
     // enable keyboard shortcuts
     page.shortcuts(true)
+    return { status: "ok" }
   },
   dropperDeactivate: function () {
     if (!page.dropperActivated) return
