@@ -10,7 +10,9 @@ class Overlay {
   private _tooltip = {} as ToolTip
 
   tools: Array<Tool> = []
+
   mouseMoved: boolean = false
+  elMoveMouseTip: HTMLElement
 
   constructor(args: {
     width: number
@@ -48,6 +50,32 @@ class Overlay {
         "z-index: 1000001",
       ].join(";"),
     })
+
+    this.elMoveMouseTip = createNode("div", {
+      id: "move-mouse",
+      style: [
+        "position: absolute",
+        "top: 40px",
+        "left: 80%",
+        "transform: translate(-50%, -50%)",
+        "background-color: rgba(255, 255, 255, 0.9)",
+        "color: #1a1a1a",
+        "text-align: center",
+        "padding: 20px",
+        "border-radius: 10px",
+      ].join(";"),
+    })
+
+    const mouseIcon = createNode("span", {
+      style: "background-color: #2f2f2f; padding: 2px 1px; border-radius: 4px;",
+    })
+    mouseIcon.append("🖱️")
+
+    this.elMoveMouseTip.append("Move your ")
+    this.elMoveMouseTip.append(mouseIcon)
+    this.elMoveMouseTip.append(" to pick a color")
+
+    this.el.append(this.elMoveMouseTip)
 
     for (let tool of this.tools) {
       this.el.append(tool.el)
@@ -104,6 +132,7 @@ class Overlay {
 
   tooltip(args: TooltipArgs) {
     if (!this.mouseMoved) {
+      this.elMoveMouseTip.style.display = "none"
       this.mouseMoved = true
       this.show()
     }
