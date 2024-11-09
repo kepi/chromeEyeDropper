@@ -146,7 +146,7 @@ async function onInstalledHandler(details: Runtime.OnInstalledDetailsType) {
   if (details.reason === "install") {
     console.info("Extension has been installed.")
     browser.tabs.create({
-      url: "https://eyedropper.org/installed",
+      url: `https://eyedropper.org/${import.meta.env.BROWSER}/installed/`,
       active: true,
     })
 
@@ -170,7 +170,7 @@ async function onInstalledHandler(details: Runtime.OnInstalledDetailsType) {
     if (__APP_VERSION__ && bigUpdate && sprint !== null && isOnUpdateEnabled) {
       console.info("This is big update, show update tab.")
       browser.tabs.create({
-        url: `https://eyedropper.org/updated/${sprint}/`,
+        url: `https://eyedropper.org/${import.meta.env.BROWSER}/updated/${sprint}/`,
         active: true,
       })
     }
