@@ -8,7 +8,7 @@ export default defineConfig({
   srcDir: "src",
   extensionApi: "chrome",
   modules: ["@wxt-dev/module-svelte"],
-  manifest: () => ({
+  manifest: ({ browser }) => ({
     browser_action: {
       theme_icons: [{ light: "icon/light.svg", dark: "icon/dark.svg", size: 16 }],
     },
@@ -29,11 +29,13 @@ export default defineConfig({
         description: "Pick color from web page",
       },
     },
-    browser_specific_settings: {
-      gecko: {
-        id: "prod@eyedropper.org",
+    ...(browser === "firefox" && {
+      browser_specific_settings: {
+        gecko: {
+          id: "prod@eyedropper.org",
+        },
       },
-    },
+    }),
   }),
   runner: {
     startUrls: ["https://eyedropper.org"],
