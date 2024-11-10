@@ -2,7 +2,7 @@
   "name": "Eye Dropper",
   "description": "Pick colors from any website.",
   "private": true,
-  "version": "3.0.0.5",
+  "version": "3.3.0.6",
   "type": "module",
   "scripts": {
     "build": "wxt build",
