@@ -89,8 +89,8 @@ var page = {
   // ---------------------------------
   // DROPPER CONTROL
   // ---------------------------------
-  dropperActivate: function () {
-    if (page.dropperActivated) return
+  dropperActivate: function (): PickResponse {
+    if (page.dropperActivated) return { status: "ok" }
 
     if (document.body === null) {
       if (document.documentElement?.tagName === "svg") {

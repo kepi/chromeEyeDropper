@@ -1,6 +1,6 @@
 import { createNode } from "./helpers"
 
-type TooltipArgs = { color: Color; x: number; y: number }
+type TooltipArgs = { color: Color; x: number; y: number; screenWidth: number; screenHeight: number }
 
 class Overlay {
   el: HTMLElement
@@ -188,7 +188,7 @@ class ToolTip extends Tool {
     })
   }
 
-  hookColor(args: { color: any; x: number; y: number; screenWidth: number; screenHeight: number }) {
+  hookColor(args: TooltipArgs) {
     super.hookColor(args)
 
     // offset is used for positioning element on screen
@@ -271,7 +271,7 @@ class ToolBox extends Tool {
     this.elText.append(this.elTextRgb)
   }
 
-  hookColor(args: { color: any; x: number; y: number; top: number; left: number }) {
+  hookColor(args: TooltipArgs) {
     super.hookColor(args)
 
     this.elTextHex.textContent = `#${this.color.rgbhex}`

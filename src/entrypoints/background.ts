@@ -12,7 +12,7 @@ export type EdropperRequest = {
   options: EdropperOptions
 }
 
-async function pickFromWeb(tabId?: number): Promise<pickResponse> {
+async function pickFromWeb(tabId?: number): Promise<PickResponse> {
   console.log("picking from webpage")
 
   tabId ??= await getTabId()
@@ -29,7 +29,7 @@ async function pickFromWeb(tabId?: number): Promise<pickResponse> {
 
   const timeoutDuration = 3000
 
-  const timeoutPromise = new Promise<pickResponse>((resolve) =>
+  const timeoutPromise = new Promise<PickResponse>((resolve) =>
     setTimeout(() => resolve({ status: "timeout" }), timeoutDuration),
   )
 
@@ -179,6 +179,26 @@ async function onInstalledHandler(details: Runtime.OnInstalledDetailsType) {
 
 async function initBadge() {
   console.log("init badge")
+
+  // we have to set some badge text first
+  //
+  // on Firefox we are changing color of unicode character which we set as badge
+  // text. Background is set as transparent.
+  if (import.meta.env.FIREFOX) {
+    await browser.browserAction.setBadgeText({
+      // empty string doesn't work so I chose this unicode character
+      text: "⏹",
+    })
+
+    await browser.browserAction.setBadgeBackgroundColor({
+      color: [0, 0, 0, 0],
+    })
+    // on Chrome (and hopefully all chrome based) we are changing badge
+    // background color and leaving text color default as string is empty
+  } else {
+    await browser.action.setBadgeText({ text: " " })
+  }
+
   const color = await paletteGetColor()
   if (color) {
     paletteSetBadge(color)

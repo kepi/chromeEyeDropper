@@ -11,7 +11,6 @@
  * things under the hood, if necessary.
  */
 
-import browser from "webextension-polyfill"
 import storage from "./storage"
 import { settingsGet } from "./settings"
 import { copyToClipboard } from "./clipboard"
@@ -179,21 +178,14 @@ export const paletteSetBadge = async (color: string) => {
   // I'm trying to achieve similar effect as on Chrome with colored badge text
   // with text set to square-like unicode character and transparent background
   if (import.meta.env.FIREFOX) {
-    await browser.browserAction.setBadgeText({
-      text: "⏹",
+    browser.browserAction.setBadgeTextColor({
+      color,
     })
-    if (color) {
-      browser.browserAction.setBadgeTextColor({
-        color,
-      })
-      await browser.browserAction.setBadgeBackgroundColor({
-        // color,
-        color: [0, 0, 0, 0],
-      })
-    }
-    // I hope that on other browsers it would work as nicely as on Chrome
+    await browser.browserAction.setBadgeBackgroundColor({
+      color: [0, 0, 0, 0],
+    })
   } else {
-    await browser.browserAction.setBadgeBackgroundColor({ color })
+    await browser.action.setBadgeBackgroundColor({ color })
   }
 }
 

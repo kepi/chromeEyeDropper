@@ -2,9 +2,9 @@ import { defineExtensionMessaging } from "@webext-core/messaging"
 
 interface ProtocolMap {
   getVersion(): number
-  pickupActivate(data: EdropperOptions): pickResponse
+  pickupActivate(data: EdropperOptions): PickResponse
   pickupDeactivate(): void
-  pickFromWeb(data: number): pickResponse
+  pickFromWeb(data: number): PickResponse
   setColor(data: string): void
   capture(): string | null
 }
