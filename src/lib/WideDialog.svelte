@@ -7,7 +7,7 @@
   import PaletteSort from "~/lib/PaletteSort.svelte"
 </script>
 
-<div class="bg-slate-100 px-4 py-2 rounded prose prose-sm">
+<div class="px-4 py-2 rounded prose prose-sm">
   {#if $popupDialog === "palettes"}
     <PalettePalettes />
   {:else if $popupDialog === "wipe"}

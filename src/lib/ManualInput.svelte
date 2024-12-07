@@ -22,10 +22,7 @@
   }
 </script>
 
-<div class="mb-2 flex">
-  <div class="text-xs w-4 [writing-mode:vertical-lr] text-center rotate-180 font-mono">
-    Quick input
-  </div>
+<div class="mb-2 flex flex-row-reverse w-[9.2rem]">
   <div
     class="shadow-lg flex w-full flex-wrap gap-2 rounded p-2 text-xs"
     style="background-color: {acceptedHexColor}"
@@ -51,5 +48,8 @@
       </ul>
       <div><span class="kbd kbd-xs">Enter</span> to add.</div>
     </div>
+  </div>
+  <div class="text-xs w-4 [writing-mode:vertical-lr] text-center rotate-180 font-mono">
+    Quick input
   </div>
 </div>

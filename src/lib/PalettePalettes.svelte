@@ -1,12 +1,9 @@
 <script lang="ts">
+  import { isNumber } from "@/helpers"
   import pStore from "~/allPalettesStore"
   import PaletteDelete from "~/lib/PaletteDelete.svelte"
   import PaletteLine from "~/lib/PaletteLine.svelte"
   import { popupDialog } from "~/store"
-
-  function isNumber(input: unknown): input is number {
-    return !isNaN(Number(input))
-  }
 
   let newPaletteName = $state("")
 
