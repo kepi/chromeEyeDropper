@@ -11,6 +11,7 @@
  * things under the hood, if necessary.
  */
 
+import browser from "webextension-polyfill"
 import storage from "./storage"
 import { settingsGet } from "./settings"
 import { copyToClipboard } from "./clipboard"
