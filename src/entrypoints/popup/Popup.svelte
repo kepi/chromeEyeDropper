@@ -5,7 +5,6 @@
   import { selectedColor, newColor, wideDialog, popupDialog } from "~/store"
   import { Icon } from "@steeze-ui/svelte-icon"
   import Link from "~/Link.svelte"
-  import BottomBanner from "@/lib/BottomBanner.svelte"
   import {
     SlidersHorizontal as Mixer,
     Bug,
@@ -122,8 +121,4 @@
       >
     </div>
   </div>
-
-  {#if import.meta.env.CHROME}
-    <BottomBanner />
-  {/if}
 </div>
