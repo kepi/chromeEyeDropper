@@ -141,6 +141,24 @@ export const paletteSetWeight = async (paletteId: number, weight: number) => {
 }
 
 /**
+ * Set name for palette
+ *
+ * @remarks
+ * Used when ordering palettes
+ *
+ * @param paletteId - id of a palette
+ * @param name - new name
+ */
+export const paletteSetName = async (paletteId: number, name: string) => {
+  const meta = await storage.getItem(`p${paletteId}m`)
+
+  if (meta && meta.n !== name) {
+    meta.n = name
+    await storage.setItem(`p${paletteId}m`, meta)
+  }
+}
+
+/**
  * Sets palette as active
  *
  * @paletteId - id of palette to be set as active

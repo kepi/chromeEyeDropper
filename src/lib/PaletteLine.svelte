@@ -4,14 +4,14 @@
   import { paletteSetActive } from "~/palette"
   import { Icon } from "@steeze-ui/svelte-icon"
   import { Move } from "@steeze-ui/lucide-icons"
-  import Square from "./Square.svelte"
 
   interface Props {
     deleteAction: any
+    renameAction: any
     paletteId: number
   }
 
-  let { deleteAction, paletteId }: Props = $props()
+  let { deleteAction, renameAction, paletteId }: Props = $props()
   let palette = $derived($pStore[paletteId])
   let active = $derived(paletteId === $pStore.active?.id)
 
@@ -49,10 +49,15 @@
     </div>
   </div>
 
-  <button
-    data-paletteid={paletteId}
-    disabled={active}
-    class="btn btn-xs btn-error"
-    onclick={deleteAction}>delete</button
-  >
+  <div>
+    <button
+      data-paletteid={paletteId}
+      disabled={active}
+      class="btn btn-xs btn-error"
+      onclick={deleteAction}>delete</button
+    >
+    <button data-paletteid={paletteId} class="btn btn-xs btn-info" onclick={renameAction}
+      >rename</button
+    >
+  </div>
 </div>

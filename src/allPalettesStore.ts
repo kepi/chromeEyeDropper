@@ -155,6 +155,18 @@ function createAllPalettesStore() {
     }))
   }
 
+  function renamePalette(id: number, name: string) {
+    update((st) => {
+      const palette = st[id]
+      palette.name = name
+
+      return {
+        ...st,
+        [id]: palette,
+      }
+    })
+  }
+
   function switchPalette(id: number) {
     paletteSetActive(id)
   }
@@ -181,6 +193,7 @@ function createAllPalettesStore() {
     destroyPalette,
     switchPalette,
     createPalette,
+    renamePalette,
     manualSort,
   }
 }

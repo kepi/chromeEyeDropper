@@ -6,6 +6,7 @@
   import PaletteDelete from "~/lib/PaletteDelete.svelte"
   import PaletteLine from "~/lib/PaletteLine.svelte"
   import { popupDialog } from "~/store"
+  import PaletteRename from "./PaletteRename.svelte"
 
   let newPaletteName = $state("")
 
@@ -34,20 +35,31 @@
     $popupDialog = "palette"
   }
 
+  const renamePaletteDialog = (event: MouseEvent) => {
+    if (event.target === undefined) return
+
+    console.log(event.target)
+    showPaletteRename = true
+    paletteIdForAction = Number((event.target as HTMLElement).getAttribute("data-paletteid"))
+  }
+
   const deletePaletteDialog = (event: MouseEvent) => {
     if (event.target === undefined) return
 
     console.log(event.target)
     showPaletteDelete = true
-    paletteIdToDelete = Number((event.target as HTMLElement).getAttribute("data-paletteid"))
+    paletteIdForAction = Number((event.target as HTMLElement).getAttribute("data-paletteid"))
   }
 
   let showPaletteDelete = $state(false)
-  let paletteIdToDelete: number = $state(-1)
+  let showPaletteRename = $state(false)
+  let paletteIdForAction: number = $state(-1)
 </script>
 
 {#if showPaletteDelete}
-  <PaletteDelete bind:paletteId={paletteIdToDelete} bind:show={showPaletteDelete} />
+  <PaletteDelete bind:paletteId={paletteIdForAction} bind:show={showPaletteDelete} />
+{:else if showPaletteRename}
+  <PaletteRename bind:paletteId={paletteIdForAction} bind:show={showPaletteRename} />
 {:else}
   <h4 class="mb-4">Switch to Palette:</h4>
   <div class="not-prose">
@@ -75,7 +87,11 @@
       {onEnd}
     >
       {#each ids as id (id)}
-        <PaletteLine paletteId={Number(id)} deleteAction={deletePaletteDialog} />
+        <PaletteLine
+          paletteId={Number(id)}
+          deleteAction={deletePaletteDialog}
+          renameAction={renamePaletteDialog}
+        />
       {/each}
     </SortableList>
   </div>
