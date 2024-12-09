@@ -1,11 +1,31 @@
 <script lang="ts">
-  import { isNumber } from "@/helpers"
+  import { arrayMoveItem } from "~/helpers"
+  import { paletteSetWeight } from "~/palette"
+  import { SortableList } from "@sonderbase/svelte-sortablejs"
   import pStore from "~/allPalettesStore"
   import PaletteDelete from "~/lib/PaletteDelete.svelte"
   import PaletteLine from "~/lib/PaletteLine.svelte"
   import { popupDialog } from "~/store"
 
   let newPaletteName = $state("")
+
+  const onEnd = (event: SortableEvent) => {
+    if (event.oldIndex !== undefined && event.newIndex !== undefined) {
+      const newIds = arrayMoveItem(ids, event.oldIndex, event.newIndex)
+
+      newIds.forEach((id, idx) => {
+        paletteSetWeight(id, idx + 1)
+      })
+    }
+  }
+
+  let ids = $derived(
+    Object.keys($pStore)
+      .filter((key) => /^[0-9]+$/.test(key))
+      .map((key) => $pStore[Number(key)])
+      .sort((a, b) => a.weight - b.weight)
+      .map((meta) => meta.id),
+  )
 
   const newPalette = async (event: Event) => {
     event.preventDefault()
@@ -43,8 +63,11 @@
         <button type="submit" class="btn btn-sm btn-secondary" onclick={newPalette}>create</button>
       </li>
     </form>
-    {#each Object.keys($pStore).filter(isNumber) as id}
-      <PaletteLine paletteId={Number(id)} deleteAction={deletePaletteDialog} />
-    {/each}
+    <!-- TODO move to store somehow so it autoupdates -->
+    <SortableList group="palettes" dataIdAttr="data-palette" class="" {onEnd}>
+      {#each ids as id (id)}
+        <PaletteLine paletteId={Number(id)} deleteAction={deletePaletteDialog} />
+      {/each}
+    </SortableList>
   </ul>
 {/if}

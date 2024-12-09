@@ -15,6 +15,7 @@ import { toString } from "./helpers"
 
 type AllPalettesStore = Record<number, Palette> & {
   active?: Palette
+  ids: number[]
 }
 
 function createAllPalettesStore() {
@@ -27,6 +28,7 @@ function createAllPalettesStore() {
       colors: [],
       unsorted: [],
       deleted: [],
+      weight: 0,
     },
   })
 
@@ -86,10 +88,16 @@ function createAllPalettesStore() {
   function addPalette(id: number, palette: Palette) {
     update((st) => {
       const active = st.active?.id === id ? { active: palette } : {}
+      const ids = Object.keys(st)
+        .filter((key) => /^[0-9]+$/.test(key))
+        .map((key) => st[Number(key)])
+        .sort((a, b) => a.weight - b.weight)
+        .map((meta) => meta.id)
       const n = {
         ...st,
         [id]: palette,
         ...active,
+        ids,
       }
       return n
     })

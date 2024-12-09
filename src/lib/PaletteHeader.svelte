@@ -4,7 +4,6 @@
   import { Palette as PaletteIcon } from "@steeze-ui/lucide-icons"
   import { popupDialog } from "~/store"
   import PaletteTab from "./PaletteTab.svelte"
-  import { isNumber } from "@/helpers"
 
   const toggle = (what: string) => {
     $popupDialog = $popupDialog === what ? "palette" : what
@@ -15,6 +14,14 @@
   const close = () => {
     $popupDialog = "palette"
   }
+
+  let ids = $derived(
+    Object.keys($pStore)
+      .filter((key) => /^[0-9]+$/.test(key))
+      .map((key) => $pStore[Number(key)])
+      .sort((a, b) => a.weight - b.weight)
+      .map((meta) => meta.id),
+  )
 </script>
 
 {#if $pStore.active}
@@ -35,7 +42,7 @@
             <Icon src={PaletteIcon} class="w-4 h-4 stroke-slate-600 hover:stroke-primary" />
           </button>
         </div>
-        {#each Object.keys($pStore).slice(0, 7).filter(isNumber) as id}
+        {#each ids as id}
           <PaletteTab paletteId={Number(id)} />
         {/each}
       </div>

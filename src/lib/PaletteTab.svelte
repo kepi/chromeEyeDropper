@@ -9,22 +9,26 @@
 
   let { paletteId = $bindable() }: Props = $props()
   let palette = $derived($pStore[paletteId])
-  let active = $derived(($pStore.active?.id ?? 0) === palette.id && $popupDialog != "palettes")
+  let active = $derived(($pStore.active?.id ?? 0) === paletteId && $popupDialog != "palettes")
 </script>
 
-<div
-  class="text-nowrap max-w-14 h-6 tab [--tab-bg:#fff] [--tab-border-color:#cbd5e1]"
-  class:tab-active={active}
-  role="tab"
->
-  <button
-    class="text-sm hover:text-primary tooltip tooltip-bottom flex gap-1 items-center"
-    data-tip={`#${palette.id}: ${palette.name}`}
-    onclick={() => {
-      paletteSetActive(palette.id)
-      $popupDialog = "palette"
-    }}
+{#if palette?.id !== undefined}
+  <div
+    class="text-nowrap max-w-14 h-6 tab [--tab-bg:#fff] [--tab-border-color:#cbd5e1]"
+    class:tab-active={active}
+    role="tab"
   >
-    <div class="truncate max-w-[48px] shadow-black" class:text-shadow={active}>{palette.name}</div>
-  </button>
-</div>
+    <button
+      class="text-sm hover:text-primary tooltip tooltip-bottom flex gap-1 items-center"
+      data-tip={`#${palette.id}: ${palette.name}`}
+      onclick={() => {
+        paletteSetActive(palette.id)
+        $popupDialog = "palette"
+      }}
+    >
+      <div class="truncate max-w-[48px] shadow-black" class:text-shadow={active}>
+        {palette.name}
+      </div>
+    </button>
+  </div>
+{/if}
