@@ -33,7 +33,7 @@
 </script>
 
 <button
-  class={`${classes} box-content rounded-full border-4 border-gray-200 text-gray-700 hover:border-double`}
+  class={`${classes} box-content rounded-full text-gray-700 border-gray-200 hover:border-double border-4`}
   class:h-6={!small}
   class:w-6={!small}
   class:h-4={small}

@@ -50,25 +50,33 @@
   <PaletteDelete bind:paletteId={paletteIdToDelete} bind:show={showPaletteDelete} />
 {:else}
   <h4 class="mb-4">Switch to Palette:</h4>
-  <ul class="not-prose ml-2">
-    <form>
-      <li class="flex items-center gap-2 px-2 py-1 mt-1 rounded hover:bg-slate-300">
-        <div class="w-6 text-right font-mono">#?:</div>
+  <div class="not-prose">
+    <form class="">
+      <div
+        class="flex group gap-2 py-1 rounded hover:bg-slate-300 items-center bg-white border-b border-dashed"
+      >
+        <div class="shrink invisible w-4 h-4">&nbsp;</div>
+        <div class="w-7 text-right font-mono">#?:</div>
         <input
-          class="input input-sm"
+          class="input input-sm w-48"
           type="text"
           name="newPaletteName"
           bind:value={newPaletteName}
           placeholder="name of new palette"
         />
         <button type="submit" class="btn btn-sm btn-secondary" onclick={newPalette}>create</button>
-      </li>
+      </div>
     </form>
-    <!-- TODO move to store somehow so it autoupdates -->
-    <SortableList group="palettes" dataIdAttr="data-paletteid" class="" {onEnd}>
+
+    <SortableList
+      group="palettes"
+      dataIdAttr="data-paletteid"
+      class="divide-y divide-dashed"
+      {onEnd}
+    >
       {#each ids as id (id)}
         <PaletteLine paletteId={Number(id)} deleteAction={deletePaletteDialog} />
       {/each}
     </SortableList>
-  </ul>
+  </div>
 {/if}
