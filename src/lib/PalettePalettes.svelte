@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { arrayMoveItem, visibleTabNames } from "~/popupHelpers"
+  import { arrayMoveItem } from "~/popupHelpers"
   import { paletteSetWeight } from "~/palette"
   import { SortableList } from "@sonderbase/svelte-sortablejs"
   import pStore from "~/allPalettesStore"
@@ -7,6 +7,9 @@
   import PaletteLine from "~/lib/PaletteLine.svelte"
   import { popupDialog } from "~/store"
   import PaletteRename from "./PaletteRename.svelte"
+  import { Download, Upload } from "@steeze-ui/lucide-icons"
+  import { Icon } from "@steeze-ui/svelte-icon"
+  import Link from "~/Link.svelte"
 
   let newPaletteName = $state("")
 
@@ -38,7 +41,6 @@
   const renamePaletteDialog = (event: MouseEvent) => {
     if (event.target === undefined) return
 
-    console.log(event.target)
     showPaletteRename = true
     paletteIdForAction = Number((event.target as HTMLElement).getAttribute("data-paletteid"))
   }
@@ -46,9 +48,12 @@
   const deletePaletteDialog = (event: MouseEvent) => {
     if (event.target === undefined) return
 
-    console.log(event.target)
     showPaletteDelete = true
     paletteIdForAction = Number((event.target as HTMLElement).getAttribute("data-paletteid"))
+  }
+
+  const toggle = (what: string) => {
+    $popupDialog = $popupDialog === what ? "palettes" : what
   }
 
   let showPaletteDelete = $state(false)
@@ -61,6 +66,25 @@
 {:else if showPaletteRename}
   <PaletteRename bind:paletteId={paletteIdForAction} bind:show={showPaletteRename} />
 {:else}
+  <div class="flex items-center justify-start gap-2">
+    <div class="tooltip tooltip-right" data-tip="Export all Palettes">
+      <button
+        class="btn btn-xs"
+        onclick={() => {
+          toggle("export")
+        }}
+      >
+        <Icon src={Download} class="w-4 h-4 stroke-slate-600 hover:stroke-primary" />
+        export
+      </button>
+    </div>
+    <div class="tooltip tooltip-right" data-tip="Import one or more Palettes">
+      <Link href="/popup.html#import" class="btn btn-xs">
+        <Icon src={Upload} class="w-4 h-4 stroke-slate-600 hover:stroke-primary" />
+        import
+      </Link>
+    </div>
+  </div>
   <h4 class="mb-4">Switch to Palette:</h4>
   <div class="not-prose">
     <form class="">

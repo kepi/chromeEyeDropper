@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte"
   import ColorBox from "~/lib/ColorBox.svelte"
   import PickFromWebpageButton from "~/lib/PickFromWebpageButton.svelte"
   import { selectedColor, newColor, wideDialog, popupDialog } from "~/store"
@@ -12,6 +13,7 @@
   import PopupFooter from "./PopupFooter.svelte"
 
   let value = $derived(`linear-gradient(to right, ${$selectedColor} 0%, ${$newColor} 100%)`)
+  let hash = $state("")
 
   const copy = () => {
     copyToClipboard(value)
@@ -20,6 +22,14 @@
   const colorPicker = () => {
     $popupDialog = "picker"
   }
+
+  onMount(() => {
+    hash = window.location.hash
+
+    if (hash === "#import") {
+      $popupDialog = "import"
+    }
+  })
 </script>
 
 <div class="container min-w-[464px] max-w-[600px] m-auto">

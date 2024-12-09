@@ -1,7 +1,7 @@
 <script lang="ts">
   import pStore from "~/allPalettesStore"
   import { Icon } from "@steeze-ui/svelte-icon"
-  import { Download, Move, Trash2 } from "@steeze-ui/lucide-icons"
+  import { Move, Trash2 } from "@steeze-ui/lucide-icons"
   import { popupDialog } from "~/store"
   import { sortByInfo } from "~/palette"
 
@@ -29,17 +29,6 @@
       }}
     >
       <Icon src={Move} class="w-4 h-4 stroke-slate-600 hover:stroke-primary" />
-    </button>
-  </div>
-  <div class="text-slate-300">|</div>
-  <div class="tooltip tooltip-bottom" data-tip="Export your Palettes">
-    <button
-      class="flex"
-      onclick={() => {
-        toggle("export")
-      }}
-    >
-      <Icon src={Download} class="w-4 h-4 stroke-slate-600 hover:stroke-primary" />
     </button>
   </div>
   <div class="text-slate-300">|</div>

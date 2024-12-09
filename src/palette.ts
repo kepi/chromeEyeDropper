@@ -374,6 +374,7 @@ export const paletteCreate = async (
   name: string,
   colors: StorePaletteColor[],
   time?: number,
+  sortBy?: StorePaletteSortBy,
 ) => {
   // get next paletteId
   if (paletteId === null) {
@@ -393,7 +394,7 @@ export const paletteCreate = async (
     i: paletteId,
     n: name,
     t: time ?? Date.now(),
-    s: "m:asc",
+    s: sortBy ?? "m:asc",
     w: await palettesGetMaxWeight(),
   })
 
@@ -620,7 +621,21 @@ export const getPalettesForExport = async () => {
   return Promise.all(palettes)
 }
 
-export const getPaletteForExport = async (paletteId: number) => {
+export type ColorJson = {
+  hex: StorePaletteColor["h"]
+  source: StorePaletteColor["s"]
+  captured: Date
+}
+
+export type PaletteJson = {
+  id: StorePaletteMeta["i"]
+  name: StorePaletteMeta["n"]
+  createdAt: StorePaletteMeta["t"]
+  sortBy: StorePaletteMeta["s"]
+  colors: ColorJson[]
+}
+
+export const getPaletteForExport = async (paletteId: number): Promise<PaletteJson> => {
   const colorsKey = `p${paletteId}c` as keyof StorePalettes
   const metaKey = `p${paletteId}m` as keyof StorePalettes
 
@@ -641,6 +656,26 @@ export const getPaletteForExport = async (paletteId: number) => {
     sortBy: meta.s,
     colors,
   }
+}
+
+export const jsonColorsToColors = (jsonColors: ColorJson[]) => {
+  return jsonColors.map((jsonColor) => ({
+    h: jsonColor.hex,
+    s: jsonColor.source,
+    t: new Date(jsonColor.captured).getTime(),
+  }))
+}
+
+export const importPalette = async (jsonPalette: PaletteJson) => {
+  // find if we can use old id
+  const testMeta = await storage.getItem(`p${jsonPalette.id}m`)
+  // if testMeta is undefined, id is free and we can use it
+  const id = testMeta === null ? jsonPalette.id : await paletteFindFirstAvailableId()
+
+  // then we convert colors
+  const colors = jsonColorsToColors(jsonPalette.colors)
+
+  return paletteCreate(id, jsonPalette.name, colors, jsonPalette.createdAt, jsonPalette.sortBy)
 }
 
 export const palettesIds = async () => {
