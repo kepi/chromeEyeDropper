@@ -15,6 +15,7 @@ import { toString } from "./helpers"
 
 type AllPalettesStore = Record<number, Palette> & {
   active?: Palette
+  ids: number[]
 }
 
 function createAllPalettesStore() {
@@ -27,6 +28,7 @@ function createAllPalettesStore() {
       colors: [],
       unsorted: [],
       deleted: [],
+      weight: 0,
     },
   })
 
@@ -86,10 +88,16 @@ function createAllPalettesStore() {
   function addPalette(id: number, palette: Palette) {
     update((st) => {
       const active = st.active?.id === id ? { active: palette } : {}
+      const ids = Object.keys(st)
+        .filter((key) => /^[0-9]+$/.test(key))
+        .map((key) => st[Number(key)])
+        .sort((a, b) => a.weight - b.weight)
+        .map((meta) => meta.id)
       const n = {
         ...st,
         [id]: palette,
         ...active,
+        ids,
       }
       return n
     })
@@ -97,11 +105,13 @@ function createAllPalettesStore() {
 
   function destroyPalette(id: number) {
     update((st) => {
-      const { [id]: removed, ...rest } = st
-      return rest
+      if (st.active && st.active.id != id) {
+        const { [id]: removed, ...rest } = st
+        paletteDelete(id)
+        return rest
+      }
+      return st
     })
-
-    paletteDelete(id)
   }
 
   function manualSort(
@@ -145,6 +155,18 @@ function createAllPalettesStore() {
     }))
   }
 
+  function renamePalette(id: number, name: string) {
+    update((st) => {
+      const palette = st[id]
+      palette.name = name
+
+      return {
+        ...st,
+        [id]: palette,
+      }
+    })
+  }
+
   function switchPalette(id: number) {
     paletteSetActive(id)
   }
@@ -171,6 +193,7 @@ function createAllPalettesStore() {
     destroyPalette,
     switchPalette,
     createPalette,
+    renamePalette,
     manualSort,
   }
 }

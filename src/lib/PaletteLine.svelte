@@ -2,13 +2,18 @@
   import pStore from "~/allPalettesStore"
   import { popupDialog } from "~/store"
   import { paletteSetActive } from "~/palette"
+  import { Icon } from "@steeze-ui/svelte-icon"
+  import { Move } from "@steeze-ui/lucide-icons"
 
   interface Props {
-    deleteAction: any;
-    paletteId: number;
+    deleteAction: any
+    renameAction: any
+    paletteId: number
   }
 
-  let { deleteAction, paletteId }: Props = $props();
+  let { deleteAction, renameAction, paletteId }: Props = $props()
+  let palette = $derived($pStore[paletteId])
+  let active = $derived(paletteId === $pStore.active?.id)
 
   async function switchPalette(paletteId: number) {
     paletteSetActive(paletteId)
@@ -16,29 +21,43 @@
   }
 </script>
 
-<li class="flex items-center gap-2 px-2 py-1 mt-1 rounded hover:bg-slate-300">
-  <div class="w-6 text-right font-mono">
-    #{$pStore[paletteId].id}:
+<div class="flex group gap-2 py-1 rounded hover:bg-slate-300 items-center bg-white">
+  <div class="shrink invisible group-hover:visible">
+    <Icon src={Move} class="w-4 h-4 stroke-slate-600 hover:stroke-primary" />
+  </div>
+  <div class="w-7 text-xs text-right font-mono">
+    #{palette.id}:
   </div>
 
-  <div class="text-base">
-    {#if paletteId === $pStore.active?.id}
-      <b>➤ {$pStore[paletteId].name}</b>
-    {:else}
-      <button
-        class="link font-bold text-neutral hover:text-primary"
-        onclick={() => switchPalette($pStore[paletteId].id)}
-      >
-        {$pStore[paletteId].name}
-      </button>
-    {/if}
-    <span class="text-xs ml-2 mr-4">({$pStore[paletteId].colors.length} colors)</span>
+  <div class="w-48">
+    <button
+      class="link text-left hover:text-primary"
+      class:font-bold={active}
+      onclick={() => switchPalette(palette.id)}
+    >
+      {$pStore[paletteId].name}
+    </button>
+    <div>
+      {#each palette.colors.toSpliced(14) as color (color.h)}
+        <span
+          class="inline-block rounded-full text-gray-700 border-gray-200 hover:border-double border-2 w-3 h-3"
+          style="background-color: {color.h}"
+        >
+          &nbsp;
+        </span>
+      {/each}
+    </div>
   </div>
 
-  <button
-    disabled={paletteId === $pStore.active?.id}
-    class="btn btn-xs btn-error"
-    data-paletteid={$pStore[paletteId].id}
-    onclick={deleteAction}>delete</button
-  >
-</li>
+  <div>
+    <button
+      data-paletteid={paletteId}
+      disabled={active}
+      class="btn btn-xs btn-error"
+      onclick={deleteAction}>delete</button
+    >
+    <button data-paletteid={paletteId} class="btn btn-xs btn-info" onclick={renameAction}
+      >rename</button
+    >
+  </div>
+</div>

@@ -1,16 +1,32 @@
 <script lang="ts">
   import pStore from "~/allPalettesStore"
-  import PaletteHeader from "~/lib/PaletteHeader.svelte"
   import ColorPicker from "~/lib/ColorPicker.svelte"
   import Square from "~/lib/Square.svelte"
   import { popupDialog } from "~/store"
+  import PaletteTools from "./PaletteTools.svelte"
 
   let showTipClick = $state(false)
+
+  // in case there isn't active palette, set some
+  // this shouldn't happen, but as it would lead to broken view for user,
+  // lets make sure
+  if ($pStore.active === undefined) {
+    pStore.switchPalette(Number(Object.keys($pStore)[0]))
+  }
 </script>
 
-<div>
-  <PaletteHeader />
-  <div class="my-4 max-w-md">
+<div class="">
+  {#if $pStore.active}
+    <div class="flex justify-between h-8 pt-1">
+      <div class="flex pl-2">
+        <PaletteTools />
+      </div>
+      <div class="items-center flex text-slate-700 text-sm mr-5 truncate max-w-64">
+        #{$pStore.active.id}: {$pStore.active.name}
+      </div>
+    </div>
+  {/if}
+  <div class="my-4">
     {#if $popupDialog === "picker"}
       <ColorPicker />
     {:else if $pStore.active?.colors.length === 0}

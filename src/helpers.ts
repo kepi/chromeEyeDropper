@@ -88,3 +88,7 @@ export function isSiteRestricted(url: URL, browser = import.meta.env.BROWSER) {
     }
   }
 }
+
+export function isNumber(input: unknown): input is number {
+  return !isNaN(Number(input))
+}

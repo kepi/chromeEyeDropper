@@ -1,89 +1,60 @@
 <script lang="ts">
   import pStore from "~/allPalettesStore"
   import { Icon } from "@steeze-ui/svelte-icon"
-  import { Download, Move, Palette as PaletteIcon, Trash2 } from "@steeze-ui/lucide-icons"
-  import { sortByInfo } from "~/palette"
+  import { Palette as PaletteIcon } from "@steeze-ui/lucide-icons"
   import { popupDialog } from "~/store"
+  import PaletteTab from "./PaletteTab.svelte"
+  import { visibleTabNames } from "~/popupHelpers"
 
   const toggle = (what: string) => {
     $popupDialog = $popupDialog === what ? "palette" : what
   }
 
-  let sortBy = $derived($pStore.active?.sortBy ?? "m:asc")
-  let sortInfo = $derived(sortByInfo[sortBy])
+  let palettesActive = $derived($popupDialog === "palettes")
+
+  const close = () => {
+    $popupDialog = "palette"
+  }
+
+  let ids = $derived(
+    Object.keys($pStore)
+      .filter((key) => /^[0-9]+$/.test(key))
+      .map((key) => $pStore[Number(key)])
+      .sort((a, b) => a.weight - b.weight)
+      .map((meta) => meta.id),
+  )
+
+  let visibleTabs = $derived(visibleTabNames(ids.map((id) => ({ id: id, name: $pStore[id].name }))))
 </script>
 
 {#if $pStore.active}
-  <div class="mr-4 mt-6 flex justify-between">
-    <div class="flex items-center gap-1">
-      <div class="tooltip tooltip-right" data-tip="Manage Palettes">
-        <button
-          class="flex"
-          onclick={() => {
-            toggle("palettes")
-          }}
+  <div class="mr-4 mt-6 flex justify-between w-full">
+    <div class="flex items-center gap-1 bg-slate-100 rounded-t pt-1">
+      <div role="tablist" class="tabs tabs-lifted tabs-xs">
+        <div
+          class="h-6 tab [--tab-border-color:#cbd5e1]"
+          class:tab-active={palettesActive}
+          role="tab"
         >
-          <Icon src={PaletteIcon} class="w-4 h-4 stroke-slate-600 hover:stroke-primary" />
-        </button>
-      </div>
-      <div class="text-nowrap max-w-28">
-        <button
-          class="text-sm hover:text-primary tooltip tooltip-bottom flex gap-1 items-center"
-          data-tip={$pStore.active.name}
-          onclick={() => {
-            toggle("palettes")
-          }}
-        >
-          <div class="text-xs">#{$pStore.active.id}:</div>
-          <div class="font-bold">
-            <div class="truncate max-w-[104px]">{$pStore.active.name}</div>
-          </div>
-        </button>
+          <button
+            class="flex"
+            onclick={() => {
+              toggle("palettes")
+            }}
+          >
+            <Icon src={PaletteIcon} class="w-4 h-4 stroke-slate-600 hover:stroke-primary" />
+          </button>
+        </div>
+        {#each visibleTabs as tabName (tabName.id)}
+          <PaletteTab paletteId={Number(tabName.id)} shortName={tabName.name} />
+        {/each}
       </div>
     </div>
-    <div class="flex items-center gap-1">
-      <div class="tooltip tooltip-bottom" data-tip="Change sorting of active Palette">
-        <button class="flex gap-1 group" onclick={() => toggle("sort")}>
-          <Icon src={sortInfo.icon} class="w-4 h-4 stroke-slate-600 group-hover:stroke-primary" />
-          <Icon
-            src={sortInfo.iconOrder}
-            class="w-4 h-4 stroke-slate-600 group-hover:stroke-primary"
-          />
-        </button>
+    {#if $popupDialog !== "palette"}
+      <!-- 147px is here so poup doesn't rescale when switching between wide and normal dialog -->
+      <div class="w-[147px] flex flex-row-reverse">
+        <button class="p-1 px-2 bg-slate-100 rounded" onclick={close}> ✖ </button>
       </div>
-      <div class="text-slate-300">|</div>
-      <div class="tooltip tooltip-bottom" data-tip="Rearrange or trash colors in Palette">
-        <button
-          class="flex"
-          onclick={() => {
-            toggle("edit")
-          }}
-        >
-          <Icon src={Move} class="w-4 h-4 stroke-slate-600 hover:stroke-primary" />
-        </button>
-      </div>
-      <div class="text-slate-300">|</div>
-      <div class="tooltip tooltip-bottom" data-tip="Export your Palettes">
-        <button
-          class="flex"
-          onclick={() => {
-            toggle("export")
-          }}
-        >
-          <Icon src={Download} class="w-4 h-4 stroke-slate-600 hover:stroke-primary" />
-        </button>
-      </div>
-      <div class="text-slate-300">|</div>
-      <div class="tooltip tooltip-bottom" data-tip="Wipe colors from active Palette">
-        <button
-          class="flex"
-          onclick={() => {
-            toggle("wipe")
-          }}
-        >
-          <Icon src={Trash2} class="w-4 h-4 stroke-slate-600 hover:stroke-primary" />
-        </button>
-      </div>
-    </div>
+    {/if}
   </div>
 {/if}

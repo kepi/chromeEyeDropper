@@ -5,9 +5,10 @@
   import PaletteEdit from "~/lib/PaletteEdit.svelte"
   import PaletteExport from "~/lib/PaletteExport.svelte"
   import PaletteSort from "~/lib/PaletteSort.svelte"
+  import PaletteImport from "./PaletteImport.svelte"
 </script>
 
-<div class="bg-slate-100 px-4 py-2 rounded prose prose-sm">
+<div class="px-4 py-2 rounded prose prose-sm">
   {#if $popupDialog === "palettes"}
     <PalettePalettes />
   {:else if $popupDialog === "wipe"}
@@ -18,5 +19,7 @@
     <PaletteEdit />
   {:else if $popupDialog === "export"}
     <PaletteExport />
+  {:else if $popupDialog === "import"}
+    <PaletteImport />
   {/if}
 </div>

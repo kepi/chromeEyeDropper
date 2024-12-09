@@ -29,11 +29,13 @@ import { defaults, type SettingsProps } from "./settings"
 import {
   paletteCreate,
   paletteSetActive,
+  type StorePaletteMeta,
   type StorePalettes,
   type StorePaletteColor,
   type StorePaletteColorSource,
   paletteDefaultColors,
   getDefaultColor,
+  palettesIds,
 } from "./palette"
 import { storeAppVersion } from "./version"
 
@@ -61,6 +63,39 @@ const setDefaultStorage = async () => {
 }
 
 export const checkStorage = async () => {
+  await checkLegacyStorage()
+
+  const v = await extensionStorage.getItem("v")
+
+  // v should be defined now but better safe than sorry
+  if (!v) {
+    return false
+  }
+
+  if (v === 26) {
+    console.log("Storage version v26 - adding palette weights")
+    await setMissingPaletteWeights()
+    await extensionStorage.setItem("v", 27)
+  }
+
+  return true
+}
+
+export const setMissingPaletteWeights = async () => {
+  const ids = (await palettesIds()).sort((a, b) => a - b)
+
+  const updatePromises = ids.map(async (paletteId, idx) => {
+    const metaKey = `p${paletteId}m` as keyof StorePalettes
+    const meta = (await extensionStorage.getItem(metaKey)) as StorePaletteMeta
+
+    meta.w = idx + 1
+    await extensionStorage.setItem(metaKey, meta)
+  })
+
+  await Promise.all(updatePromises)
+}
+
+export const checkLegacyStorage = async () => {
   const v = await extensionStorage.getItem("v")
 
   // v exists, we are in post 0.6 schema
@@ -94,7 +129,7 @@ export const checkStorage = async () => {
 
       // settings and basic info
       const convertedData: Schema = {
-        v: STORAGE_VERSION,
+        v: 26,
         c: data.history?.lc || getDefaultColor(),
         p: 0, // we will set selected palette in next steps
         autoClipboard: data.settings?.autoClipboard ?? defaults.autoClipboard,

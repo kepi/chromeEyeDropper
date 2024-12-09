@@ -16,7 +16,7 @@
     <PickFromWpButton
       reason="Can't pick from new blank page. Your browser won't allow me to access it."
     />
-  {:else if tab.url === browser.runtime.getURL("/popup.html")}
+  {:else if tab.url.startsWith(browser.runtime.getURL("/popup.html"))}
     <div class="-mt-6"></div>
   {:else}
     {@const url = new URL(tab.url)}
