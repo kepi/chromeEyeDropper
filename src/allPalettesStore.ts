@@ -105,11 +105,13 @@ function createAllPalettesStore() {
 
   function destroyPalette(id: number) {
     update((st) => {
-      const { [id]: removed, ...rest } = st
-      return rest
+      if (st.active && st.active.id != id) {
+        const { [id]: removed, ...rest } = st
+        paletteDelete(id)
+        return rest
+      }
+      return st
     })
-
-    paletteDelete(id)
   }
 
   function manualSort(
