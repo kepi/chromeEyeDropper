@@ -7,6 +7,7 @@
   }
 
   let { paletteId = $bindable(), show = $bindable() }: Props = $props()
+  let palette = $derived($pStore[paletteId])
 
   function reallyDeletePalette() {
     // we have to use pStore function as we need to remove it first from store,
@@ -19,11 +20,9 @@
   }
 </script>
 
-{#if paletteId > -1 && show}
+{#if palette && show}
   <h4>
-    Really delete palette "<span class="font-mono"
-      >#{$pStore[paletteId].id} {$pStore[paletteId].name}"?</span
-    >
+    Really delete palette "<span class="font-mono">#{palette.id} {palette.name}"?</span>
   </h4>
   <button class="btn btn-error" onclick={() => reallyDeletePalette()}
     >Yes, I know it can't be restored.</button
