@@ -20,10 +20,7 @@
   }
 </script>
 
-<li
-  data-palette={paletteId}
-  class="flex items-center gap-2 px-2 py-1 mt-1 rounded hover:bg-slate-300"
->
+<li class="flex items-center gap-2 px-2 py-1 mt-1 rounded hover:bg-slate-300">
   <div>
     <Icon src={Move} class="w-4 h-4 stroke-slate-600 hover:stroke-primary" />
   </div>
@@ -46,5 +43,10 @@
     <span class="text-xs ml-2 mr-4">({palette.colors.length} colors)</span>
   </div>
 
-  <button disabled={active} class="btn btn-xs btn-error" onclick={deleteAction}>delete</button>
+  <button
+    data-paletteid={paletteId}
+    disabled={active}
+    class="btn btn-xs btn-error"
+    onclick={deleteAction}>delete</button
+  >
 </li>

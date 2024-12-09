@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { arrayMoveItem } from "~/helpers"
+  import { arrayMoveItem, visibleTabNames } from "~/popupHelpers"
   import { paletteSetWeight } from "~/palette"
   import { SortableList } from "@sonderbase/svelte-sortablejs"
   import pStore from "~/allPalettesStore"
@@ -37,6 +37,7 @@
   const deletePaletteDialog = (event: MouseEvent) => {
     if (event.target === undefined) return
 
+    console.log(event.target)
     showPaletteDelete = true
     paletteIdToDelete = Number((event.target as HTMLElement).getAttribute("data-paletteid"))
   }
@@ -64,7 +65,7 @@
       </li>
     </form>
     <!-- TODO move to store somehow so it autoupdates -->
-    <SortableList group="palettes" dataIdAttr="data-palette" class="" {onEnd}>
+    <SortableList group="palettes" dataIdAttr="data-paletteid" class="" {onEnd}>
       {#each ids as id (id)}
         <PaletteLine paletteId={Number(id)} deleteAction={deletePaletteDialog} />
       {/each}

@@ -5,9 +5,10 @@
 
   interface Props {
     paletteId: number
+    shortName: string
   }
 
-  let { paletteId = $bindable() }: Props = $props()
+  let { paletteId = $bindable(), shortName }: Props = $props()
   let palette = $derived($pStore[paletteId])
   let active = $derived(($pStore.active?.id ?? 0) === paletteId && $popupDialog != "palettes")
 </script>
@@ -27,7 +28,7 @@
       }}
     >
       <div class="truncate max-w-[48px] shadow-black" class:text-shadow={active}>
-        {palette.name}
+        {shortName}
       </div>
     </button>
   </div>

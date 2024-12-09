@@ -6,6 +6,13 @@
   import PaletteTools from "./PaletteTools.svelte"
 
   let showTipClick = $state(false)
+
+  // in case there isn't active palette, set some
+  // this shouldn't happen, but as it would lead to broken view for user,
+  // lets make sure
+  if ($pStore.active === undefined) {
+    pStore.switchPalette(Number(Object.keys($pStore)[0]))
+  }
 </script>
 
 <div class="">
