@@ -86,8 +86,10 @@ export interface StorePaletteMeta {
   n: string
   /** created at (timestamp) */
   t: number
-  /** sorted by */
+  /** colors in palette sorted by */
   s: StorePaletteSortBy
+  /** palette weight for palette list sorting */
+  w: number
 }
 
 export type StorePalettes = {
@@ -110,8 +112,32 @@ export const paletteGetActive = async () => {
   return p ?? 0
 }
 
+/**
+ * Returns default hex color
+ *
+ * @remarks
+ * Used when there is no color defined
+ */
 export const noColor = () => {
   return "#fec76f"
+}
+
+/**
+ * Set weight for palette
+ *
+ * @remarks
+ * Used when ordering palettes
+ *
+ * @param paletteId - id of a palette
+ * @param weight - new weight
+ */
+export const paletteSetWeight = async (paletteId: number, weight: number) => {
+  const meta = await storage.getItem(`p${paletteId}m`)
+
+  if (meta && meta.w !== weight) {
+    meta.w = weight
+    await storage.setItem(`p${paletteId}m`, meta)
+  }
 }
 
 /**
@@ -291,13 +317,18 @@ export const findFirstMissingNumber = (arr: number[]) => {
  *
  */
 export const paletteFindFirstAvailableId = async () => {
-  const syncStorage = await browser.storage.sync.get()
-  // this will count all existing palettes but default one (0) and add 1
-  const existingPaletteIds = Object.keys(syncStorage)
-    .filter((key) => /^p[0-9]+m$/.test(key))
-    .map((key) => Number(key.match(/^p([0-9]+)m$/)![1]))
+  return findFirstMissingNumber(await palettesIds())
+}
 
-  return findFirstMissingNumber(existingPaletteIds)
+export const palettesGetMaxWeight = async () => {
+  const storage = await browser.storage.sync.get()
+  return (
+    1 +
+    Object.keys(storage)
+      .filter((key) => /^p[0-9]+m$/.test(key))
+      .map((key) => (storage[key] as StorePaletteMeta)["w"])
+      .reduce((max, weight) => (weight > max ? weight : (max ?? 0)), 0)
+  )
 }
 
 /**
@@ -345,6 +376,7 @@ export const paletteCreate = async (
     n: name,
     t: time ?? Date.now(),
     s: "m:asc",
+    w: await palettesGetMaxWeight(),
   })
 
   await storage.setItem(`p${paletteId}c`, colors)
@@ -493,6 +525,7 @@ export type Palette = {
   colors: StorePaletteColor[]
   unsorted: StorePaletteColor[]
   deleted: StorePaletteColor[]
+  weight: number
 }
 
 const tinySorter = (a: TinyColor, b: TinyColor) => {
@@ -559,6 +592,7 @@ export const getPalette = async (paletteId?: number) => {
     colors,
     unsorted,
     deleted,
+    weight: meta.w,
   } as Palette
 }
 
@@ -592,19 +626,12 @@ export const getPaletteForExport = async (paletteId: number) => {
 }
 
 export const palettesIds = async () => {
-  const data = await browser.storage.sync.get()
-
-  const palettes: number[] = []
-
-  Object.keys(data).forEach(async (key) => {
-    const match = key.match(/^p([0-9]+)m$/)
-    if (match) {
-      const paletteId = Number(match[1])
-      palettes.push(paletteId)
-    }
-  })
-
-  return palettes
+  const storage = await browser.storage.sync.get()
+  return Object.keys(storage)
+    .filter((key) => /^p[0-9]+m$/.test(key))
+    .map((key) => storage[key] as StorePaletteMeta)
+    .sort((a, b) => a.w - b.w)
+    .map((meta) => meta.i)
 }
 
 export const paletteDelete = async (paletteId: number) => {

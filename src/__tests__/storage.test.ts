@@ -1,4 +1,4 @@
-import { Schema, checkStorage } from "~/storage"
+import { checkStorage } from "~/storage"
 
 import browser from "webextension-polyfill"
 import { fakeBrowser } from "wxt/testing"
@@ -12,9 +12,9 @@ import {
   storeV24NoPalettes,
   storeV24NoSettings,
 } from "./storage.previous"
-import { StorePaletteColor, StorePaletteMeta, StorePalettes } from "@/palette"
+import { StorePaletteColor, StorePaletteMeta } from "@/palette"
 
-const STORAGE_VERSION = 26
+const STORAGE_VERSION = 27
 
 describe("emptyStore", () => {
   beforeEach(async () => {
@@ -52,7 +52,7 @@ describe("unknownStore", () => {
     expect(syncStorage.p).toEqual(0)
 
     const { t, ...p0mWoTime } = syncStorage.p0m as StorePaletteMeta
-    expect(p0mWoTime).toEqual({ i: 0, n: "default", s: "m:asc" })
+    expect(p0mWoTime).toEqual({ i: 0, n: "default", s: "m:asc", w: 1 })
     expect((syncStorage.p0c as StorePaletteColor[]).length).toEqual(7)
   })
 
