@@ -1,4 +1,4 @@
-import { arrayMoveItem } from "@/helpers"
+import { arrayMoveItem, type TabName, visibleTabNames } from "~/popupHelpers"
 import { test, describe, expect } from "vitest"
 
 describe("arrayMoveItem", () => {
@@ -16,5 +16,85 @@ describe("arrayMoveItem", () => {
   test.each(inputs)("%s", (_name, a, b, res) => {
     const changed = arrayMoveItem(ids, a, b)
     expect(changed).toStrictEqual(res)
+  })
+})
+
+describe("getTabs", () => {
+  const tabNamesSingle: TabName[] = [{ id: 0, name: "default" }]
+
+  const tabNamesShort: TabName[] = [
+    { id: 0, name: "default" },
+    { id: 2, name: "short" },
+    { id: 3, name: "💩" },
+    { id: 5, name: "🐕" },
+  ]
+
+  const tabNamesSingleLong: TabName[] = [
+    { id: 0, name: "really really long name of tab which should be shorten in all cases" },
+  ]
+
+  const resTabNamesSingleLong: TabName[] = [{ id: 0, name: "really…" }]
+
+  const tabNamesShortable: TabName[] = [
+    { id: 0, name: "default" },
+    { id: 1, name: "really long name of tab" },
+    { id: 2, name: "short" },
+    { id: 3, name: "💩" },
+    { id: 4, name: "another really long name of tab" },
+    { id: 5, name: "🐕" },
+    { id: 6, name: "one" },
+    { id: 7, name: "two" },
+  ]
+
+  const resTabNamesShortable: TabName[] = [
+    { id: 0, name: "default" },
+    { id: 1, name: "really…" },
+    { id: 2, name: "short" },
+    { id: 3, name: "💩" },
+    { id: 4, name: "another…" },
+    { id: 5, name: "🐕" },
+    { id: 6, name: "one" },
+    { id: 7, name: "two" },
+  ]
+
+  const tabNamesLong: TabName[] = [
+    { id: 0, name: "default" },
+    { id: 1, name: "really really long name of tab" },
+    { id: 2, name: "short" },
+    { id: 3, name: "💩" },
+    { id: 4, name: "another really long name of tab" },
+    { id: 5, name: "🐕" },
+    { id: 6, name: "one" },
+    { id: 7, name: "two" },
+    { id: 8, name: "three" },
+    { id: 9, name: "four" },
+    { id: 10, name: "five" },
+    { id: 11, name: "six" },
+  ]
+
+  const resTabNamesLong: TabName[] = [
+    { id: 0, name: "default" },
+    { id: 1, name: "really…" },
+    { id: 2, name: "short" },
+    { id: 3, name: "💩" },
+    { id: 4, name: "another…" },
+    { id: 5, name: "🐕" },
+    { id: 6, name: "one" },
+    { id: 7, name: "two" },
+  ]
+
+  type Inputs = [string, TabName[], TabName[]][]
+
+  const inputs: Inputs = [
+    ["singleTab", tabNamesSingle, tabNamesSingle],
+    ["singleTab but too long", tabNamesSingleLong, resTabNamesSingleLong],
+    ["short tabs", tabNamesShort, tabNamesShort],
+    ["longer tabs but shortable names", tabNamesShortable, resTabNamesShortable],
+    ["too long tabs", tabNamesLong, resTabNamesLong],
+  ]
+
+  test.each(inputs)("%s", (_name, tabNames, resTabNames) => {
+    const visible = visibleTabNames(tabNames)
+    expect(visible).toStrictEqual(resTabNames)
   })
 })
