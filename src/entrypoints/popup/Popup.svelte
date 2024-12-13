@@ -35,9 +35,11 @@
 <div class="container min-w-[464px] max-w-[600px] m-auto">
   <div class="flex justify-between flex-nowrap p-1 w-full">
     <div class="w-full">
-      <div class="pt-2">
-        <PickFromWebpageButton />
-      </div>
+      {#if !$wideDialog}
+        <div class="pt-2">
+          <PickFromWebpageButton />
+        </div>
+      {/if}
       <PaletteHeader />
       {#if !$wideDialog}
         <Palette />
